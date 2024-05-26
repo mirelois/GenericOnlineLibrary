@@ -8,13 +8,13 @@
             <a href="#settings"><div class="settings-section">
                 <img class="settings" src="/img/settings.svg"/>Settings    
             </div></a>
-            <a href="#home"><div class="home-section">
+            <a href="/"><div class="home-section">
                 <img class="vuesax-outline-home" src="/img/home-2.svg"/>Home
             </div></a>
             <div class="search-box">
                 <input type="text" placeholder="Search for books, readers and writers . . ." name="search">
             </div>
-            <a href="#books"><div class="books-section">
+            <a href="/books"><div class="books-section">
                 <img class="book-light" src="/img/Book_light.svg"/>Books
             </div></a>
             <a href="#notifications"><div class="notifications">
@@ -30,12 +30,13 @@ a {
 }
 
 .navegador {
-    position: absolute;
+    position:fixed; 
     width: 100%;
     height: 115px;
     top:0px;
     left:0px;
     background-color: #000000;
+    z-index:30;
 }
 
 .navegador .logo {

@@ -1,3 +1,7 @@
+<script setup>
+import ReviewComponent from '../components/ReviewComponent.vue';
+import NavComponent from '../components/NavComponent.vue';
+</script>
 <template>
 	<div class="bookpagecomponent">
     	<div class="canva-brown-rusty-mystery-nove-parent">
@@ -10,41 +14,36 @@
 	<div>
 			<div class="titulo">Soul</div>
     		<div class="autor">by Olivia Wilson</div>
+			<div class="group-categories">
+				<span>
+					<div class="rectangle-div">
+        			Romance	
+	      			</div>
+				</span>
+				<span>
+					<div class="rectangle-div">
+        			Terror	
+	      			</div>
+				</span>
+			</div>
     		<div class="descricao"> A  vida que Kim e Krickitt Carpenter conheciam mudou completamente no dia  24 de novembro de 1993, dois meses após o seu casamento, quando a  traseira do seu carro foi atingida por uma caminhonete que transitava em alta velocidade. Um ferimento sério na cabeça deixou Krickitt em coma  por várias semanas. Quando finalmente despertou, parte da sua memória  estava comprometida e ela não conseguia se lembrar de seu marido. Ela  não fazia a menor ideia de quem ele era. Essencialmente, a "Krickitt"  com quem Kim havia se casado morreu no acidente, e naquele momento ele  precisava reconquistar a mulher que amava.</div>
-    		<div class="group-stars">
-      			<img class="star-icon" alt="" src="/img/Star.svg">
-      			
-      			<img class="star-icon1" alt="" src="/img/Star.svg">
-      			
-      			<img class="star-icon2" alt="" src="/img/Star.svg">
-      			
-      			<img class="star-icon3" alt="" src="/img/Star.svg">
-      			
-      			<img class="star-icon4" alt="" src="/img/Star.svg">
-      			
-    		</div>
+			<div class="group-stars">
+				<div class="rating" style="--rating-value: 3;"></div>       
+			</div>
 			<div class="classificacao">3.0/5</div>
     		<div class="nr-rates">20 ratings</div>
     		<div class="nr-reviews">1 reviews</div>
     		<div class="separator">
     		</div>
-			<div class="group-categories">
-      			<div class="rectangle-parent">
-        				<div class="group-child">
-							Horror
-        				</div>
-      			</div>
-      			<div class="rectangle-group">
-        				<div class="group-child">
-        				</div>
-						<div>Romance</div>	
-      			</div>
+			
+	<div class="reviews-title">Reviews 
+			<img class="line-icon" alt="" src="/img/line.svg"> 
+			<ReviewComponent></ReviewComponent>
     		</div>
 	</div>
 	<NavComponent></NavComponent>
 </template>
 <script>
-import NavComponent from '../components/NavComponent.vue';
 export default {
 	components: {
         NavComponent
@@ -189,20 +188,21 @@ export default {
   	position: absolute;
   	top: 625px;
   	left: 485px;
-  	width: 227px;
   	height: 33.1px;
+	display: inline-block;
 }
 
 .classificacao {
-  	position: absolute;
-  	top: 615px;
-  	left: 735px;
-  	font-size: 36px;
-  	display: inline-block;
-  	width: 108px;
-  	height: 51px;
-	color: white;
+  position: absolute;
+  top: 615px;
+  left: 655px;
+  font-size: 36px;
+  display: inline-block;
+  width: 108px;
+  height: 51px;
+  color: white;
 }
+
 .nr-rates {
   	position: absolute;
   	top: 629px;
@@ -224,48 +224,70 @@ export default {
   	width: 5px;
   	height: 5px;
 }
-.review-box {
-  	position: absolute;
-  	top: 25.72px;
-  	left: 0px;
-  	border-radius: 30px;
-  	background-color: #212121;
-  	width: 929px;
-  	height: 159.3px;
-  	mix-blend-mode: normal;
-}
-.foto-icon {
-  	position: absolute;
-  	top: 0px;
-  	left: 24px;
-  	width: 79px;
-  	height: 74.1px;
-  	object-fit: cover;
-}
+
 .sophie-mayer {
   	color: #fff;
 }
 
 .group-categories {
 	position: absolute;
-	height: 4.5%;
+	display:flex;
+	height: 5%;
   	width: 8%;
-  	top: 62%;
-	left: 13%;
+  	top: 58%;
+	left: 20%;
 	color: #e1e1e1;
 	font-family: Lato;
 }
 
-.rectangle-group {
-  	position: absolute;
-  	height: 100%;
-  	width: 48.66%;
-  	top: 0%;
-  	right: -0.02%;
-  	bottom: 0%;
-  	left: 51.36%;
-	display: inline-block;
+.rectangle-div {
+	display: inline-block; 
+	position: relative;
+	border-radius: 4px;
+	background-color: rgba(26, 26, 26, 0);
+	border: 1px solid #a5a3a3;
+	box-sizing: border-box;
+	height: 41px;
+	margin: 10px;
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	padding:10px;
 }
+
+:root {
+  --rating-max: 5;
+  --rating-content: '★★★★★';
+  --rating-inactive-color: #CCCCCC;
+  --rating-background: #FFDD00;
+}
+
+.rating {
+  display: inline-block;
+  font-size: 30px;
+}
+
+.rating::before {
+  --rating-percent: calc(var(--rating-value) / var(--rating-max) * 100%);
+  content: var(--rating-content);
+  background: linear-gradient(90deg, var(--rating-background) var(--rating-percent), var(--rating-inactive-color) var(--rating-percent));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.reviews-title {
+	position: absolute;
+	top: 1044px;
+	left: 155px;
+	font-size: 32px;
+	font-weight: 600;
+	font-family: 'Open Sans';
+	display: inline-block;
+	width: 238px;
+	height: 61px;
+	color: #5d5d5e;
+} 
 
 body {
 	margin-left: -80px !important;
