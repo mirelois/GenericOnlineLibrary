@@ -7,7 +7,7 @@ import AddBookSearchComponent from '../components/AddBookSearchComponent.vue';
     <NavComponent></NavComponent>
     <div class="books-page">
         <div id="searchbox" v-if="showSearchBox==true"><AddBookSearchComponent @close="showSearchBox=false"/></div>
-        <div class="text-wrapper-4">My Book Shelf</div> 
+        <div class="text-wrapper-4">My Bookshelf</div> 
         <input class="search-bookshelf" type="text" placeholder="Filter by book name"/> 
         <div class="div">
             <div class="ibooks-template">
