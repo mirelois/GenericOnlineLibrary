@@ -2,9 +2,19 @@
     <main>
         <div class="navegador">
             <div class="logo"><div class="text-wrapper">C</div></div>
-            <a href="#profile"><div class="profile-section">
-                <img class="vuesax-outline-frame" src="/img/frame.svg"/>Profile
-            </div></a>
+       		<div class="profile-section" @click="openProfile" id="profileSectionContainer"  v-bind:style="{ 'background-color': computedColor }">
+                <img class="vuesaxoutlineframe-icon" alt="" src="/img/frame.svg">
+                <img class="chevron-icon" alt="" src="/img/Chevron.svg">
+                <div class="c">Carmen</div>
+            </div>
+            <div v-if="isProfileOpen==true" tabindex="0" class="dropdown-profile">
+                <div class="viewprofileoption" id="viewProfileOptionContainer">
+                <div class="view-profile"><a>View Profile</a></div>
+                </div>
+                <div class="signoutoption" id="signoutOptionContainer">
+                <div class="view-profile"><a>Sign Out</a></div>
+                </div>
+            </div>  
             <a href="#settings"><div class="settings-section">
                 <img class="settings" src="/img/settings.svg"/>Settings    
             </div></a>
@@ -14,21 +24,55 @@
             <div class="search-box">
                 <input type="text" placeholder="Search for books, readers and writers . . ." name="search">
             </div>
-            <a href="/books"><div class="books-section">
+            <a href="#catalog"><div class="books-section">
                 <img class="book-light" src="/img/Book_light.svg"/>Books
             </div></a>
             <a href="#notifications"><div class="notifications">
                 <img class="bell-light" src="/img/Bell_light.svg"/>Notifications
             </div></a>
+            <a href="/books">
+            	<div class="bookshelf-section">
+                    <img class="icon" alt="" src="/img/bookshelf.svg">
+                    <div class="c">Bookshelf</div>
+                </div> 
+            </a>
         </div>
     </main>
 </template>
+<script>
+export default {
+    data(){
+        return {
+            isProfileOpen:false,
+            backgroundColor: "#000000"
+        }
+    },
+    computed: {
+        computedColor: function () {
+        return this.backgroundColor;
+        }
+    },
+    methods: {
+        openProfile() {
+            if(this.isProfileOpen==true) this.backgroundColor = "#000000"
+            else this.backgroundColor = "#da9f46d9"
+            
+            this.isProfileOpen = !this.isProfileOpen
+            console.log("here:"+isProfileOpen)
+
+        }
+    }
+}
+</script>
+
+
 <style>
 
 a {
     color:white;
 }
 
+a:hover { text-decoration: underline; }
 .navegador {
     position:fixed; 
     width: 100%;
@@ -65,22 +109,51 @@ a {
     line-height: normal;
 }
 
-.navegador .profile-section {
+.view-profile {
+    position: relative;
+}
+.viewprofileoption {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(219, 160, 70, 0.85);
+    border: 1px solid #fff;
+    box-sizing: border-box;
+    width: 184px;
+    height: 60px;
     display: flex;
-    width: 157px;
-    height: 115px;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 11px;
+    cursor: pointer;
+}
+.signoutoption {
     position: absolute;
-    top: 0;
-    left: 1059px;
-    font-size: 22px;
+    top: 64px;
+    left: 0px;
+    background-color: rgba(219, 160, 70, 0.85);
+    border: 1px solid #fff;
+    box-sizing: border-box;
+    width: 184px;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.dropdown-profile {
+    width: 100%;
+    position: relative;
+    height: 124px;
+    text-align: left;
+    font-size: 24px;
+    color: #fff;
+    font-family: Inika;
+    left: 1032px;
+    top:115px;
 }
 
-.navegador .profile-section:hover {
-    background-color: #da9f46d9; 
-}
 
 .navegador .vuesax-outline-frame {
     position: relative;
@@ -97,6 +170,23 @@ a {
     font-size: 24px;
     letter-spacing: 0;
     line-height: normal;
+}
+.navegador .profile-section {
+    position: absolute;
+    color: #ffffff;
+    top: 0px;
+    left: 1032px;
+    width: 184px;
+    height: 115px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+    font-size: 22px;
+} 
+
+.navegador .profile-section:hover {
+    cursor: pointer;
 }
 
 .navegador .settings-section {
@@ -133,6 +223,24 @@ a {
     top: 0;
     left: 141px;
     font-size: 22px;
+}
+
+.navegador .bookshelf-section {
+    position: absolute;
+    top: -1px;
+    left: 1610px;
+    width: 209px;
+    height: 115px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color:white;
+    font-size: 22px;
+} 
+
+.navegador .bookshelf-section:hover {
+    background-color: #da9f46d9;
 }
 
 .navegador .home-section:hover {
