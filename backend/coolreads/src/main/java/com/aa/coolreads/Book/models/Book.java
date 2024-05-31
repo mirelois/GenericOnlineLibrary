@@ -1,4 +1,4 @@
-package com.aa.coolreads.Book;
+package com.aa.coolreads.Book.models;
 
 import jakarta.persistence.*;
 
@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Book implements Serializable {
+public class Book implements Serializable { // todo falta ligar ao author
     @Id
     private String isbn;
 

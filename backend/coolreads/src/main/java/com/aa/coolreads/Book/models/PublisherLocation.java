@@ -1,4 +1,4 @@
-package com.aa.coolreads.Book;
+package com.aa.coolreads.Book.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
