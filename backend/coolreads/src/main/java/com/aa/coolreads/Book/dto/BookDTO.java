@@ -1,7 +1,10 @@
 package com.aa.coolreads.Book.dto;
 
+import com.aa.coolreads.Book.models.Book;
+
 import java.util.Date;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BookDTO {
     private String isbn;
@@ -28,6 +31,17 @@ public class BookDTO {
         this.totalPageNumbers = totalPageNumbers;
         this.publisherName = publisherName;
         this.genres = genres;
+    }
+
+    public BookDTO(Book book) {
+        this.isbn = book.getIsbn();
+        this.title = book.getTitle();
+        this.description = book.getDescription();
+        this.launchDate = book.getLaunchDate();
+        this.publisherName = book.getPublisher().getName();
+        this.genres = book.getGenres().stream()
+                .map(genre -> genre.getGenreType().name())
+                .collect(Collectors.toSet());
     }
 
     public String getIsbn() {
