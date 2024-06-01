@@ -1,0 +1,18 @@
+{
+	"info": {
+		"_postman_id": "c500f6d1-a6f1-409a-ae2b-ca0aaa829c0c",
+		"name": "CoolReads",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31872453"
+	},
+	"item": [
+		{
+			"name": "GetBookByISBN",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
