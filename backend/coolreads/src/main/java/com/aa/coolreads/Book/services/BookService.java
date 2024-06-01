@@ -67,6 +67,7 @@ public class BookService {
         Iterator<String> genreIter = genresNames.iterator();
         while(genreIter.hasNext() && isValid){
             String genreName = genreIter.next();
+
             Optional<Genre> genreOptional = this.genreRepository.findById(genreName);
             if(genreOptional.isEmpty()) {
                 invalidGenres.add(genreName);

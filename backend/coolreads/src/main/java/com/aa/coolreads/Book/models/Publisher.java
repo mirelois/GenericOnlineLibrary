@@ -16,17 +16,13 @@ public class Publisher implements Serializable {
 
     private String logoUrl;
 
-    @ManyToOne
-    private PublisherLocation publisherLocation;
-
     public Publisher(){}
 
-    public Publisher(String name, String email, String siteUrl, String logoUrl, PublisherLocation publisherLocation) {
+    public Publisher(String name, String email, String siteUrl, String logoUrl) {
         this.name = name;
         this.email = email;
         this.siteUrl = siteUrl;
         this.logoUrl = logoUrl;
-        this.publisherLocation = publisherLocation;
     }
 
     public String getName() {
@@ -59,13 +55,5 @@ public class Publisher implements Serializable {
 
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
-    }
-
-    public PublisherLocation getPublisherLocation() {
-        return publisherLocation;
-    }
-
-    public void setPublisherLocation(PublisherLocation publisherLocation) {
-        this.publisherLocation = publisherLocation;
     }
 }

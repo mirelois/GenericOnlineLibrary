@@ -8,21 +8,20 @@ import java.io.Serializable;
 public class Genre implements Serializable{
 
     @Id
-    @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private GenreType genreType;
+    private String genreType;
 
     public Genre(){}
 
-    public Genre(GenreType genreType){
+    public Genre(String genreType) {
         this.genreType = genreType;
     }
 
-    public GenreType getGenreType() {
+    public String getGenreType() {
         return genreType;
     }
 
-    public void setGenreType(GenreType genreType) {
+    public void setGenreType(String genreType) {
         this.genreType = genreType;
     }
 }
