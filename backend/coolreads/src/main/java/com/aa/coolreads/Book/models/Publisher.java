@@ -8,9 +8,6 @@ import java.io.Serializable;
 public class Publisher implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     private String name;
 
     private String email;
@@ -30,14 +27,6 @@ public class Publisher implements Serializable {
         this.siteUrl = siteUrl;
         this.logoUrl = logoUrl;
         this.publisherLocation = publisherLocation;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

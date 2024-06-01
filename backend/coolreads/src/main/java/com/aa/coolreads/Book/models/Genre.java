@@ -8,9 +8,6 @@ import java.io.Serializable;
 public class Genre implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
     private GenreType genreType;
@@ -19,14 +16,6 @@ public class Genre implements Serializable{
 
     public Genre(GenreType genreType){
         this.genreType = genreType;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public GenreType getGenreType() {
