@@ -1,6 +1,7 @@
 <script setup>
 import ReviewComponent from '../components/ReviewComponent.vue';
 import NavComponent from '../components/NavComponent.vue';
+import FooterComponent from '../components/FooterComponent.vue';
 </script>
 <template>
 	<div class="bookpagecomponent">
@@ -42,11 +43,13 @@ import NavComponent from '../components/NavComponent.vue';
     		</div>
 	</div>
 	<NavComponent></NavComponent>
+	<FooterComponent></FooterComponent>
 </template>
 <script>
 export default {
 	components: {
-        NavComponent
+        NavComponent,
+		FooterComponent
     }
 
 }
@@ -231,13 +234,15 @@ export default {
 
 .group-categories {
 	position: absolute;
-	display:flex;
+	display: flex;
 	height: 5%;
-  	width: 8%;
-  	top: 58%;
+	width: 8%;
+	top: 58%;
 	left: 20%;
 	color: #e1e1e1;
 	font-family: Lato;
+	height: 30px;
+	width: 30px;
 }
 
 .rectangle-div {

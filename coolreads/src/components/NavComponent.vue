@@ -24,13 +24,13 @@
             <div class="search-box">
                 <input type="text" placeholder="Search for books, readers and writers . . ." name="search">
             </div>
-            <a href="#catalog"><div class="books-section">
+            <a href="/bookmenu"><div class="books-section">
                 <img class="book-light" src="/img/Book_light.svg"/>Books
             </div></a>
             <a href="#notifications"><div class="notifications">
                 <img class="bell-light" src="/img/Bell_light.svg"/>Notifications
             </div></a>
-            <a href="/books">
+            <a href="/bookshelf">
             	<div class="bookshelf-section">
                     <img class="icon" alt="" src="/img/bookshelf.svg">
                     <div class="c">Bookshelf</div>

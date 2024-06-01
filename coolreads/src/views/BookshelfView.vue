@@ -22,9 +22,6 @@ import AddBookSearchComponent from '../components/AddBookSearchComponent.vue';
                             </div>
                         </div>
                     </div>
-                    <div class="book-add" @click="changeSearchBoxVisibility()">
-                        <div class="div-wrapper"><div class="text-wrapper-3">+</div></div>
-                    </div> 
                 </div>
             </div>
         </div>
@@ -39,6 +36,8 @@ export default {
     data(){
         return {
                 bookshelf:[
+                { cover: "/img/book.png", id: 1 },
+                { cover: "/img/book.png", id: 1 },
                 { cover: "/img/book.png", id: 1 },
                 { cover: "/img/book.png", id: 1 },
                 { cover: "/img/book.png", id: 1 },
@@ -74,7 +73,7 @@ export default {
     gap: 45px;
     position: absolute;
     top: 29px;
-    left: 277px;
+    left: 80px;
 }
 .books-page .book {
     position: relative;
@@ -104,16 +103,6 @@ export default {
     font-size: 80px;
     letter-spacing: 0;
     line-height: normal;
-} 
-
-.books-page .book-row {
-    display: flex;
-    width: 1060px;
-    align-items: flex-end;
-    gap: 45px;
-    position: absolute;
-    top: 29px;
-    left: 277px;
 }
 
 .books-page .remove {
@@ -289,6 +278,7 @@ export default {
     background-color: #e6e6e66e;
     border-radius: 25px;
 }
+
 .books-page .search-2 {
     position: absolute;
     width: 33px;
@@ -312,8 +302,8 @@ export default {
 
 .overlap-group {
     display: grid;
-    grid-template-columns: auto auto auto auto auto;
-    grid-template-rows : auto auto auto auto auto;
+    grid-template-columns: auto auto auto auto auto auto;
+    grid-template-rows : auto auto auto auto auto auto;
     grid-gap: 10px;
     grid-row-gap:70px;
 } 
