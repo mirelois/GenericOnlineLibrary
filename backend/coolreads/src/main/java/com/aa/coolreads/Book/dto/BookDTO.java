@@ -33,17 +33,6 @@ public class BookDTO {
         this.genres = genres;
     }
 
-    public BookDTO(Book book) {
-        this.isbn = book.getIsbn();
-        this.title = book.getTitle();
-        this.description = book.getDescription();
-        this.launchDate = book.getLaunchDate();
-        this.publisherName = book.getPublisher().getName();
-        this.genres = book.getGenres().stream()
-                .map(genre -> genre.getGenreType().name())
-                .collect(Collectors.toSet());
-    }
-
     public String getIsbn() {
         return isbn;
     }

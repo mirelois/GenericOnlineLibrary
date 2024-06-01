@@ -1,5 +1,6 @@
 package com.aa.coolreads.Book.models;
 
+import com.aa.coolreads.Book.dto.BookDTO;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -37,7 +38,6 @@ public class Book implements Serializable { // todo falta ligar ao author
         this.publisher = publisher;
         this.genres = genres;
     }
-
 
     public String getIsbn() {
         return isbn;
