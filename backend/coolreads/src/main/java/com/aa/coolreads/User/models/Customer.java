@@ -1,16 +1,13 @@
 package com.aa.coolreads.User.models;
 
 import com.aa.coolreads.Book.models.Genre;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.Set;
 
 @Entity
-public class User {
+public class Customer {
     @Id
     private String username;
 
@@ -42,9 +39,9 @@ public class User {
     @OneToMany
     private Set<Bookshelf> bookshelves;
 
-    public User(){}
+    public Customer(){}
 
-    public User(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves) {
+    public Customer(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves) {
         this.username = username;
         this.password = password;
         this.email = email;
