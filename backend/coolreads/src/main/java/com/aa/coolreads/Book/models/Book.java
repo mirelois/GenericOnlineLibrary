@@ -27,9 +27,12 @@ public class Book implements Serializable { // todo falta ligar ao author
     @ManyToMany
     private Set<Genre> genres = new HashSet<>();
 
+    @OneToMany
+    private Set<BookRating> ratings = new HashSet<>();
+
     public Book(){}
 
-    public Book(String isbn, String title, String description, Date launchDate, int totalPageNumbers, Publisher publisher, Set<Genre> genres) {
+    public Book(String isbn, String title, String description, Date launchDate, int totalPageNumbers, Publisher publisher, Set<Genre> genres, Set<BookRating> ratings) {
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -37,6 +40,7 @@ public class Book implements Serializable { // todo falta ligar ao author
         this.totalPageNumbers = totalPageNumbers;
         this.publisher = publisher;
         this.genres = genres;
+        this.ratings = ratings;
     }
 
     public String getIsbn() {
@@ -93,5 +97,13 @@ public class Book implements Serializable { // todo falta ligar ao author
 
     public void setGenres(Set<Genre> genres) {
         this.genres = genres;
+    }
+
+    public Set<BookRating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(Set<BookRating> ratings) {
+        this.ratings = ratings;
     }
 }

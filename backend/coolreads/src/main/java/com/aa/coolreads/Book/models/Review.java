@@ -1,8 +1,6 @@
 package com.aa.coolreads.Book.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -20,5 +18,67 @@ public class Review implements Serializable {
 
     private Date PostDate;
 
-    //private Set<ReviewLike> reviewLikes;
+    @OneToMany
+    private Set<ReviewLike> reviewLikes;
+
+    @OneToMany
+    private Set<ReviewComment> reviewComments;
+
+    public Review(){}
+
+    public Review(String title, String description, Date postDate, Set<ReviewLike> reviewLikes, Set<ReviewComment> reviewComments) {
+        this.title = title;
+        this.description = description;
+        PostDate = postDate;
+        this.reviewLikes = reviewLikes;
+        this.reviewComments = reviewComments;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getPostDate() {
+        return PostDate;
+    }
+
+    public void setPostDate(Date postDate) {
+        PostDate = postDate;
+    }
+
+    public Set<ReviewLike> getReviewLikes() {
+        return reviewLikes;
+    }
+
+    public void setReviewLikes(Set<ReviewLike> reviewLikes) {
+        this.reviewLikes = reviewLikes;
+    }
+
+    public Set<ReviewComment> getReviewComments() {
+        return reviewComments;
+    }
+
+    public void setReviewComments(Set<ReviewComment> reviewComments) {
+        this.reviewComments = reviewComments;
+    }
 }
