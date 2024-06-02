@@ -1,14 +1,41 @@
 <script setup>
 import NavComponent from '../components/NavComponent.vue'
 import BookComponent from '../components/BookCoverComponent.vue'
-import AddBookSearchComponent from '../components/AddBookSearchComponent.vue';
+import FooterComponent from '../components/FooterComponent.vue';
 </script>
 <template>
-    <NavComponent></NavComponent>
     <div class="books-page">
-        <div id="searchbox" v-if="showSearchBox==true"><AddBookSearchComponent @close="showSearchBox=false"/></div>
         <div class="text-wrapper-4">My Bookshelf</div> 
         <input v-model="search_input" class="search-bookshelf" type="text" placeholder="Filter by book name"/> 
+        <div class="sort-component">
+        <div class="listbox-title">
+            <img v-if="showDropdownMenu==true" class="chevron-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
+            <img v-if="showDropdownMenu==false" class="chevron-icon-d" @click='showMenu' alt="" src="/img/updroplist.svg">
+            <div class="order-by-title">Order By</div>
+            </div>
+            <div class="listbox-main">
+            <div class="listboxbg">
+            </div>
+        <div class="placeholder-text">
+            <div class="order-by-placeholder">{{selectedOption}}</div>
+        </div>
+        </div>
+        <div v-if="showDropdownMenu==true" class="clip-list">
+            <div class="dropdown-list">
+            <div class="item-option-d" @click="sortBooks(`Date`)">
+            <div class="item-content">Date</div>
+            </div>
+            <div class="item-option-d" @click="sortBooks(`Title`)">
+            <div class="item-content">Title</div>
+            </div>
+            <div class="item-option-d" @click="sortBooks(`Rate`)">
+            <div class="item-content">Rate</div>
+            </div>
+            </div>
+            <div class="clip-list-child">
+            </div>
+        </div>     
+    </div>
         <div class="div">
             <div class="ibooks-template">
                 <div class="overlap">
@@ -35,8 +62,12 @@ import AddBookSearchComponent from '../components/AddBookSearchComponent.vue';
             <img class="vector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
             </div>
             </div>
+            <div class="newfooter">
+                <FooterComponent></FooterComponent>
+            </div>
         </div>
     </div>
+    <NavComponent></NavComponent>
 </template>
 <script>
 export default {
@@ -47,56 +78,56 @@ export default {
     data(){
         return {
                 bookshelf:[
-                { titulo:"biografia", cover: "/img/biografia.png", id: 1 },
-                { titulo:"desporto", cover: "/img/desporto.png", id: 2 },
-                { titulo:"misterio", cover: "/img/misterio.png", id: 3 },
-                { titulo:"musica",cover: "/img/musica.png", id: 4 },
-                { titulo:"biografia", cover: "/img/biografia.png", id: 1 },
-                { titulo:"desporto", cover: "/img/desporto.png", id: 2 },
-                { titulo:"misterio", cover: "/img/misterio.png", id: 3 },
-                { titulo:"musica",cover: "/img/musica.png", id: 4 },
-                { titulo:"biografia", cover: "/img/biografia.png", id: 1 },
-                { titulo:"desporto", cover: "/img/desporto.png", id: 2 },
-                { titulo:"misterio", cover: "/img/misterio.png", id: 3 },
-                { titulo:"musica",cover: "/img/musica.png", id: 4 },
-                { titulo:"biografia", cover: "/img/biografia.png", id: 1 },
-                { titulo:"desporto", cover: "/img/desporto.png", id: 2 },
-                { titulo:"misterio", cover: "/img/misterio.png", id: 3 },
-                { titulo:"musica",cover: "/img/musica.png", id: 4 },
-                { titulo:"biografia", cover: "/img/biografia.png", id: 1 },
-                { titulo:"desporto", cover: "/img/desporto.png", id: 2 },
-                { titulo:"misterio", cover: "/img/misterio.png", id: 3 },
-                { titulo:"musica",cover: "/img/musica.png", id: 4 },
-                { titulo:"biografia", cover: "/img/biografia.png", id: 1 },
-                { titulo:"desporto", cover: "/img/desporto.png", id: 2 },
-                { titulo:"misterio", cover: "/img/misterio.png", id: 3 },
-                { titulo:"musica",cover: "/img/musica.png", id: 4 },
-                { titulo:"biografia", cover: "/img/biografia.png", id: 1 },
-                { titulo:"desporto", cover: "/img/desporto.png", id: 2 },
-                { titulo:"misterio", cover: "/img/misterio.png", id: 3 },
-                { titulo:"musica",cover: "/img/musica.png", id: 4 },
-                { titulo:"biografia", cover: "/img/biografia.png", id: 1 },
-                { titulo:"desporto", cover: "/img/desporto.png", id: 2 },
-                { titulo:"misterio", cover: "/img/misterio.png", id: 3 },
-                { titulo:"musica",cover: "/img/musica.png", id: 4 },
-                { titulo:"fantasia",cover: "/img/fantasia.png", id: 5 }
+                { titulo:"biografia", rate:2.3,launchDate:"2011-10-11", cover: "/img/biografia.png", id: 1 },
+                { titulo:"desporto", rate:3.3,launchDate:"2021-11-11",cover: "/img/desporto.png", id: 2 },
+                { titulo:"misterio", rate:1.3,launchDate:"2013-05-21",cover: "/img/misterio.png", id: 3 },
+                { titulo:"musica",rate:1.4,launchDate:"2019-06-22",cover: "/img/musica.png", id: 4 },
+                { titulo:"biografia",rate:4.3, launchDate:"2019-03-11",cover: "/img/biografia.png", id: 1 },
+                { titulo:"musica",rate:1.4,launchDate:"2019-06-22",cover: "/img/musica.png", id: 4 },
+                { titulo:"biografia",rate:4.3, launchDate:"2019-03-11",cover: "/img/biografia.png", id: 1 },
+                { titulo:"musica",rate:1.4,launchDate:"2019-06-22",cover: "/img/musica.png", id: 4 },
+                { titulo:"biografia",rate:4.3, launchDate:"2019-03-11",cover: "/img/biografia.png", id: 1 },
+                { titulo:"musica",rate:1.4,launchDate:"2019-06-22",cover: "/img/musica.png", id: 4 },
+                { titulo:"biografia",rate:4.3, launchDate:"2019-03-11",cover: "/img/biografia.png", id: 1 },
+                { titulo:"desporto",rate:4.5, launchDate:"2021-01-21",cover: "/img/desporto.png", id: 2 },
+                { titulo:"misterio",rate:3.3,launchDate:"2022-05-21", cover: "/img/misterio.png", id: 3 },
+                { titulo:"fantasia",rate:2.4,launchDate:"2023-02-11",cover: "/img/fantasia.png", id: 5 }
             ],
-            activate : [true,false],
-            showSearchBox:false,
+            activate : [],
+            showDropdownMenu:false,
             page: 0,
             maxPerPage : 30,
             nrpages : 0,
             search_input: '',
-            filtered: []
+            filtered: [],
+            selectedOption: 'Select Sorting Operation'
         }
     },
     methods: {
-        changeSearchBoxVisibility(){
-            this.showSearchBox = !this.showSearchBox
-            console.log("estado:"+this.showSearchBox)
+        showMenu(){
+            this.showDropdownMenu = !this.showDropdownMenu
+        },
+        sortBooks(param){
+            if(param=="Date"){
+                this.filtered.sort((a,b)=> new Date(a.launchDate) - new Date(b.launchDate))
+                console.log(this.filtered)
+            }
+            if(param=="Rate"){
+                this.filtered.sort((a,b)=> a.rate-b.rate)
+                console.log(this.filtered)
+            }
+            else{
+                this.filtered.sort((a,b)=>a.titulo.localeCompare(b.titulo))
+            }
+            this.selectedOption = param
+            this.page = 0; // Reset to the first page after sorting
+            this.nrpages = Math.ceil(this.filtered.length / this.maxPerPage);
+            this.initializeActivate();
         },
         nextPage(){
-            if(this.page+1<=this.bookshelf.length){
+            console.log(this.page)
+            console.log(this.nrpages)
+            if(this.page+2<=this.nrpages){
                 this.activate[this.page] = !this.activate[this.page]
                 this.page = this.page + 1;
                 this.activate[this.page] = !this.activate[this.page]
@@ -108,7 +139,15 @@ export default {
                 this.page = this.page - 1;
                 this.activate[this.page] = !this.activate[this.page]
             }
+        },
+        initializeActivate(){
+            this.activate = new Array(this.nrpages).fill(false)
+            this.activate[0] = true;
         }
+    },
+    created(){
+        this.nrpages = Math.ceil(this.filtered.length / this.maxPerPage);
+        this.initializeActivate();
     },
     computed: {
         displayBooksPerPage(){
@@ -120,8 +159,8 @@ export default {
             const startIndex = this.maxPerPage * this.page;
             const endIndex = startIndex + this.maxPerPage;
             this.nrpages = Math.ceil(this.filtered.length / this.maxPerPage);
-            console.log(startIndex)
-            console.log(endIndex)
+            //console.log(startIndex)
+            //console.log(endIndex)
             if(startIndex>=0 && startIndex<this.filtered.length && endIndex>0 && endIndex<this.filtered.length) return this.filtered.slice(startIndex, endIndex);
             else if(endIndex>=this.filtered.length) {
                 const endIndex=this.filtered.length;
@@ -132,7 +171,19 @@ export default {
 }
 </script>
 <style>
-
+@media (min-width: 1024px) {
+    #app {
+            padding: 0;
+    }
+}
+#app {
+    max-width: 3000px;
+    font-weight: normal;
+}
+.newfooter {
+    margin-top: 500px;
+    margin-left: -800px;
+}
 .books-page .overlap {
     position: relative;
     width: 1379px;
@@ -149,6 +200,16 @@ export default {
     top: 29px;
     left: 80px;
 }
+.clip-list {
+    position: absolute;
+    height: 59.52%;
+    width: 92.86%;
+    top: 12.48%;
+    right: 0%;
+    bottom: 0%;
+    left: 7.14%;
+    color: #333;
+}
 .books-page .book {
     position: relative;
     width: 180px;
@@ -156,10 +217,9 @@ export default {
 } 
 
 .books-page {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
+	width: 2000px;
+	display: flex;
+	flex-direction: row;
 }
 .books-page .div:not(#searchbox) {
     width: 1300px;
@@ -168,15 +228,15 @@ export default {
 } 
 
 .books-page .text-wrapper-4 {
-    position: absolute;
-    top: 201px;
-    left: 100px;
-    font-family: "Inika-Regular", Helvetica;
-    font-weight: 400;
-    color: #e9e9e9;
-    font-size: 80px;
-    letter-spacing: 0;
-    line-height: normal;
+  position: absolute;
+  top: 300px;
+  left: 100px;
+  font-family: "Inika-Regular", Helvetica;
+  font-weight: 400;
+  color: #e9e9e9;
+  font-size: 80px;
+  letter-spacing: 0;
+  line-height: normal;
 }
 
 .books-page .remove {
@@ -212,24 +272,26 @@ export default {
     letter-spacing: 0;
     line-height: normal;
 }
-.books-page .text-wrapper-4 {
-    position: absolute;
-    top: 201px;
-    left: 100px;
-    font-family: "Inika-Regular", Helvetica;
-    font-weight: 400;
-    color: #e9e9e9;
-    font-size: 80px;
-    letter-spacing: 0;
-    line-height: normal;
-}
+
+.item-option-d {
+    align-self: stretch;
+    position: relative;
+    background-color: #c2c2c2;
+    height: 44px;
+    overflow: hidden;
+    flex-shrink: 0;
+} 
+
+.item-option-d:hover {
+    cursor:pointer;
+} 
 
 .books-page .pagination {
     position: absolute;
     width: 542px;
     height: 68px;
-    top: 2272px;
-    left: 534px;
+    top: 2400px;
+    left: 800px;
     background-color: #f6f8ff;
     border-radius: 32.32px;
     box-shadow: 0px 4.97px 4.97px #00000033;
@@ -453,11 +515,133 @@ export default {
     grid-gap: 10px;
     grid-row-gap:70px;
 } 
+.order-by-title {
+  	position: absolute;
+  	top: 0%;
+  	left: 0%;
+  	font-weight: 500;
+}
+.listbox-title {
+  position: absolute;
+  font-family: "Inika-Regular", Helvetica;
+  height: 6.92%;
+  width: 90.91%;
+  top: -20px;
+  right: 4.55%;
+  bottom: 93.08%;
+  left: 4.55%;
+  font-size: 25px;
+}
+.listboxbg {
+  	position: absolute;
+  	height: 100%;
+  	width: 100%;
+  	top: 0%;
+  	right: 0%;
+  	bottom: 0%;
+  	left: 0%;
+  	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  	border-radius: 25px;
+    background-color: #c2c2c2;
+}
+.chevron-icon-d {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    top: 330%;
+    right: 7.86%;
+    bottom: 45%;
+    left: 88.57%;
+    max-width: 100%;
+    max-height: 100%;
+    z-index:11;
+}
+
+.chevron-icon-d:hover {
+    cursor:pointer;
+}
+
+.order-by-placeholder {
+  	position: absolute;
+  	top: 0%;
+  	left: 0%;
+    font-size: 18px;
+}
+.placeholder-text {
+  	position: absolute;
+  	height: 33.33%;
+  	width: 65.71%;
+  	top: 33.33%;
+  	right: 28.57%;
+  	bottom: 33.33%;
+  	left: 5.71%;
+}
+.listbox-main {
+  	position: absolute;
+  	height: 20.76%;
+  	width: 90.91%;
+  	top: 9.69%;
+  	right: 4.55%;
+  	bottom: 69.55%;
+  	left: 4.55%;
+  	color: #666;
+}
+.item-content {
+  	position: absolute;
+  	top: 12px;
+  	left: 16px;
+}
+.item-dropdown {
+  	align-self: stretch;
+  	position: relative;
+  	background-color: #fff;
+  	height: 44px;
+  	overflow: hidden;
+  	flex-shrink: 0;
+}
+.dropdown-list {
+    position: absolute;
+    width: auto;
+    top: 1px;
+    right: 7%;
+    left: 0%;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    height: 1px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 250px;
+    z-index:10;
+}
+.clip-list-child {
+  	position: absolute;
+  	top: -19px;
+  	left: 61px;
+  	width: 100px;
+  	height: 100px;
+  	overflow: hidden;
+}
+
+.sort-component {
+  width: 400px;
+  position: absolute;
+  height: 300px;
+  text-align: left;
+  font-size: 16px;
+  color: #fff;
+  font-family: Montserrat;
+  left: 900px;
+  top: 410px;
+}
 
 body {
-  margin: 0;
+	margin-left: -80px !important;
   background-color: #222831;
 }
+
 
 
 </style>

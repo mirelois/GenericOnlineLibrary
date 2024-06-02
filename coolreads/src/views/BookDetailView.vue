@@ -2,6 +2,7 @@
 import ReviewComponent from '../components/ReviewComponent.vue';
 import NavComponent from '../components/NavComponent.vue';
 import FooterComponent from '../components/FooterComponent.vue';
+import MyReviewComponent from '../components/MyReviewComponent.vue';
 </script>
 <template>
 	<div class="bookpagecomponent">
@@ -39,6 +40,7 @@ import FooterComponent from '../components/FooterComponent.vue';
 			
 	<div class="reviews-title">Reviews 
 			<img class="line-icon" alt="" src="/img/line.svg"> 
+			<MyReviewComponent></MyReviewComponent>
 			<ReviewComponent></ReviewComponent>
     		</div>
 	</div>

@@ -21,8 +21,8 @@
             <a href="/"><div class="home-section">
                 <img class="vuesax-outline-home" src="/img/home-2.svg"/>Home
             </div></a>
-            <div class="search-box">
-                <input type="text" placeholder="Search for books, readers and writers . . ." name="search">
+            <div>
+                <input type="text" class="my-search-box" placeholder="Search for books, readers and writers . . ." name="search">
             </div>
             <a href="/bookmenu"><div class="books-section">
                 <img class="book-light" src="/img/Book_light.svg"/>Books
@@ -120,7 +120,7 @@ a:hover { text-decoration: underline; }
     border: 1px solid #fff;
     box-sizing: border-box;
     width: 184px;
-    height: 60px;
+    height: 65px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -253,19 +253,20 @@ a:hover { text-decoration: underline; }
     height: 32.25px;
 }
 
-input {
-    position: absolute;
-    width: 556px;
-    height: 70px;
-    top: 22px;
-    left: 462px;
-    font-size: 22px;
-    background: url("/img/Search.svg") no-repeat left;
-    padding-left: 35px;
-    background-color: #6b6b6b;
-    border-radius: 15px;
-    border-width: 0px;
-    overflow: hidden;
+.my-search-box {
+  position: absolute;
+  width: 556px;
+  height: 70px;
+  top: 22px;
+  left: 462px;
+  font-size: 22px;
+  padding-left: 35px;
+  background: url("/img/Search.svg") no-repeat left;
+    background-color: rgba(0, 0, 0, 0);
+  border-radius: 15px;
+  border-width: 0px;
+  overflow: hidden;
+  background-color: #6b6b6b;
 }
 
 .navegador .search {
