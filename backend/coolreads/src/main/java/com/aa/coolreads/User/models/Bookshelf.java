@@ -14,7 +14,8 @@ public class Bookshelf implements Serializable {
 
     private String name;
 
-    private Boolean isPublic;
+    @Enumerated
+    private Privacy privacy;
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
@@ -26,9 +27,9 @@ public class Bookshelf implements Serializable {
 
     public Bookshelf(){}
 
-    public Bookshelf(String name, Boolean isPublic) {
+    public Bookshelf(String name, Privacy privacy) {
         this.name = name;
-        this.isPublic = isPublic;
+        this.privacy = privacy;
     }
 
     public Long getId() {
@@ -47,11 +48,19 @@ public class Bookshelf implements Serializable {
         this.name = name;
     }
 
-    public Boolean getPublic() {
-        return isPublic;
+    public Privacy getPrivacy() {
+        return privacy;
     }
 
-    public void setPublic(Boolean aPublic) {
-        isPublic = aPublic;
+    public void setPrivacy(Privacy privacy) {
+        this.privacy = privacy;
+    }
+
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
     }
 }

@@ -1,12 +1,14 @@
 package com.aa.coolreads.Book.models;
 
 import com.aa.coolreads.User.models.Customer;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-public class ReviewLike {
-    @Enumerated(EnumType.STRING)
-    private LikeType likeType;
+public class ReviewComment {
+
+    private String comment;
 
     @Id
     @ManyToOne
@@ -16,20 +18,20 @@ public class ReviewLike {
     @ManyToOne
     private Review review;
 
-    public ReviewLike(){}
+    public ReviewComment(){}
 
-    public ReviewLike(LikeType likeType, Customer customer, Review review) {
-        this.likeType = likeType;
+    public ReviewComment(String comment, Customer customer, Review review) {
+        this.comment = comment;
         this.customer = customer;
         this.review = review;
     }
 
-    public LikeType getLikeType() {
-        return likeType;
+    public String getComment() {
+        return comment;
     }
 
-    public void setLikeType(LikeType likeType) {
-        this.likeType = likeType;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public Customer getCustomer() {

@@ -36,7 +36,7 @@ public class BookController {
         try{
             bookService.insertBook(bookDTO);
         } catch (BookAlreadyExistsException | PublisherNotFoundException | GenresNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 }

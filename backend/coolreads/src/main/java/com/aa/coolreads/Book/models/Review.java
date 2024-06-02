@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class Review implements Serializable {
@@ -19,5 +20,5 @@ public class Review implements Serializable {
 
     private Date PostDate;
 
-
+    //private Set<ReviewLike> reviewLikes;
 }
