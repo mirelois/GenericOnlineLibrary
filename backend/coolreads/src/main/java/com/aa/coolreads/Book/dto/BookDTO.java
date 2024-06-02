@@ -4,7 +4,6 @@ import com.aa.coolreads.Book.models.Book;
 
 import java.util.Date;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class BookDTO {
     private String isbn;
@@ -19,11 +18,13 @@ public class BookDTO {
 
     private String publisherName;
 
+    private String authorUsername;
+
     private Set<String> genres;
 
     public BookDTO(){}
 
-    public BookDTO(String isbn, String title, String description, Date launchDate, int totalPageNumbers, String publisherName, Set<String> genres) {
+    public BookDTO(String isbn, String title, String description, Date launchDate, int totalPageNumbers, String publisherName, Set<String> genres, String authorUsername) {
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -31,6 +32,7 @@ public class BookDTO {
         this.totalPageNumbers = totalPageNumbers;
         this.publisherName = publisherName;
         this.genres = genres;
+        this.authorUsername = authorUsername;
     }
 
     public String getIsbn() {
@@ -87,5 +89,13 @@ public class BookDTO {
 
     public void setGenres(Set<String> genres) {
         this.genres = genres;
+    }
+
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
+
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
     }
 }

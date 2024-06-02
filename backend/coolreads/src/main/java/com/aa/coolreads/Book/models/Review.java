@@ -16,7 +16,7 @@ public class Review implements Serializable {
 
     private String description;
 
-    private Date PostDate;
+    private Date postDate;
 
     @OneToMany
     private Set<ReviewLike> reviewLikes;
@@ -29,7 +29,7 @@ public class Review implements Serializable {
     public Review(String title, String description, Date postDate, Set<ReviewLike> reviewLikes, Set<ReviewComment> reviewComments) {
         this.title = title;
         this.description = description;
-        PostDate = postDate;
+        this.postDate = postDate;
         this.reviewLikes = reviewLikes;
         this.reviewComments = reviewComments;
     }
@@ -59,11 +59,11 @@ public class Review implements Serializable {
     }
 
     public Date getPostDate() {
-        return PostDate;
+        return postDate;
     }
 
     public void setPostDate(Date postDate) {
-        PostDate = postDate;
+        this.postDate = postDate;
     }
 
     public Set<ReviewLike> getReviewLikes() {

@@ -1,6 +1,7 @@
 package com.aa.coolreads.Book.models;
 
 import com.aa.coolreads.Book.dto.BookDTO;
+import com.aa.coolreads.User.models.Author;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -9,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Book implements Serializable { // todo falta ligar ao author
+public class Book implements Serializable {
     @Id
     private String isbn;
 
@@ -25,14 +26,33 @@ public class Book implements Serializable { // todo falta ligar ao author
     private Publisher publisher;
 
     @ManyToMany
-    private Set<Genre> genres = new HashSet<>();
+    private Set<Genre> genres;
 
     @OneToMany
-    private Set<BookRating> ratings = new HashSet<>();
+    private Set<BookRating> ratings;
+
+    @OneToMany
+    private Set<Review> reviews;
+
+    @ManyToOne
+    private Author  author;
 
     public Book(){}
 
-    public Book(String isbn, String title, String description, Date launchDate, int totalPageNumbers, Publisher publisher, Set<Genre> genres, Set<BookRating> ratings) {
+    public Book(String isbn, String title, String description, Date launchDate, int totalPageNumbers, Publisher publisher, Set<Genre> genres, Author author){
+        this.isbn = isbn;
+        this.title = title;
+        this.description = description;
+        this.launchDate = launchDate;
+        this.totalPageNumbers = totalPageNumbers;
+        this.publisher = publisher;
+        this.genres = genres;
+        this.ratings = new HashSet<>();
+        this.reviews = new HashSet<>();
+        this.author = author;
+    }
+
+    public Book(String isbn, String title, String description, Date launchDate, int totalPageNumbers, Publisher publisher, Set<Genre> genres, Set<BookRating> ratings, Set<Review> reviews, Author author) {
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -41,6 +61,8 @@ public class Book implements Serializable { // todo falta ligar ao author
         this.publisher = publisher;
         this.genres = genres;
         this.ratings = ratings;
+        this.reviews = reviews;
+        this.author = author;
     }
 
     public String getIsbn() {
@@ -105,5 +127,21 @@ public class Book implements Serializable { // todo falta ligar ao author
 
     public void setRatings(Set<BookRating> ratings) {
         this.ratings = ratings;
+    }
+
+    public Set<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(Set<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 }

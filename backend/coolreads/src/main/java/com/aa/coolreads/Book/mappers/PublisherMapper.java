@@ -1,4 +1,4 @@
-package com.aa.coolreads.Book.components;
+package com.aa.coolreads.Book.mappers;
 
 import com.aa.coolreads.Book.dto.PublisherDTO;
 import com.aa.coolreads.Book.models.Publisher;

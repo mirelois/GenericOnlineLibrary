@@ -1,17 +1,22 @@
 package com.aa.coolreads.Book.services;
 
-import com.aa.coolreads.Book.components.BookMapper;
+import com.aa.coolreads.Book.dto.FullBookDTO;
+import com.aa.coolreads.Book.mappers.BookMapper;
 import com.aa.coolreads.Book.dto.BookDTO;
 import com.aa.coolreads.Book.exception.BookAlreadyExistsException;
 import com.aa.coolreads.Book.exception.BookNotFoundException;
 import com.aa.coolreads.Book.exception.GenresNotFoundException;
 import com.aa.coolreads.Book.exception.PublisherNotFoundException;
+import com.aa.coolreads.Book.mappers.FullBookMapper;
 import com.aa.coolreads.Book.models.Book;
 import com.aa.coolreads.Book.models.Genre;
 import com.aa.coolreads.Book.models.Publisher;
 import com.aa.coolreads.Book.repositories.BookRepository;
 import com.aa.coolreads.Book.repositories.GenreRepository;
 import com.aa.coolreads.Book.repositories.PublisherRepository;
+import com.aa.coolreads.User.exception.AuthorNotFoundException;
+import com.aa.coolreads.User.models.Author;
+import com.aa.coolreads.User.repositories.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,20 +33,26 @@ public class BookService {
 
     private final GenreRepository genreRepository;
 
+    private final AuthorRepository authorRepository;
+
     private final BookMapper bookMapper;
 
+    private final FullBookMapper fullBookMapper;
+
     @Autowired
-    public BookService(BookRepository bookRepository, PublisherRepository publisherRepository, GenreRepository genreRepository, BookMapper bookMapper) {
+    public BookService(BookRepository bookRepository, PublisherRepository publisherRepository, GenreRepository genreRepository, AuthorRepository authorRepository, BookMapper bookMapper, FullBookMapper fullBookMapper) {
         this.bookRepository = bookRepository;
         this.publisherRepository = publisherRepository;
         this.genreRepository = genreRepository;
+        this.authorRepository = authorRepository;
         this.bookMapper = bookMapper;
+        this.fullBookMapper = fullBookMapper;
     }
 
-    public BookDTO getBookByISBN(String isbn) throws BookNotFoundException {
+    public FullBookDTO getBookByISBN(String isbn) throws BookNotFoundException {
         Optional<Book> bookOptional = this.bookRepository.findById(isbn);
         if(bookOptional.isPresent()){
-            return this.bookMapper.toBookDTO(bookOptional.get());
+            return this.fullBookMapper.toFullBookDTO(bookOptional.get());
         }
 
         throw new BookNotFoundException(isbn);
@@ -90,7 +101,16 @@ public class BookService {
         return genres;
     }
 
-    public void insertBook(BookDTO bookDTO) throws BookAlreadyExistsException, PublisherNotFoundException, GenresNotFoundException {
+    private Author checkIfAuthorExist(String userName) throws AuthorNotFoundException {
+        Optional<Author> authorOptional = this.authorRepository.findById(userName);
+        if(authorOptional.isPresent()){
+            return authorOptional.get();
+        }
+
+        throw new AuthorNotFoundException(userName);
+    }
+
+    public void insertBook(BookDTO bookDTO) throws BookAlreadyExistsException, PublisherNotFoundException, GenresNotFoundException, AuthorNotFoundException {
 
         checkIfDoesntBookExist(bookDTO.getIsbn());
 
@@ -98,6 +118,8 @@ public class BookService {
 
         Set<Genre> genres = checkIfGenresExist(bookDTO.getGenres());
 
-        this.bookRepository.save(this.bookMapper.toBook(bookDTO, publisher, genres));
+        Author author = checkIfAuthorExist(bookDTO.getAuthorUsername());
+
+        this.bookRepository.save(this.bookMapper.toBook(bookDTO, publisher, genres, author));
     }
 }

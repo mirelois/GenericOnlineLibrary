@@ -1,9 +1,8 @@
 package com.aa.coolreads.Book.services;
 
-import com.aa.coolreads.Book.components.PublisherMapper;
+import com.aa.coolreads.Book.mappers.PublisherMapper;
 import com.aa.coolreads.Book.dto.PublisherDTO;
 import com.aa.coolreads.Book.exception.PublisherAlreadyExistsException;
-import com.aa.coolreads.Book.models.Publisher;
 import com.aa.coolreads.Book.repositories.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
