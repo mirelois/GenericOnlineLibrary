@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class PublisherService {
 
-    private PublisherRepository publisherRepository;
-    private PublisherMapper publisherMapper;
+    private final PublisherRepository publisherRepository;
+    private final PublisherMapper publisherMapper;
 
     @Autowired
     public PublisherService(PublisherRepository publisherRepository, PublisherMapper publisherMapper) {

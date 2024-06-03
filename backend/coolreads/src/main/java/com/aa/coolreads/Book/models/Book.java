@@ -28,7 +28,7 @@ public class Book implements Serializable {
     @ManyToMany
     private Set<Genre> genres;
 
-    @OneToMany
+    @OneToMany(cascade = { CascadeType.ALL })
     private Set<BookRating> ratings;
 
     @OneToMany

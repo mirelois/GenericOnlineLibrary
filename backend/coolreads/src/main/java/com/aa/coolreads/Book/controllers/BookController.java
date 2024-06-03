@@ -61,7 +61,7 @@ public class BookController {
         }
     }
 
-    @PatchMapping("/{isbn}/rate")
+    @DeleteMapping("/{isbn}/rate")
     public void DeleteRateBook(@PathVariable String isbn, @RequestParam String customerUsername){
         try{
             this.bookService.deleteRating(isbn, customerUsername);

@@ -1,15 +1,8 @@
-package com.aa.coolreads.User.models;
-
-import com.aa.coolreads.Book.models.Genre;
-import jakarta.persistence.*;
+package com.aa.coolreads.User.dto;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-@Entity
-public class Customer {
-    @Id
+public class NewCustomerDTO {
     private String username;
 
     private String password;
@@ -34,18 +27,9 @@ public class Customer {
 
     private String profileBannerUrl;
 
-    @ManyToMany
-    private Set<Genre> favoriteGenres;
+    public NewCustomerDTO(){}
 
-    @OneToMany
-    private Set<Bookshelf> bookshelves;
-
-    public Customer(){
-        this.favoriteGenres = new HashSet<>();
-        this.bookshelves = new HashSet<>();
-    }
-
-    public Customer(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves) {
+    public NewCustomerDTO(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -58,8 +42,6 @@ public class Customer {
         this.interests = interests;
         this.profileImageUrl = profileImageUrl;
         this.profileBannerUrl = profileBannerUrl;
-        this.favoriteGenres = favoriteGenres;
-        this.bookshelves = bookshelves;
     }
 
     public String getUsername() {
@@ -156,21 +138,5 @@ public class Customer {
 
     public void setProfileBannerUrl(String profileBannerUrl) {
         this.profileBannerUrl = profileBannerUrl;
-    }
-
-    public Set<Genre> getFavoriteGenres() {
-        return favoriteGenres;
-    }
-
-    public void setFavoriteGenres(Set<Genre> favoriteGenres) {
-        this.favoriteGenres = favoriteGenres;
-    }
-
-    public Set<Bookshelf> getBookshelves() {
-        return bookshelves;
-    }
-
-    public void setBookshelves(Set<Bookshelf> bookshelves) {
-        this.bookshelves = bookshelves;
     }
 }
