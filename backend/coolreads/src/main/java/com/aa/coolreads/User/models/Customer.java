@@ -28,8 +28,10 @@ public class Customer {
 
     private String country;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(columnDefinition = "TEXT")
     private String interests;
 
     private String profileImageUrl;

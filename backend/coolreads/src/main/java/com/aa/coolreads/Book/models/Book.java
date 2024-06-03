@@ -16,6 +16,7 @@ public class Book implements Serializable {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     private Date launchDate;
