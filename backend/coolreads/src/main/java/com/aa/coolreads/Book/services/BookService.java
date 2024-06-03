@@ -22,6 +22,7 @@ import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.models.Author;
 import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.repositories.CustomerRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -110,12 +111,14 @@ public class BookService {
         return genres;
     }
 
+    @Transactional
     public FullBookDTO getBookByISBN(String isbn) throws BookNotFoundException {
         Book book = findBookByIsbn(isbn);
 
         return this.fullBookMapper.toFullBookDTO(book);
     }
 
+    @Transactional
     public void insertBook(BookDTO bookDTO) throws BookAlreadyExistsException, PublisherNotFoundException, GenresNotFoundException, AuthorNotFoundException {
 
         checkIfBookDoesntExist(bookDTO.getIsbn());
