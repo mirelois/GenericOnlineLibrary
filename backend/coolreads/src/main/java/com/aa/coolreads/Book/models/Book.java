@@ -129,6 +129,10 @@ public class Book implements Serializable {
         this.ratings = ratings;
     }
 
+    public void addRating(BookRating rating){
+        this.ratings.add(rating);
+    }
+
     public Set<Review> getReviews() {
         return reviews;
     }

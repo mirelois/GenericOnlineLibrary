@@ -22,9 +22,10 @@ public class BookRating implements Serializable {
 
     public BookRating() {}
 
-    public BookRating(Book book, Customer customer) {
+    public BookRating(double rating, Book book, Customer customer) {
         this.book = book;
         this.customer = customer;
+        this.rating = rating;
     }
 
     public double getRating() {
