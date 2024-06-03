@@ -21,20 +21,19 @@ public class PersonalBook implements Serializable {
     private Date insertDate;
 
     @ManyToOne
-    private Customer customer;
+    private Bookshelf bookshelf;
 
     @ManyToOne
     private Book book;
 
     public PersonalBook(){}
 
-    public PersonalBook(Integer pagesRead, Date insertDate, Customer customer, Book book) {
+    public PersonalBook(Integer pagesRead, Date insertDate, Book book, Bookshelf bookshelf) {
         this.pagesRead = pagesRead;
         this.insertDate = insertDate;
-        this.customer = customer;
         this.book = book;
+        this.bookshelf = bookshelf;
     }
-
 
     public Long getId() {
         return id;
@@ -60,13 +59,6 @@ public class PersonalBook implements Serializable {
         this.insertDate = insertDate;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
 
     public Book getBook() {
         return book;
@@ -74,5 +66,13 @@ public class PersonalBook implements Serializable {
 
     public void setBook(Book book) {
         this.book = book;
+    }
+
+    public Bookshelf getBookshelf() {
+        return bookshelf;
+    }
+
+    public void setBookshelf(Bookshelf bookshelf) {
+        this.bookshelf = bookshelf;
     }
 }

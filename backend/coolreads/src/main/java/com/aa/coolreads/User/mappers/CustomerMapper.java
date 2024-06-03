@@ -2,17 +2,19 @@ package com.aa.coolreads.User.mappers;
 
 import com.aa.coolreads.User.builder.CustomerBuilder;
 import com.aa.coolreads.User.builder.UserBuilder;
+import com.aa.coolreads.User.dto.BookShelfDTO;
+import com.aa.coolreads.User.dto.CustomerDTO;
 import com.aa.coolreads.User.dto.NewCustomerDTO;
 import com.aa.coolreads.User.models.Customer;
 import org.springframework.stereotype.Component;
 
 
 @Component
-public class NewCustomerMapper {
+public class CustomerMapper {
 
     private final UserBuilder userBuilder;
 
-    public NewCustomerMapper() {
+    public CustomerMapper() {
         this.userBuilder = new CustomerBuilder();
     }
 
@@ -31,7 +33,7 @@ public class NewCustomerMapper {
                 .setProfileBannerUrl(newCustomerDTO.getProfileBannerUrl()).build();
     }
 
-    public NewCustomerDTO toCustomerDTO(Customer customer) {
+    public NewCustomerDTO toNewCustomerDTO(Customer customer) {
         return (NewCustomerDTO) this.userBuilder.setUsername(customer.getUsername())
                 .setPassword(customer.getPassword())
                 .setEmail(customer.getEmail())
@@ -45,4 +47,13 @@ public class NewCustomerMapper {
                 .setProfileImageUrl(customer.getProfileImageUrl())
                 .setProfileBannerUrl(customer.getProfileBannerUrl()).build();
     }
+
+    /*
+    public CustomerDTO toCustomerDTO(Customer customer){
+        CustomerDTO customerDTO = (CustomerDTO) toNewCustomerDTO(customer);
+
+        customerDTO.setBookshelves(customer.getBookshelves().stream().map(e -> new BookShelfDTO(e.getName(), )));
+    }
+
+     */
 }

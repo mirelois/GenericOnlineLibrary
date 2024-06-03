@@ -4,6 +4,7 @@ import com.aa.coolreads.Book.models.Book;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -17,19 +18,15 @@ public class Bookshelf implements Serializable {
     @Enumerated
     private Privacy privacy;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "PersonalBook",
-            joinColumns = { @JoinColumn(name = "id") },
-            inverseJoinColumns = { @JoinColumn(name = "isbn") }
-    )
-    private Set<Book> books;
+    @OneToMany
+    private Set<PersonalBook> personalBooks;
 
     public Bookshelf(){}
 
     public Bookshelf(String name, Privacy privacy) {
         this.name = name;
         this.privacy = privacy;
+        this.personalBooks = new HashSet<>();
     }
 
     public Long getId() {
@@ -56,11 +53,11 @@ public class Bookshelf implements Serializable {
         this.privacy = privacy;
     }
 
-    public Set<Book> getBooks() {
-        return books;
+    public Set<PersonalBook> getPersonalBooks() {
+        return personalBooks;
     }
 
-    public void setBooks(Set<Book> books) {
-        this.books = books;
+    public void setPersonalBooks(Set<PersonalBook> personalBooks) {
+        this.personalBooks = personalBooks;
     }
 }

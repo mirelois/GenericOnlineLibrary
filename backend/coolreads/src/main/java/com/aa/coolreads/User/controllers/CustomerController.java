@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/customer")
 public class CustomerController {
 
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
     @Autowired
     public CustomerController(CustomerService customerService) {

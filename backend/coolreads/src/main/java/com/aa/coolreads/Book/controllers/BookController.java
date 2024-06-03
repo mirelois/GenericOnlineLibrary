@@ -24,8 +24,8 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping
-    public BookDTO getBook(@RequestParam String isbn){
+    @GetMapping("/{isbn}")
+    public BookDTO getBook(@PathVariable String isbn){
         try{
             return bookService.getBookByISBN(isbn);
         } catch (BookNotFoundException e){
