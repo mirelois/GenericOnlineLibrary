@@ -5,19 +5,28 @@
         </div>
         <img class="foto-icon" alt="" src="/img/perfil1.png">
         <div class="reviewer">
-			<div>
-				<div class="rating" style="--rating-value: 0;"></div>       
+			<div class="mystar-class">
+				<Rating id="estrelas" v-model="bookrate" :cancel="false" />
 			</div>
 		</div>
         <input type="text" class="review-area"></input> 
-        <div class="publish">
-            <div class="publish-child">
-            </div>
-            <b class="publicar">Publicar</b>
-        </div> 
+        <button class="publish">Publish</button> 
     </div> 
 	</main>
 </template>
+<script>
+import Rating from 'primevue/rating';
+export default{
+	data(){
+		return{
+			bookrate:0
+		}
+	},
+	components: {
+		Rating
+	}
+}
+</script>
 <style>
 .review-box {
   	position: absolute;
@@ -79,17 +88,30 @@
 	font-size: 16px;
 	color: #a9a0a0;
 	font-family: 'Open Sans';
+	margin-bottom: 50px;
 }
 .publish {
     position: absolute;
-    top: 72px;
-    left: 874px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    top: 90px;
+	left: 700px;
     width: 121.8px;
     height: 49px;
     text-align: center;
     font-size: 20px;
     color: #afafaf;
-}  
+	background-color: #313030;
+	border-radius: 30px;
+	border-width: 0px 0px 0px 0px;
+	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+.publish:hover{
+	cursor:pointer;
+}
+.publish:active { 
+    transform: scale(0.98); 
+    /* Scaling button to 0.98 to its original size */ 
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24); 
+    /* Lowering the shadow */ 
+} 
 </style>
 

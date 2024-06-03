@@ -269,6 +269,11 @@ a:hover { text-decoration: underline; }
   background-color: #6b6b6b;
 }
 
+::placeholder {
+  color: black;
+  opacity: 0.5; 
+}
+
 .navegador .search {
     position: absolute;
     width: 30px;

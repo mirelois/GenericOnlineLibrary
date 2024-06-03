@@ -8,7 +8,7 @@
         <span>review by</span>
         <span class="sophie-mayer"> Sophie Mayer</span>
 			<div>
-				<div class="rating" style="--rating-value: 2.5;"></div>       
+				<Rating id="estrelas" v-model="bookrate" readonly :cancel="false" />
 			</div>
 		</div>
         <div class="review">"Soul" by Olivia Wilson is a captivating journey into the depths of the human experience. With richly drawn characters and evocative prose, Wilson explores the essence of humanity, touching upon universal truths that resonate deeply. A profound and thought-provoking read that lingers in the mind long after the last page.
@@ -16,6 +16,19 @@
     </div> 
 	</main>
 </template>
+<script>
+import Rating from 'primevue/rating';
+export default{
+	data(){
+		return{
+			bookrate:2
+		}
+	},
+	components: {
+		Rating
+	}
+}
+</script>
 <style>
 .review-box {
   	position: absolute;

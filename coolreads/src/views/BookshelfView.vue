@@ -321,12 +321,16 @@ export default {
     left: 0;
 }
 
+
 .search-bookshelf {
     position: relative;
     width: 739px;
     height: 57px;
+    padding-left: 35px;
+    background: url("/img/Search.svg") no-repeat left;
     background-color: #e6e6e66e;
     border-radius: 25px;
+    font-size: 22px;
 }
 
 .search-bookshelf .search {

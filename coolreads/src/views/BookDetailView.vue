@@ -3,6 +3,7 @@ import ReviewComponent from '../components/ReviewComponent.vue';
 import NavComponent from '../components/NavComponent.vue';
 import FooterComponent from '../components/FooterComponent.vue';
 import MyReviewComponent from '../components/MyReviewComponent.vue';
+import Rating from 'primevue/rating';
 </script>
 <template>
 	<div class="bookpagecomponent">
@@ -30,7 +31,7 @@ import MyReviewComponent from '../components/MyReviewComponent.vue';
 			</div>
     		<div class="descricao"> A  vida que Kim e Krickitt Carpenter conheciam mudou completamente no dia  24 de novembro de 1993, dois meses após o seu casamento, quando a  traseira do seu carro foi atingida por uma caminhonete que transitava em alta velocidade. Um ferimento sério na cabeça deixou Krickitt em coma  por várias semanas. Quando finalmente despertou, parte da sua memória  estava comprometida e ela não conseguia se lembrar de seu marido. Ela  não fazia a menor ideia de quem ele era. Essencialmente, a "Krickitt"  com quem Kim havia se casado morreu no acidente, e naquele momento ele  precisava reconquistar a mulher que amava.</div>
 			<div class="group-stars">
-				<div class="rating" style="--rating-value: 3;"></div>       
+				<Rating id="estrelas" v-model="bookrate" readonly :cancel="false" />
 			</div>
 			<div class="classificacao">3.0/5</div>
     		<div class="nr-rates">20 ratings</div>
@@ -44,13 +45,20 @@ import MyReviewComponent from '../components/MyReviewComponent.vue';
 			<ReviewComponent></ReviewComponent>
     		</div>
 	</div>
+
 	<NavComponent></NavComponent>
 	<FooterComponent></FooterComponent>
 </template>
 <script>
 export default {
+	data(){
+		return{
+			bookrate:3
+		}
+	},
 	components: {
         NavComponent,
+		Rating,
 		FooterComponent
     }
 
@@ -66,6 +74,10 @@ export default {
 #app {
   max-width: 3000px;
   font-weight: normal;
+}
+#estrelas{
+	left:30px;
+	top:10px;
 }
 
 .canva-brown-rusty-mystery-nove-icon {
@@ -137,7 +149,6 @@ export default {
   	font-size: 48px;
 	color: white;
 }
-
 .descricao {
   	position: absolute;
   	top: 775px;
@@ -262,27 +273,6 @@ export default {
 	padding:10px;
 }
 
-:root {
-  --rating-max: 5;
-  --rating-content: '★★★★★';
-  --rating-inactive-color: #CCCCCC;
-  --rating-background: #FFDD00;
-}
-
-.rating {
-  display: inline-block;
-  font-size: 30px;
-}
-
-.rating::before {
-  --rating-percent: calc(var(--rating-value) / var(--rating-max) * 100%);
-  content: var(--rating-content);
-  background: linear-gradient(90deg, var(--rating-background) var(--rating-percent), var(--rating-inactive-color) var(--rating-percent));
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
 .reviews-title {
 	position: absolute;
 	top: 1044px;
@@ -295,6 +285,10 @@ export default {
 	height: 61px;
 	color: #5d5d5e;
 } 
+
+.p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
+    color: #EAE600;
+}
 
 body {
 	margin-left: -80px !important;
