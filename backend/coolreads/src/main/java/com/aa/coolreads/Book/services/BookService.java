@@ -95,7 +95,7 @@ public class BookService {
         Set<String> invalidGenres = new HashSet<>();
 
         for (String genreName : genreNames) {
-            Optional<Genre> genreOptional = this.genreRepository.findById(genreName);
+            Optional<Genre> genreOptional = this.genreRepository.findById(genreName.toLowerCase());
             if (genreOptional.isPresent()) {
                 genres.add(genreOptional.get());
             } else {

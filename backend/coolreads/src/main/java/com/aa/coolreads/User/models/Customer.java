@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
 public class Customer {
     @Id
     private String username;

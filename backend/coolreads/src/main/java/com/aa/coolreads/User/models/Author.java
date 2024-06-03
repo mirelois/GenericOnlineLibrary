@@ -2,6 +2,7 @@ package com.aa.coolreads.User.models;
 
 import com.aa.coolreads.Book.models.Book;
 import com.aa.coolreads.Book.models.Genre;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
+@DiscriminatorValue("author")
 public class Author extends Customer implements Serializable{
 
     @OneToMany
