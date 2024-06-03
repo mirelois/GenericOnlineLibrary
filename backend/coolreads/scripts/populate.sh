@@ -47,4 +47,4 @@ VALUES (
     'Science Today Press'
 );";
 
-docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO book_genres (book_isbn, genres_genre_type) VALUES ('1','SciFi'),('1','Fantasy');";
+docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO book_genres (book_isbn, genres_genre_type) VALUES ('1','scifi'),('1','fantasy');";
