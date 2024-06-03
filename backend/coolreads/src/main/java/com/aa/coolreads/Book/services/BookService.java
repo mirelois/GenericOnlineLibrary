@@ -21,7 +21,6 @@ import com.aa.coolreads.User.exception.AuthorNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.models.Author;
 import com.aa.coolreads.User.models.Customer;
-import com.aa.coolreads.User.repositories.AuthorRepository;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,12 +34,11 @@ import java.util.Set;
 public class BookService {
     private final BookRepository bookRepository;
 
+    private final BookRatingRepository bookRatingRepository;
 
     private final PublisherRepository publisherRepository;
 
     private final GenreRepository genreRepository;
-
-    private final AuthorRepository authorRepository;
 
     private final CustomerRepository customerRepository;
 
@@ -49,105 +47,111 @@ public class BookService {
     private final FullBookMapper fullBookMapper;
 
     @Autowired
-    public BookService(BookRepository bookRepository, BookRatingRepository bookRatingRepository, PublisherRepository publisherRepository, GenreRepository genreRepository, AuthorRepository authorRepository, CustomerRepository customerRepository, BookMapper bookMapper, FullBookMapper fullBookMapper) {
+    public BookService(BookRepository bookRepository, BookRatingRepository bookRatingRepository, BookRatingRepository bookRatingRepository1, PublisherRepository publisherRepository, GenreRepository genreRepository, CustomerRepository customerRepository, BookMapper bookMapper, FullBookMapper fullBookMapper) {
         this.bookRepository = bookRepository;
+        this.bookRatingRepository = bookRatingRepository1;
         this.publisherRepository = publisherRepository;
         this.genreRepository = genreRepository;
-        this.authorRepository = authorRepository;
         this.customerRepository = customerRepository;
         this.bookMapper = bookMapper;
         this.fullBookMapper = fullBookMapper;
     }
 
-    public FullBookDTO getBookByISBN(String isbn) throws BookNotFoundException {
-        Optional<Book> bookOptional = this.bookRepository.findById(isbn);
-        if(bookOptional.isPresent()){
-            return this.fullBookMapper.toFullBookDTO(bookOptional.get());
-        }
-
-        throw new BookNotFoundException(isbn);
-    }
-
-    private void checkIfDoesntBookExist(String isbn) throws BookAlreadyExistsException{
+    private void checkIfBookDoesntExist(String isbn) throws BookAlreadyExistsException{
         if(this.bookRepository.findById(isbn).isPresent())
             throw new BookAlreadyExistsException(isbn);
     }
 
-    private Publisher checkIfPublisherExist(String publisherName) throws PublisherNotFoundException{
-        Optional<Publisher> publisherOptional = this.publisherRepository.findById(publisherName);
-        if(publisherOptional.isEmpty())
-            throw new PublisherNotFoundException(publisherName);
-
-        return publisherOptional.get();
+    private Publisher findPublisherByName(String publisherName) throws PublisherNotFoundException {
+        return this.publisherRepository.findById(publisherName)
+                .orElseThrow(() -> new PublisherNotFoundException(publisherName));
     }
 
-    private Set<Genre> checkIfGenresExist(Set<String> genresNames) throws GenresNotFoundException {
+    private Book findBookByIsbn(String isbn) throws BookNotFoundException {
+        return this.bookRepository.findById(isbn)
+                .orElseThrow(() -> new BookNotFoundException(isbn));
+    }
+
+    private Customer findCustomerByUsername(String username) throws CustomerNotFoundException {
+        return this.customerRepository.findById(username)
+                .orElseThrow(() -> new CustomerNotFoundException(username));
+    }
+
+    private Author findAuthorByUsername(String username) throws AuthorNotFoundException {
+        try {
+            Customer customer = findCustomerByUsername(username);
+            if (customer instanceof Author) {
+                return (Author) customer;
+            } else {
+                throw new AuthorNotFoundException(username);
+            }
+        } catch (CustomerNotFoundException e){
+            throw new AuthorNotFoundException(username);
+        }
+    }
+
+    private Set<Genre> findGenresByGenreNames(Set<String> genreNames) throws GenresNotFoundException {
         Set<Genre> genres = new HashSet<>();
         Set<String> invalidGenres = new HashSet<>();
-        boolean isValid = true;
-        Iterator<String> genreIter = genresNames.iterator();
-        while(genreIter.hasNext() && isValid){
-            String genreName = genreIter.next();
 
+        for (String genreName : genreNames) {
             Optional<Genre> genreOptional = this.genreRepository.findById(genreName);
-            if(genreOptional.isEmpty()) {
-                invalidGenres.add(genreName);
-                isValid = false;
-            } else {
+            if (genreOptional.isPresent()) {
                 genres.add(genreOptional.get());
+            } else {
+                invalidGenres.add(genreName);
             }
         }
 
-        if(!isValid){
-            while(genreIter.hasNext()){
-                String genreName = genreIter.next();
-                if(this.genreRepository.findById(genreName).isEmpty())
-                    invalidGenres.add(genreName);
-            }
-
+        if (!invalidGenres.isEmpty()) {
             throw new GenresNotFoundException(invalidGenres);
         }
 
         return genres;
     }
 
-    private Author checkIfAuthorExist(String userName) throws AuthorNotFoundException {
-        Optional<Author> authorOptional = this.authorRepository.findById(userName);
-        if(authorOptional.isPresent()){
-            return authorOptional.get();
-        }
+    public FullBookDTO getBookByISBN(String isbn) throws BookNotFoundException {
+        Book book = findBookByIsbn(isbn);
 
-        throw new AuthorNotFoundException(userName);
+        return this.fullBookMapper.toFullBookDTO(book);
     }
 
     public void insertBook(BookDTO bookDTO) throws BookAlreadyExistsException, PublisherNotFoundException, GenresNotFoundException, AuthorNotFoundException {
 
-        checkIfDoesntBookExist(bookDTO.getIsbn());
+        checkIfBookDoesntExist(bookDTO.getIsbn());
 
-        Publisher publisher = checkIfPublisherExist(bookDTO.getPublisherName());
+        Publisher publisher = findPublisherByName(bookDTO.getPublisherName());
 
-        Set<Genre> genres = checkIfGenresExist(bookDTO.getGenres());
+        Set<Genre> genres = findGenresByGenreNames(bookDTO.getGenres());
 
-        Author author = checkIfAuthorExist(bookDTO.getAuthorUsername());
+        Author author = findAuthorByUsername(bookDTO.getAuthorUsername());
 
         this.bookRepository.save(this.bookMapper.toBook(bookDTO, publisher, genres, author));
     }
 
     public void insertRating(String isbn, BookRatingDTO bookRatingDTO) throws BookNotFoundException, CustomerNotFoundException {
-        Optional<Book> bookOptional = this.bookRepository.findById(isbn);
-        if(bookOptional.isEmpty()){
-            throw new BookNotFoundException(isbn);
-        }
+        Book book = findBookByIsbn(isbn);
 
-        String username = bookRatingDTO.getCustomerUserName();
-        Optional<Customer> customerOptional = this.customerRepository.findById(username);
-        if(customerOptional.isEmpty()){
-            throw new CustomerNotFoundException(username);
-        }
+        Customer customer = findCustomerByUsername(bookRatingDTO.getCustomerUserName());
 
-        Book book = bookOptional.get();
-        book.addRating(new BookRating(bookRatingDTO.getRating(), book, customerOptional.get()));
+        book.addRating(new BookRating(bookRatingDTO.getRating(), book, customer));
 
         this.bookRepository.save(book);
+    }
+
+    public void updateRating(String isbn, BookRatingDTO bookRatingDTO) throws BookNotFoundException, CustomerNotFoundException {
+        Book book = findBookByIsbn(isbn);
+
+        Customer customer = findCustomerByUsername(bookRatingDTO.getCustomerUserName());
+
+        this.bookRatingRepository.updateRating(bookRatingDTO.getRating(), book, customer);
+    }
+
+    public void deleteRating(String isbn, String customerUsername) throws BookNotFoundException, CustomerNotFoundException {
+        Book book = findBookByIsbn(isbn);
+
+        Customer customer = findCustomerByUsername(customerUsername);
+
+        this.bookRatingRepository.deleteRating(book, customer);
     }
 }

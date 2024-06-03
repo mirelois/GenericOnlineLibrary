@@ -51,4 +51,22 @@ public class BookController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+    @PatchMapping("/{isbn}/rate")
+    public void UpdateBookRating(@PathVariable String isbn, @RequestBody BookRatingDTO bookRatingDTO){
+        try{
+            this.bookService.updateRating(isbn, bookRatingDTO);
+        } catch (BookNotFoundException | CustomerNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{isbn}/rate")
+    public void DeleteRateBook(@PathVariable String isbn, @RequestParam String customerUsername){
+        try{
+            this.bookService.deleteRating(isbn, customerUsername);
+        } catch (BookNotFoundException | CustomerNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 }
