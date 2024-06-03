@@ -1,13 +1,13 @@
 docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO Genre (genre_type) VALUES
-('SciFi'),
-('Fantasy'),
-('Adventure'),
-('Mystery'),
-('Biography'),
-('Manga'),
-('Music'),
-('Sports'),
-('Romance')
+('scifi'),
+('fantasy'),
+('adventure'),
+('mystery'),
+('biography'),
+('manga'),
+('music'),
+('sports'),
+('romance')
 ON CONFLICT (genre_type) DO NOTHING;";
 
 docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO publisher (name, email, logo_url, site_url) VALUES
