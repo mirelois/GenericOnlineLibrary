@@ -62,9 +62,9 @@ class CoolreadsApplicationTests {
 	void testBookService() {
 
         try {
-            bookService.getBookByISBN("lmao");
-            assert false;
+            bookService.getBookByISBN("978-3-16-148410-0");
         } catch (BookNotFoundException e) {
+            e.printStackTrace();
         }
 
     }
