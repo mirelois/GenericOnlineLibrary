@@ -36,6 +36,9 @@ import Rating from 'primevue/rating';
 			<div class="classificacao">3.0/5</div>
     		<div class="nr-rates">20 ratings</div>
     		<div class="nr-reviews">1 reviews</div>
+			<div>
+				<StateComponent></StateComponent>
+			</div>
     		<div class="separator">
     		</div>
 			
@@ -50,6 +53,7 @@ import Rating from 'primevue/rating';
 	<FooterComponent></FooterComponent>
 </template>
 <script>
+import StateComponent from '../components/StateComponent.vue';
 export default {
 	data(){
 		return{
@@ -59,6 +63,7 @@ export default {
 	components: {
         NavComponent,
 		Rating,
+		StateComponent,
 		FooterComponent
     }
 
@@ -231,6 +236,7 @@ export default {
   	left: 1009px;
 	color: white;
 }
+
 .separator {
   	position: absolute;
   	top: 643px;
