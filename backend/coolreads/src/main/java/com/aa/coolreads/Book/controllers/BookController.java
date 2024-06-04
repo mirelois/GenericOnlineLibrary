@@ -2,6 +2,7 @@ package com.aa.coolreads.Book.controllers;
 
 import com.aa.coolreads.Book.dto.BookDTO;
 import com.aa.coolreads.Book.dto.BookRatingDTO;
+import com.aa.coolreads.Book.dto.FullBookDTO;
 import com.aa.coolreads.Book.exception.BookAlreadyExistsException;
 import com.aa.coolreads.Book.exception.BookNotFoundException;
 import com.aa.coolreads.Book.exception.GenresNotFoundException;
@@ -25,7 +26,7 @@ public class BookController {
     }
 
     @GetMapping("/{isbn}")
-    public BookDTO getBook(@PathVariable String isbn){
+    public FullBookDTO getBook(@PathVariable String isbn){
         try{
             return bookService.getBookByISBN(isbn);
         } catch (BookNotFoundException e){
