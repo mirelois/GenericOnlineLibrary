@@ -22,7 +22,7 @@ const router = createRouter({
       component: BooksMenuView
     },
     {
-      path: '/books/:id',
+      path: '/books/:bookisbn',
       name: 'bookdetail',
       component: BookDetailView
     },

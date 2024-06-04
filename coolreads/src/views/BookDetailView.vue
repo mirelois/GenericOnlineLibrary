@@ -15,21 +15,16 @@ import Rating from 'primevue/rating';
     </div>
 	<img class="capa-icon" alt="" src="/img/capa.png">
 	<div>
-			<div class="titulo">Soul</div>
-    		<div class="autor">by Olivia Wilson</div>
-			<div class="group-categories">
+			<div class="titulo">{{title}}</div>
+    		<div class="autor">by {{author}}</div>
+			<div class="group-categories" v-for="genre in genres" v-if="!genre">
 				<span>
 					<div class="rectangle-div">
-        			Romance	
-	      			</div>
-				</span>
-				<span>
-					<div class="rectangle-div">
-        			Terror	
+        			{{genre}}	
 	      			</div>
 				</span>
 			</div>
-    		<div class="descricao"> A  vida que Kim e Krickitt Carpenter conheciam mudou completamente no dia  24 de novembro de 1993, dois meses após o seu casamento, quando a  traseira do seu carro foi atingida por uma caminhonete que transitava em alta velocidade. Um ferimento sério na cabeça deixou Krickitt em coma  por várias semanas. Quando finalmente despertou, parte da sua memória  estava comprometida e ela não conseguia se lembrar de seu marido. Ela  não fazia a menor ideia de quem ele era. Essencialmente, a "Krickitt"  com quem Kim havia se casado morreu no acidente, e naquele momento ele  precisava reconquistar a mulher que amava.</div>
+    		<div class="descricao"> {{ description }}</div>
 			<div class="group-stars">
 				<Rating id="estrelas" v-model="bookrate" readonly :cancel="false" />
 			</div>
@@ -54,10 +49,15 @@ import Rating from 'primevue/rating';
 </template>
 <script>
 import StateComponent from '../components/StateComponent.vue';
+import axios from "axios";
 export default {
 	data(){
 		return{
-			bookrate:3
+			bookrate:3,
+			title:"title",
+			author:"author",
+			genres:[],
+			description:"description"
 		}
 	},
 	components: {
@@ -65,7 +65,22 @@ export default {
 		Rating,
 		StateComponent,
 		FooterComponent
-    }
+    },created(){
+		let isbn = this.$route.params.bookisbn;
+		this.getBook(isbn);
+	},methods:{
+		getBook(isbn){
+			axios.get("http://localhost:8080/books/"+isbn).then(book =>{
+				this.title = book.data.title;
+				this.author = book.data.authorUsername;
+				this.genres = book.data.genres;
+				this.description = book.data.description;
+				console.log(book)
+			}).catch(err =>{
+				console.log(err)
+			})
+		}
+	}
 
 }
 </script>
