@@ -2,12 +2,9 @@ package com.aa.coolreads.Book.services;
 
 import com.aa.coolreads.Book.dto.BookRatingDTO;
 import com.aa.coolreads.Book.dto.FullBookDTO;
+import com.aa.coolreads.Book.exception.*;
 import com.aa.coolreads.Book.mappers.BookMapper;
 import com.aa.coolreads.Book.dto.BookDTO;
-import com.aa.coolreads.Book.exception.BookAlreadyExistsException;
-import com.aa.coolreads.Book.exception.BookNotFoundException;
-import com.aa.coolreads.Book.exception.GenresNotFoundException;
-import com.aa.coolreads.Book.exception.PublisherNotFoundException;
 import com.aa.coolreads.Book.mappers.FullBookMapper;
 import com.aa.coolreads.Book.models.Book;
 import com.aa.coolreads.Book.models.BookRating;
@@ -23,6 +20,8 @@ import com.aa.coolreads.User.models.Author;
 import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
+import org.apache.commons.validator.routines.ISBNValidator;
+import org.apache.commons.validator.routines.checkdigit.ISBNCheckDigit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +29,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class BookService {
@@ -118,8 +119,20 @@ public class BookService {
         return this.fullBookMapper.toFullBookDTO(book);
     }
 
+    private void checkIfValidISBN(String isbn) throws InvalidISBNExeption {
+
+        ISBNValidator isbnValidator = new ISBNValidator();
+
+        if (!isbnValidator.isValid(isbn)){
+            throw new InvalidISBNExeption(isbn);
+        }
+
+    }
+
     @Transactional
-    public void insertBook(BookDTO bookDTO) throws BookAlreadyExistsException, PublisherNotFoundException, GenresNotFoundException, AuthorNotFoundException {
+    public void insertBook(BookDTO bookDTO) throws BookAlreadyExistsException, PublisherNotFoundException, GenresNotFoundException, AuthorNotFoundException, InvalidISBNExeption {
+
+        checkIfValidISBN(bookDTO.getIsbn());
 
         checkIfBookDoesntExist(bookDTO.getIsbn());
 
