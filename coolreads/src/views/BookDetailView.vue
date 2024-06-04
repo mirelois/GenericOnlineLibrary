@@ -75,9 +75,6 @@ export default {
 				this.author = book.data.authorUsername;
 				this.genres = book.data.genres;
 				this.description = book.data.description;
-				console.log(book)
-			}).catch(err =>{
-				console.log(err)
 			})
 		}
 	}
