@@ -15,13 +15,13 @@ public class BookMapper {
     public Book toBook(BookDTO bookDTO, Publisher publisher, Set<Genre> genres, Author author) {
         return new Book(bookDTO.getIsbn(), bookDTO.getTitle(), bookDTO.getDescription(),
                 bookDTO.getLaunchDate(), bookDTO.getTotalPageNumbers(),
-                publisher, genres, author);
+                publisher, genres, author, bookDTO.getImageUrl());
     }
 
     public BookDTO toBookDTO(Book book) {
         Set<String> genres = book.getGenres().stream().map(Genre::getGenreType).collect(Collectors.toSet());
 
         return new BookDTO(book.getIsbn(), book.getTitle(), book.getDescription(), book.getLaunchDate(),
-                book.getTotalPageNumbers(), book.getPublisher().getName(), genres, book.getAuthor().getUsername());
+                book.getTotalPageNumbers(), book.getPublisher().getName(), genres, book.getAuthor().getUsername(), book.getImageUrl());
     }
 }

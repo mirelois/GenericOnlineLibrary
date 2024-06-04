@@ -43,7 +43,8 @@ class CoolreadsApplicationTests {
                 331,
                 "TechBooks Publishing",
                 genres,
-                "jkrowling"
+                "jkrowling",
+                "a"
         );
 
         try {

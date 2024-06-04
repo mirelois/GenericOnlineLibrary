@@ -22,9 +22,11 @@ public class BookDTO {
 
     private Set<String> genres;
 
+    private String imageUrl;
+
     public BookDTO(){}
 
-    public BookDTO(String isbn, String title, String description, Date launchDate, int totalPageNumbers, String publisherName, Set<String> genres, String authorUsername) {
+    public BookDTO(String isbn, String title, String description, Date launchDate, int totalPageNumbers, String publisherName, Set<String> genres, String authorUsername, String imageUrl) {
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -33,6 +35,7 @@ public class BookDTO {
         this.publisherName = publisherName;
         this.genres = genres;
         this.authorUsername = authorUsername;
+        this.imageUrl = imageUrl;
     }
 
     public String getIsbn() {
@@ -97,5 +100,13 @@ public class BookDTO {
 
     public void setAuthorUsername(String authorUsername) {
         this.authorUsername = authorUsername;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -1,6 +1,5 @@
 package com.aa.coolreads.Book.models;
 
-import com.aa.coolreads.Book.dto.BookDTO;
 import com.aa.coolreads.User.models.Author;
 import jakarta.persistence.*;
 
@@ -23,6 +22,8 @@ public class Book implements Serializable {
 
     private int totalPageNumbers;
 
+    private String imageUrl;
+
     @ManyToOne
     private Publisher publisher;
 
@@ -40,7 +41,7 @@ public class Book implements Serializable {
 
     public Book(){}
 
-    public Book(String isbn, String title, String description, Date launchDate, int totalPageNumbers, Publisher publisher, Set<Genre> genres, Author author){
+    public Book(String isbn, String title, String description, Date launchDate, int totalPageNumbers, Publisher publisher, Set<Genre> genres, Author author, String imageUrl){
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -51,9 +52,10 @@ public class Book implements Serializable {
         this.ratings = new HashSet<>();
         this.reviews = new HashSet<>();
         this.author = author;
+        this.imageUrl = imageUrl;
     }
 
-    public Book(String isbn, String title, String description, Date launchDate, int totalPageNumbers, Publisher publisher, Set<Genre> genres, Set<BookRating> ratings, Set<Review> reviews, Author author) {
+    public Book(String isbn, String title, String description, Date launchDate, int totalPageNumbers, Publisher publisher, Set<Genre> genres, Set<BookRating> ratings, Set<Review> reviews, Author author, String imageUrl) {
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -64,6 +66,7 @@ public class Book implements Serializable {
         this.ratings = ratings;
         this.reviews = reviews;
         this.author = author;
+        this.imageUrl = imageUrl;
     }
 
     public String getIsbn() {
@@ -148,5 +151,13 @@ public class Book implements Serializable {
 
     public void setAuthor(Author author) {
         this.author = author;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
