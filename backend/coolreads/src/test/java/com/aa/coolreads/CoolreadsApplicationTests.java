@@ -1,6 +1,7 @@
 package com.aa.coolreads;
 
 import com.aa.coolreads.Book.dto.BookDTO;
+import com.aa.coolreads.Book.dto.FullBookDTO;
 import com.aa.coolreads.Book.exception.BookAlreadyExistsException;
 import com.aa.coolreads.Book.exception.BookNotFoundException;
 import com.aa.coolreads.Book.exception.GenresNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 
 @SpringBootTest
 class CoolreadsApplicationTests {
@@ -62,7 +64,8 @@ class CoolreadsApplicationTests {
 	void testBookService() {
 
         try {
-            bookService.getBookByISBN("978-3-16-148410-0");
+            FullBookDTO fullBookDTO = bookService.getBookByISBN("1");
+            assert Objects.equals(fullBookDTO.getPublisherName(), "Science Today Press");
         } catch (BookNotFoundException e) {
             e.printStackTrace();
         }

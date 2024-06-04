@@ -1,5 +1,6 @@
 package com.aa.coolreads.User.services;
 
+import com.aa.coolreads.User.dto.CustomerDTO;
 import com.aa.coolreads.User.dto.NewCustomerDTO;
 import com.aa.coolreads.User.exception.CustomerAlreadyExistsException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
@@ -29,9 +30,9 @@ public class CustomerService {
         this.customerRepository.save(this.customerMapper.toCustomer(newCustomerDTO));
     }
 
-    public void getCustomer(String username) throws CustomerNotFoundException {
+    public CustomerDTO getCustomer(String username) throws CustomerNotFoundException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
-
+        return this.customerMapper.toCustomerDTO(customer);
     }
 }

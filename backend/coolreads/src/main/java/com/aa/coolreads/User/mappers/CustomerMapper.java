@@ -5,8 +5,11 @@ import com.aa.coolreads.User.builder.UserBuilder;
 import com.aa.coolreads.User.dto.BookShelfDTO;
 import com.aa.coolreads.User.dto.CustomerDTO;
 import com.aa.coolreads.User.dto.NewCustomerDTO;
+import com.aa.coolreads.User.dto.PersonalBookDTO;
 import com.aa.coolreads.User.models.Customer;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 
 @Component
@@ -48,12 +51,13 @@ public class CustomerMapper {
                 .setProfileBannerUrl(customer.getProfileBannerUrl()).build();
     }
 
-    /*
     public CustomerDTO toCustomerDTO(Customer customer){
         CustomerDTO customerDTO = (CustomerDTO) toNewCustomerDTO(customer);
 
-        customerDTO.setBookshelves(customer.getBookshelves().stream().map(e -> new BookShelfDTO(e.getName(), )));
+        customerDTO.setBookshelves(customer.getBookshelves().stream().map(e -> new BookShelfDTO(e.getName(), e.getPrivacy(), e.getPersonalBooks().stream().map(b -> new PersonalBookDTO(b.getPagesRead(), b.getInsertDate(), b.getBookshelf().getName(), b.getBook().getIsbn())).collect(Collectors.toSet()))).collect(Collectors.toSet()));
+
+        return customerDTO;
     }
 
-     */
+
 }

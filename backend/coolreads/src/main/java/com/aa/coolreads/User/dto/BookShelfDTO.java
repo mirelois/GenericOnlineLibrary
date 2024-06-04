@@ -9,13 +9,14 @@ public class BookShelfDTO {
 
     private Privacy privacy;
 
-    //private Set<Book> books;
+    private Set<PersonalBookDTO> personalBooks;
 
     public BookShelfDTO(){}
 
-    public BookShelfDTO(String name, Privacy privacy) {
+    public BookShelfDTO(String name, Privacy privacy, Set<PersonalBookDTO> personalBooks) {
         this.name = name;
         this.privacy = privacy;
+        this.personalBooks = personalBooks;
     }
 
     public String getName() {
@@ -32,5 +33,13 @@ public class BookShelfDTO {
 
     public void setPrivacy(Privacy privacy) {
         this.privacy = privacy;
+    }
+
+    public Set<PersonalBookDTO> getPersonalBooks() {
+        return personalBooks;
+    }
+
+    public void setPersonalBooks(Set<PersonalBookDTO> personalBooks) {
+        this.personalBooks = personalBooks;
     }
 }
