@@ -4,10 +4,10 @@
             <img class="statedown-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
             </div>
             <div class="listbox-main">
-            <div class="listboxbg">
+            <div class="listboxbg">{{stateValue}}
             </div>
         <div v-if="showStateMenu===true">
-            <StateSelectorComponent></StateSelectorComponent>
+            <StateSelectorComponent @optionStateSelected="optionofStateSelected"></StateSelectorComponent>
         </div>
         </div>    
     </div>
@@ -15,6 +15,9 @@
 <script>
 import StateSelectorComponent from './StateSelectorComponent.vue';
 export default{
+    props: {
+        stateValue: ''
+    },
     data(){
         return {
             showStateMenu:false,
@@ -22,6 +25,9 @@ export default{
     },methods:{
         showMenu(){
             this.showStateMenu = !this.showStateMenu
+        },
+        optionofStateSelected(state){
+            this.$emit('bookStateSelected', state);
         }
     },components:{
         StateSelectorComponent
@@ -42,16 +48,23 @@ export default{
   font-size: 25px;
 }
 .listboxbg {
-  	position: absolute;
-  	height: 100%;
-  	width: 100%;
-  	top: 0%;
-  	right: 0%;
-  	bottom: 0%;
-  	left: 0%;
-  	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
-  	border-radius: 15px;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 0%;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
     background-color: #c2c2c2;
+    color: black;
+    align-content: center;
+    display: flex;
+    justify-content: center;
+    font-size: 20px;
+    padding-top: 11px;
+    padding-right: 11px;
 }
 .statedown-icon-d {
     position: absolute;

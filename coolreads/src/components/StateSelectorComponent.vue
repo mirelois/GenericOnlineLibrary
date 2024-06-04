@@ -1,37 +1,59 @@
 <template>
     <main>
-        <div class="state-card">
+        <div v-if="close_state_selector==false" class="state-card">
+          
+          <div class="select-the-state-container">
+            <p class="select-the-state">Select the state for this book</p>
+          </div> 
                 <div>
-                  <button class="state-book-row">
+                  <button class="state-book-row" @click="selectState(`Want To Read`)">
                     Want to read
                 </button>
                 </div>
                 <div>
-                  <button class="state-book-row">
+                  <button class="state-book-row" @click="selectState(`Currently Reading`)">
                     Currently Reading
                 </button>
                 </div>
                 <div>
-                  <button class="state-book-row">
+                  <button class="state-book-row" @click="selectState(`Read`)">
                     Read
                 </button>
                 </div>
-                </div>
                 <img @click="closeSearchBox" class="menus-close-line" src="/img/close.svg" />
           </input>
+        </div>
     </main>
 </template>
 <script>
   export default {
+    data(){
+      return{
+        close_state_selector:false
+      }
+    },
     methods: {
       closeSearchBox(){
-        this.$emit('close_state_selector')
-        console.log("pressionado")
+        this.close_state_selector = !this.close_state_selector
+      },
+      selectState(state){
+        this.$emit('optionStateSelected', state);
+        this.close_state_selector=true;
       }
     }
   }
 </script>
 <style>
+.select-the-state {
+  margin: 0;
+}
+.select-the-state-container {
+  position: absolute;
+  top: 15px;
+  left: 60px;
+  font-size: 24px;
+  color: #fff;
+} 
 
 .state-card {
   display: flex;
@@ -53,18 +75,17 @@
   
 }
 
-.state-book-row{
-  text-align: center;
-  font-size: 20px;
-  color: #242424;
-	background-color: #b1b1b1;
-  margin:20px;
-	border-radius: 30px;
-  width: 200.8px;
-  height: 49px;
-	border-width: 0px 0px 0px 0px;
-	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-
+.state-book-row {
+    text-align: center;
+    font-size: 20px;
+    color: #242424;
+    background-color: #b1b1b1;
+    margin: 10px;
+    border-radius: 15px;
+    width: 250px;
+    height: 49px;
+    border-width: 0px 0px 0px 0px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 .state-card .overlap-group {
   position: absolute;
@@ -92,7 +113,7 @@
   position: absolute;
   width: 40px;
   height: 40px;
-  top:90px;
+  top:20px;
   left:440px;
   cursor: pointer;
   z-index: 22;

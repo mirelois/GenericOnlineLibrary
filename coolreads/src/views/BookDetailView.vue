@@ -8,19 +8,19 @@ import Rating from 'primevue/rating';
 <template>
 	<div class="bookpagecomponent">
     	<div class="canva-brown-rusty-mystery-nove-parent">
-    		<img class="canva-brown-rusty-mystery-nove-icon" alt="" src="/img/capa.png">
+    		<img class="canva-brown-rusty-mystery-nove-icon" alt="" :src="imageurl">
         		<div class="frame-child"></div>
       	</div>
 		<div class="bookpagecomponent-child"></div>
     </div>
-	<img class="capa-icon" alt="" src="/img/capa.png">
+	<img class="capa-icon" alt="" :src="imageurl">
 	<div>
-			<div class="titulo">{{title}}</div>
-    		<div class="autor">by {{author}}</div>
-			<div class="group-categories" v-for="genre in genres" v-if="!genre">
-				<span>
+			<div class="titulo">{{ title }}</div>
+    		<div class="autor">by {{ author }}</div>
+			<div class="group-categories">
+				<span v-for="genre in genres" v-if="!genre">
 					<div class="rectangle-div">
-        			{{genre}}	
+        			{{ genre }}	
 	      			</div>
 				</span>
 			</div>
@@ -32,17 +32,25 @@ import Rating from 'primevue/rating';
     		<div class="nr-rates">20 ratings</div>
     		<div class="nr-reviews">1 reviews</div>
 			<div>
-				<StateComponent></StateComponent>
+				<StateComponent :stateValue ="stateSelected" @bookStateSelected="getBookState"></StateComponent>
 			</div>
     		<div class="separator">
     		</div>
 			
-	<div class="reviews-title">Reviews 
+	<div v-bind:style="{ 'color': reviewcolor, 'font-weight': reviewfont }" @click="changeTabStyle(`Reviews`)" class="reviews-title">Reviews 
 			<img class="line-icon" alt="" src="/img/line.svg"> 
+			<div v-if="activeTab=='Reviews'">
 			<MyReviewComponent></MyReviewComponent>
 			<ReviewComponent></ReviewComponent>
+			</div>
+    		</div>
+	<div v-bind:style="{ 'color': authorcolor, 'font-weight': authorfont }" @click="changeTabStyle(`Author`)" class="author-title">Author 
+			<div class="author-content" v-if="activeTab=='Author'">
+				<MyReviewComponent></MyReviewComponent>
+			</div>
     		</div>
 	</div>
+
 
 	<NavComponent></NavComponent>
 	<FooterComponent></FooterComponent>
@@ -54,10 +62,17 @@ export default {
 	data(){
 		return{
 			bookrate:3,
-			title:"title",
-			author:"author",
-			genres:[],
-			description:"description"
+			title:"",
+			author:"",
+			genres:["None"],
+			description:"",
+			imageurl:"",
+			reviewcolor: "#ffffff",
+			reviewfont: "bold",
+			authorcolor: "#5d5d5e",
+			authorfont: "normal",
+			activeTab:"Reviews",
+			stateSelected:"+ Want To Read"
 		}
 	},
 	components: {
@@ -70,12 +85,39 @@ export default {
 		this.getBook(isbn);
 	},methods:{
 		getBook(isbn){
-			axios.get("http://localhost:8080/books/"+isbn).then(book =>{
+			axios.get("http://localhost:8080/book/"+isbn).then(book =>{
 				this.title = book.data.title;
 				this.author = book.data.authorUsername;
 				this.genres = book.data.genres;
 				this.description = book.data.description;
+				this.imageurl = book.data.imageUrl;
+				console.log(book);
+			}).catch(err=>{
+				console.log(err)
 			})
+		},
+		changeTabStyle(tab){
+			if(tab=="Author"){
+				this.authorcolor="#ffffff",
+				this.authorfont= "bold"
+				this.reviewcolor="#5d5d5e",
+				this.reviewfont= "normal"
+				this.activeTab="Author"
+			}
+			if(tab=="Reviews"){
+				this.reviewcolor="#ffffff",
+				this.reviewfont= "bold"
+				this.authorcolor="#5d5d5e",
+				this.authorfont= "normal"
+				this.activeTab="Reviews"
+			}
+		},
+		getBookState(state){
+			console.log("heerree");
+            console.log(state);
+            console.log(this.stateSelected);
+			this.stateSelected = "+ "+state;
+
 		}
 	}
 
@@ -150,15 +192,16 @@ export default {
   	object-fit: cover;
 }
 .titulo {
-  	position: absolute;
-  	top: 400px;
-  	left: 485px;
-  	font-size: 96px;
-  	display: inline-block;
-  	width: 273px;
-  	height: 185px;
+	position: absolute;
+	top: 400px;
+	left: 485px;
+	font-size: 70px;
+	display: inline-block;
+	width: auto;
+	height: 185px;
 	color: white;
 }
+
 .autor {
   	position: absolute;
   	top: 529px;
@@ -234,6 +277,7 @@ export default {
   width: 108px;
   height: 51px;
   color: white;
+  font-weight:bold;
 }
 
 .nr-rates {
@@ -241,12 +285,14 @@ export default {
   	top: 629px;
   	left: 859px;
 	color: white;
+	font-size: 20px;
 }
 .nr-reviews {
   	position: absolute;
   	top: 629px;
   	left: 1009px;
 	color: white;
+	font-size: 20px;
 }
 
 .separator {
@@ -262,18 +308,16 @@ export default {
 .sophie-mayer {
   	color: #fff;
 }
-
 .group-categories {
-	position: absolute;
-	display: flex;
-	height: 5%;
-	width: 8%;
-	top: 58%;
-	left: 20%;
 	color: #e1e1e1;
 	font-family: Lato;
-	height: 30px;
-	width: 30px;
+	position: absolute;
+	top: 700px;
+	left: 488px;
+	font-size: 30px;
+	display: flex;
+	width: 108px;
+	height: 51px;
 }
 
 .rectangle-div {
@@ -301,8 +345,26 @@ export default {
 	display: inline-block;
 	width: 238px;
 	height: 61px;
-	color: #5d5d5e;
+	cursor:pointer;
 } 
+
+.author-title{
+	position: absolute;
+	top: 1044px;
+	left: 355px;
+	font-size: 32px;
+	font-weight: 600;
+	font-family: 'Open Sans';
+	display: inline-block;
+	width: 238px;
+	height: 61px;
+	cursor:pointer;
+}
+
+.author-content {
+	margin-top: 140px;
+	margin-left: -200px;
+}
 
 .p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
     color: #EAE600;

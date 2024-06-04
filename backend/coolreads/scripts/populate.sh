@@ -36,10 +36,11 @@ docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO customer (dtyp
 
 docker exec -it postgres psql -U postgres -d cool -c "ALTER TABLE book ALTER COLUMN description TYPE TEXT;";
 
-docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO book (isbn, description, launch_date, title, total_page_numbers, author_username, publisher_name) 
+docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO book (isbn, description, image_url, launch_date, title, total_page_numbers, author_username, publisher_name) 
 VALUES (
     '1',
     'Bestselling author and cartoonist Randall Munroe explains how to predict the weather by analyzing the pixels of your Facebook photos. He teaches you how to tell if you are a baby boomer or a 90s kid by measuring the radioactivity of your teeth. He offers tips for taking a selfie with a telescope, crossing a river by boiling it, and powering your house by destroying the fabric of space-time. And if you want to get rid of the book once you are done with it, he walks you through your options for proper disposal, including dissolving it in the ocean, converting it to a vapor, using tectonic plates to subduct it into the Earths mantle, or launching it into the Sun. By exploring the most complicated ways to do simple tasks, Munroe doesnt just make things difficult for himself and his readers. As he did so brilliantly in What If?, Munroe invites us to explore the most absurd reaches of the possible. Full of clever infographics and amusing illustrations, How To is a delightfully mind-bending way to better understand the science and technology underlying the things we do every day.',
+    'https://xkcd.com/how-to/howto-cover.png',
     '2019-09-03',
     'How To: Absurd Scientific Advice for Common Real-World Problems',
     308,

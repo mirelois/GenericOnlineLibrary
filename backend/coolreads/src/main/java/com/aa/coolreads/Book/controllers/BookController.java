@@ -3,10 +3,7 @@ package com.aa.coolreads.Book.controllers;
 import com.aa.coolreads.Book.dto.BookDTO;
 import com.aa.coolreads.Book.dto.BookRatingDTO;
 import com.aa.coolreads.Book.dto.FullBookDTO;
-import com.aa.coolreads.Book.exception.BookAlreadyExistsException;
-import com.aa.coolreads.Book.exception.BookNotFoundException;
-import com.aa.coolreads.Book.exception.GenresNotFoundException;
-import com.aa.coolreads.Book.exception.PublisherNotFoundException;
+import com.aa.coolreads.Book.exception.*;
 import com.aa.coolreads.Book.services.BookService;
 import com.aa.coolreads.User.exception.AuthorNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
@@ -39,7 +36,7 @@ public class BookController {
         try{
             bookService.insertBook(bookDTO);
         } catch (BookAlreadyExistsException | PublisherNotFoundException | GenresNotFoundException |
-                 AuthorNotFoundException e){
+                 AuthorNotFoundException | InvalidISBNExeption e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
