@@ -27,8 +27,8 @@ public interface BookReviewRepository extends JpaRepository<Review, ReviewId> {
     @Query("SELECT r FROM Review r WHERE r.book.isbn = :isbn")
     Page<Review> findByIsbn(@Param("isbn") String isbn, PageRequest pageable);
 
-    @Query("SELECT rc FROM ReviewComment rc WHERE rc.review= :review")
-    Page<ReviewComment> findCommentByReview(Review review, PageRequest pageable);
+    @Query("SELECT rc FROM ReviewComment rc WHERE rc.review.book.isbn = :isbn AND rc.customer.username = :customer_username")
+    Page<ReviewComment> findCommentByReview(String isbn, String customer_username, PageRequest pageable);
 
     @Query(value = "SELECT COALESCE(COUNT(*), 0) FROM ReviewComment rc WHERE rc.review = :review")
     int getReviewCommentSize(Review review);

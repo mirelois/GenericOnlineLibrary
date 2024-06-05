@@ -1,9 +1,6 @@
 package com.aa.coolreads.Book.controllers;
 
-import com.aa.coolreads.Book.dto.BookDTO;
-import com.aa.coolreads.Book.dto.BookReviewDTO;
-import com.aa.coolreads.Book.dto.FullBookDTO;
-import com.aa.coolreads.Book.dto.SimpleReviewDTO;
+import com.aa.coolreads.Book.dto.*;
 import com.aa.coolreads.Book.exception.*;
 import com.aa.coolreads.Book.services.BookService;
 import com.aa.coolreads.User.exception.AuthorNotFoundException;
@@ -59,6 +56,11 @@ public class BookController {
     @GetMapping("/{isbn}/review")
     public Set<BookReviewDTO> getReview(@PathVariable String isbn, @RequestParam Integer page, @RequestParam Integer size){
         return this.bookService.getReviews(isbn, page, size);
+    }
+
+    @GetMapping("/{isbn}/review/comment")
+    public Set<BookReviewCommentDTO> getReviewComment(@PathVariable String isbn, @RequestParam String review_username, @RequestParam Integer page, @RequestParam Integer size){
+        return this.bookService.getReviewComments(isbn, review_username, page, size);
     }
 
     /*

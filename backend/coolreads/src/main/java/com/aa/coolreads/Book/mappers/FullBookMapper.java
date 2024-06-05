@@ -40,8 +40,8 @@ public class FullBookMapper {
         return likes;
     }
 
-    public Set<BookReviewCommentDTO> toSetBookReviewCommentDTO(Set<ReviewComment> reviewComment){
-        return reviewComment.stream().map(comment -> new BookReviewCommentDTO(comment.getComment(), comment.getCustomer().getUsername())).collect(Collectors.toSet());
+    public BookReviewCommentDTO toReviewCommentDTO(ReviewComment reviewComment){
+        return new BookReviewCommentDTO(reviewComment.getComment(), reviewComment.getCustomer().getUsername());
     }
 
     public BookReviewDTO toBookReviewDTO(Review review, Integer commentsSize){

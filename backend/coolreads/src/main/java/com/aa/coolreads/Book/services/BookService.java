@@ -3,10 +3,7 @@ package com.aa.coolreads.Book.services;
 import com.aa.coolreads.Book.dto.*;
 import com.aa.coolreads.Book.exception.*;
 import com.aa.coolreads.Book.mappers.FullBookMapper;
-import com.aa.coolreads.Book.models.Book;
-import com.aa.coolreads.Book.models.Genre;
-import com.aa.coolreads.Book.models.Publisher;
-import com.aa.coolreads.Book.models.Review;
+import com.aa.coolreads.Book.models.*;
 import com.aa.coolreads.Book.repositories.BookRepository;
 import com.aa.coolreads.Book.repositories.BookReviewRepository;
 import com.aa.coolreads.Book.repositories.GenreRepository;
@@ -145,12 +142,21 @@ public class BookService {
             throw new InvalidRatingException(rating);
     }
 
+    @Transactional
     public Set<BookReviewDTO> getReviews(String isbn, Integer pageNumber, Integer pageSize) {
 
         PageRequest pageable = PageRequest.of(pageNumber, pageSize);
         Page<Review> reviewsPage = this.bookReviewRepository.findByIsbn(isbn, pageable);
 
         return reviewsPage.get().map(review -> this.bookMapper.toBookReviewDTO(review, this.bookReviewRepository.getReviewCommentSize(review))).collect(Collectors.toSet());
+    }
+
+    public Set<BookReviewCommentDTO> getReviewComments(String isbn, String review_username, Integer pageNumber, Integer pageSize){
+
+        PageRequest pageable = PageRequest.of(pageNumber, pageSize);
+        Page<ReviewComment> commentsPage = this.bookReviewRepository.findCommentByReview(isbn, review_username, pageable);
+
+        return commentsPage.get().map(this.bookMapper::toReviewCommentDTO).collect(Collectors.toSet());
     }
 
     @Transactional
