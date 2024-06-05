@@ -2,6 +2,7 @@ package com.aa.coolreads.User.models;
 
 import com.aa.coolreads.Book.models.Book;
 import com.aa.coolreads.Book.models.Genre;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -14,7 +15,7 @@ import java.util.Set;
 @DiscriminatorValue("author")
 public class Author extends Customer implements Serializable{
 
-    @OneToMany
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     public Set<Book> booksCreated;
 
     public Author(){super();}
