@@ -139,7 +139,7 @@ public class BookService {
     }
 
     private void checkIfValidRating(Double rating) throws InvalidRatingException {
-        if (rating == null || rating < 0.0 || rating > 5.0 || rating % 0.5 != 0)
+        if (rating == null || rating < 0.5 || rating > 5.0 || rating % 0.5 != 0)
             throw new InvalidRatingException(rating);
     }
 
