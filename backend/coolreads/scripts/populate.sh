@@ -22,7 +22,7 @@ docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO publisher (nam
 ('Culinary Creations Press', 'support@culinarycreationspress.com', 'https://culinarycreationsonline.com/wp-content/uploads/2019/01/txt_burgundy_nc_color.jpg', 'https://www.culinarycreationspress.com'),
 ('Mindful Living Publications', 'hello@mindfullivingpub.com', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGEFHuZ1C0Ok8pDTiSFkQ5HoE-iM9EhM4rXQ&s', 'https://www.mindfullivingpub.com');";
 
-docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO customer (dtype, username, birth_date, country, description, email, gender, interests, name, password, profile_banner_url, profile_image_url, pronouns) VALUES
+docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO customer (role, username, birth_date, country, description, email, gender, interests, name, password, profile_banner_url, profile_image_url, pronouns) VALUES
 ('customer', 'techguru', '1985-04-12', 'USA', 'Tech enthusiast and blogger', 'techguru@example.com', 'Male', 'Technology, Gadgets, Coding', 'John Doe', 'securepassword123', 'https://example.com/banners/techguru.jpg', 'https://randomuser.me/api/portraits/men/1.jpg', 'he/him'),
 ('customer', 'wellnessqueen', '1990-07-19', 'Canada', 'Wellness coach and nutritionist', 'wellnessqueen@example.com', 'Female', 'Health, Nutrition, Yoga', 'Emily Clark', 'yogapassword456', 'https://example.com/banners/wellnessqueen.jpg', 'https://randomuser.me/api/portraits/women/2.jpg', 'she/her'),
 ('customer', 'historybuff', '1978-03-25', 'UK', 'History professor and author', 'historybuff@example.com', 'Male', 'History, Archaeology, Museums', 'Michael Smith', 'historypass789', 'https://example.com/banners/historybuff.jpg', 'https://randomuser.me/api/portraits/men/3.jpg', 'he/him'),
@@ -49,3 +49,7 @@ VALUES (
 );";
 
 docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO book_genres (book_isbn, genres_genre_type) VALUES ('1','scifi'),('1','fantasy');";
+
+docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO review (book_isbn, customer_username, description, post_date, rating) VALUES
+('1','techguru','Excelente leitura, muito envolvente e bem escrito.', '2024-05-01', 5),
+('1','historybuff','História interessante, mas o ritmo é um pouco lento.', '2024-05-02', 3);";
