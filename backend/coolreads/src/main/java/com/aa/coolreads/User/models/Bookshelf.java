@@ -10,23 +10,31 @@ import java.util.Set;
 @Entity
 public class Bookshelf implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 50)
     private String name;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Privacy privacy;
 
-    @OneToMany
+    @OneToMany(mappedBy = "bookshelf", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PersonalBook> personalBooks;
 
-    public Bookshelf(){}
+    @ManyToOne
+    @JoinColumn(name="customer_username", referencedColumnName="username")
+    private Customer customer;
 
-    public Bookshelf(String name, Privacy privacy) {
+    public Bookshelf(){
+        this.personalBooks = new HashSet<>();
+    }
+
+    public Bookshelf(String name, Privacy privacy, Customer customer) {
         this.name = name;
         this.privacy = privacy;
         this.personalBooks = new HashSet<>();
+        this.customer = customer;
     }
 
     public Long getId() {
@@ -59,5 +67,13 @@ public class Bookshelf implements Serializable {
 
     public void setPersonalBooks(Set<PersonalBook> personalBooks) {
         this.personalBooks = personalBooks;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

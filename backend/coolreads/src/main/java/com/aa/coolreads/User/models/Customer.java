@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
 public class Customer {
     @Id
     private String username;
@@ -41,7 +41,7 @@ public class Customer {
     @ManyToMany
     private Set<Genre> favoriteGenres;
 
-    @OneToMany
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Bookshelf> bookshelves;
 
     public Customer(){

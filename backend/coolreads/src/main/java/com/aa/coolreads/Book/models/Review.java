@@ -28,10 +28,12 @@ public class Review implements Serializable {
 
     @Id
     @ManyToOne
+    @JoinColumn(name="customer_username", referencedColumnName="username")
     private Customer customer;
 
     @Id
     @ManyToOne
+    @JoinColumn(name="book_isbn", referencedColumnName="isbn")
     private Book book;
 
     public Review(){}

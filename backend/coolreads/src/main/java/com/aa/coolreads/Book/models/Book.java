@@ -30,7 +30,7 @@ public class Book implements Serializable {
     @ManyToMany
     private Set<Genre> genres;
 
-    @OneToMany
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews;
 
     @ManyToOne
