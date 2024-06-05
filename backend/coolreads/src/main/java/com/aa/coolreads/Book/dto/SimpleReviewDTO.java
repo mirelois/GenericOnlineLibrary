@@ -5,17 +5,14 @@ import java.util.Date;
 public class SimpleReviewDTO {
     private Double rating;
 
-    private String title;
-
     private String description;
 
     private Date postDate;
 
     public SimpleReviewDTO(){}
 
-    public SimpleReviewDTO(Double rating, String title, String description, Date postDate) {
+    public SimpleReviewDTO(Double rating, String description, Date postDate) {
         this.rating = rating;
-        this.title = title;
         this.description = description;
         this.postDate = postDate;
     }
@@ -26,14 +23,6 @@ public class SimpleReviewDTO {
 
     public void setRating(Double rating) {
         this.rating = rating;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getDescription() {

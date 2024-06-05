@@ -12,10 +12,15 @@ public class ReviewComment {
 
     @Id
     @ManyToOne
+    @JoinColumn(name="review_comment_username", referencedColumnName = "username")
     private Customer customer;
 
     @Id
     @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name="review_book_isbn", referencedColumnName="book_isbn"),
+            @JoinColumn(name="review_customer_username", referencedColumnName="customer_username")
+    })
     private Review review;
 
     public ReviewComment(){}

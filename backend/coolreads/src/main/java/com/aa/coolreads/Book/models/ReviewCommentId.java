@@ -5,12 +5,12 @@ import com.aa.coolreads.User.models.Customer;
 import java.util.Objects;
 
 public class ReviewCommentId {
-    private Customer customer;
-    private Review review;
+    private String customer;
+    private ReviewId review;
 
     public ReviewCommentId() {}
 
-    public ReviewCommentId(Customer customer, Review review) {
+    public ReviewCommentId(String customer, ReviewId review) {
         this.customer = customer;
         this.review = review;
     }

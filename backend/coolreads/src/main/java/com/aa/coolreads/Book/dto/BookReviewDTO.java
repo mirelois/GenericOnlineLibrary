@@ -14,8 +14,8 @@ public class BookReviewDTO extends SimpleReviewDTO{
 
     public BookReviewDTO() {}
 
-    public BookReviewDTO(Double rating, String title, String description, Date postDate, Map<LikeType, Integer> likes, Set<BookReviewCommentDTO> reviewComments) {
-        super(rating, title, description, postDate);
+    public BookReviewDTO(Double rating, String description, Date postDate, Map<LikeType, Integer> likes, Set<BookReviewCommentDTO> reviewComments) {
+        super(rating, description, postDate);
         this.likes = likes;
         this.reviewComments = reviewComments;
     }

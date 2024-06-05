@@ -12,8 +12,6 @@ import java.util.Set;
 @IdClass(ReviewId.class)
 public class Review implements Serializable {
 
-    private String title;
-
     @Column(columnDefinition = "TEXT")
     private String description;
 
@@ -22,10 +20,10 @@ public class Review implements Serializable {
 
     private Double rating;
 
-    @OneToMany
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ReviewLike> reviewLikes;
 
-    @OneToMany
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ReviewComment> reviewComments;
 
     @Id
@@ -38,8 +36,7 @@ public class Review implements Serializable {
 
     public Review(){}
 
-    public Review(String title, String description, Date postDate, Double rating, Customer customer, Book book) {
-        this.title = title;
+    public Review(String description, Date postDate, Double rating, Customer customer, Book book) {
         this.description = description;
         this.postDate = postDate;
         this.rating = rating;
@@ -49,8 +46,7 @@ public class Review implements Serializable {
         this.book = book;
     }
 
-    public Review(String title, String description, Date postDate, Double rating, Customer customer, Book book, Set<ReviewLike> reviewLikes, Set<ReviewComment> reviewComments) {
-        this.title = title;
+    public Review(String description, Date postDate, Double rating, Customer customer, Book book, Set<ReviewLike> reviewLikes, Set<ReviewComment> reviewComments) {
         this.description = description;
         this.postDate = postDate;
         this.rating = rating;
@@ -58,14 +54,6 @@ public class Review implements Serializable {
         this.reviewComments = reviewComments;
         this.customer = customer;
         this.book = book;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getDescription() {

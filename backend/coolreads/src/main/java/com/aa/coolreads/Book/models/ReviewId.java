@@ -6,12 +6,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class ReviewId implements Serializable {
-    private Customer customer;
-    private Book book;
+    private String customer;
+    private String book;
 
     public ReviewId() {}
 
-    public ReviewId(Customer customer, Book book) {
+    public ReviewId(String customer, String book) {
         this.customer = customer;
         this.book = book;
     }
