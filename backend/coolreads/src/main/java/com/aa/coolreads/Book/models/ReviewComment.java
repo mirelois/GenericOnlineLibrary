@@ -1,12 +1,10 @@
 package com.aa.coolreads.Book.models;
 
 import com.aa.coolreads.User.models.Customer;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
+@IdClass(ReviewCommentId.class)
 public class ReviewComment {
 
     @Column(columnDefinition = "TEXT")

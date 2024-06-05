@@ -1,8 +1,8 @@
 package com.aa.coolreads.Book.controllers;
 
 import com.aa.coolreads.Book.dto.BookDTO;
-import com.aa.coolreads.Book.dto.BookRatingDTO;
 import com.aa.coolreads.Book.dto.FullBookDTO;
+import com.aa.coolreads.Book.dto.SimpleReviewDTO;
 import com.aa.coolreads.Book.exception.*;
 import com.aa.coolreads.Book.services.BookService;
 import com.aa.coolreads.User.exception.AuthorNotFoundException;
@@ -41,15 +41,17 @@ public class BookController {
         }
     }
 
+
     @PostMapping("/{isbn}/rate")
-    public void rateBook(@PathVariable String isbn, @RequestBody BookRatingDTO bookRatingDTO){
+    public void reviewBook(@PathVariable String isbn, @RequestParam String username, @RequestBody SimpleReviewDTO simpleReviewDTO){
         try{
-            this.bookService.insertRating(isbn, bookRatingDTO);
+            this.bookService.insertReview(isbn, username, simpleReviewDTO);
         } catch (BookNotFoundException | CustomerNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
+    /*
     @PatchMapping("/{isbn}/rate")
     public void UpdateBookRating(@PathVariable String isbn, @RequestBody BookRatingDTO bookRatingDTO){
         try{
@@ -67,4 +69,6 @@ public class BookController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+     */
 }

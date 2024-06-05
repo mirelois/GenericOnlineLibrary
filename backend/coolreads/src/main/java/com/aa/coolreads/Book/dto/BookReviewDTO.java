@@ -6,12 +6,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-public class BookReviewDTO {
-    private String title;
-
-    private String description;
-
-    private Date postDate;
+public class BookReviewDTO extends SimpleReviewDTO{
 
     private Map<LikeType, Integer> likes;
 
@@ -19,36 +14,10 @@ public class BookReviewDTO {
 
     public BookReviewDTO() {}
 
-    public BookReviewDTO(String title, String description, Date postDate, Map<LikeType, Integer> likes, Set<BookReviewCommentDTO> reviewComments) {
-        this.title = title;
-        this.description = description;
-        this.postDate = postDate;
+    public BookReviewDTO(Double rating, String title, String description, Date postDate, Map<LikeType, Integer> likes, Set<BookReviewCommentDTO> reviewComments) {
+        super(rating, title, description, postDate);
         this.likes = likes;
         this.reviewComments = reviewComments;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getPostDate() {
-        return postDate;
-    }
-
-    public void setPostDate(Date postDate) {
-        this.postDate = postDate;
     }
 
     public Map<LikeType, Integer> getLikes() {

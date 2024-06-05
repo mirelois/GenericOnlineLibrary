@@ -1,16 +1,14 @@
 package com.aa.coolreads.Book.services;
 
-import com.aa.coolreads.Book.dto.BookRatingDTO;
+import com.aa.coolreads.Book.dto.BookReviewDTO;
 import com.aa.coolreads.Book.dto.FullBookDTO;
+import com.aa.coolreads.Book.dto.SimpleReviewDTO;
 import com.aa.coolreads.Book.exception.*;
-import com.aa.coolreads.Book.mappers.BookMapper;
 import com.aa.coolreads.Book.dto.BookDTO;
 import com.aa.coolreads.Book.mappers.FullBookMapper;
 import com.aa.coolreads.Book.models.Book;
-import com.aa.coolreads.Book.models.BookRating;
 import com.aa.coolreads.Book.models.Genre;
 import com.aa.coolreads.Book.models.Publisher;
-import com.aa.coolreads.Book.repositories.BookRatingRepository;
 import com.aa.coolreads.Book.repositories.BookRepository;
 import com.aa.coolreads.Book.repositories.GenreRepository;
 import com.aa.coolreads.Book.repositories.PublisherRepository;
@@ -21,22 +19,16 @@ import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.apache.commons.validator.routines.ISBNValidator;
-import org.apache.commons.validator.routines.checkdigit.ISBNCheckDigit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class BookService {
     private final BookRepository bookRepository;
-
-    private final BookRatingRepository bookRatingRepository;
 
     private final PublisherRepository publisherRepository;
 
@@ -44,19 +36,15 @@ public class BookService {
 
     private final CustomerRepository customerRepository;
 
-    private final BookMapper bookMapper;
-
-    private final FullBookMapper fullBookMapper;
+    private final FullBookMapper bookMapper;
 
     @Autowired
-    public BookService(BookRepository bookRepository, BookRatingRepository bookRatingRepository, BookRatingRepository bookRatingRepository1, PublisherRepository publisherRepository, GenreRepository genreRepository, CustomerRepository customerRepository, BookMapper bookMapper, FullBookMapper fullBookMapper) {
+    public BookService(BookRepository bookRepository, PublisherRepository publisherRepository, GenreRepository genreRepository, CustomerRepository customerRepository, FullBookMapper fullBookMapper) {
         this.bookRepository = bookRepository;
-        this.bookRatingRepository = bookRatingRepository1;
         this.publisherRepository = publisherRepository;
         this.genreRepository = genreRepository;
         this.customerRepository = customerRepository;
-        this.bookMapper = bookMapper;
-        this.fullBookMapper = fullBookMapper;
+        this.bookMapper = fullBookMapper;
     }
 
     private void checkIfBookDoesntExist(String isbn) throws BookAlreadyExistsException{
@@ -116,7 +104,7 @@ public class BookService {
     public FullBookDTO getBookByISBN(String isbn) throws BookNotFoundException {
         Book book = findBookByIsbn(isbn);
 
-        return this.fullBookMapper.toFullBookDTO(book);
+        return this.bookMapper.toFullBookDTO(book);
     }
 
     private void checkIfValidISBN(String isbn) throws InvalidISBNExeption {
@@ -145,24 +133,19 @@ public class BookService {
         this.bookRepository.save(this.bookMapper.toBook(bookDTO, publisher, genres, author));
     }
 
-    public void insertRating(String isbn, BookRatingDTO bookRatingDTO) throws BookNotFoundException, CustomerNotFoundException {
+    @Transactional
+    public void insertReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException {
         Book book = findBookByIsbn(isbn);
 
-        Customer customer = findCustomerByUsername(bookRatingDTO.getCustomerUserName());
+        Customer customer = findCustomerByUsername(username);
 
-        book.addRating(new BookRating(bookRatingDTO.getRating(), book, customer));
+        book.addReview(this.bookMapper.toReview(simpleReviewDTO, customer, book));
 
         this.bookRepository.save(book);
     }
 
-    public void updateRating(String isbn, BookRatingDTO bookRatingDTO) throws BookNotFoundException, CustomerNotFoundException {
-        Book book = findBookByIsbn(isbn);
-
-        Customer customer = findCustomerByUsername(bookRatingDTO.getCustomerUserName());
-
-        this.bookRatingRepository.updateRating(bookRatingDTO.getRating(), book, customer);
-    }
-
+    /*
+    @Transactional
     public void deleteRating(String isbn, String customerUsername) throws BookNotFoundException, CustomerNotFoundException {
         Book book = findBookByIsbn(isbn);
 
@@ -170,4 +153,6 @@ public class BookService {
 
         this.bookRatingRepository.deleteRating(book, customer);
     }
+
+     */
 }

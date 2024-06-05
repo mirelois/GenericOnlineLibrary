@@ -30,9 +30,6 @@ public class Book implements Serializable {
     @ManyToMany
     private Set<Genre> genres;
 
-    @OneToMany(cascade = { CascadeType.ALL })
-    private Set<BookRating> ratings;
-
     @OneToMany
     private Set<Review> reviews;
 
@@ -49,13 +46,12 @@ public class Book implements Serializable {
         this.totalPageNumbers = totalPageNumbers;
         this.publisher = publisher;
         this.genres = genres;
-        this.ratings = new HashSet<>();
         this.reviews = new HashSet<>();
         this.author = author;
         this.imageUrl = imageUrl;
     }
 
-    public Book(String isbn, String title, String description, Date launchDate, int totalPageNumbers, Publisher publisher, Set<Genre> genres, Set<BookRating> ratings, Set<Review> reviews, Author author, String imageUrl) {
+    public Book(String isbn, String title, String description, Date launchDate, int totalPageNumbers, Publisher publisher, Set<Genre> genres, Set<Review> reviews, Author author, String imageUrl) {
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -63,7 +59,6 @@ public class Book implements Serializable {
         this.totalPageNumbers = totalPageNumbers;
         this.publisher = publisher;
         this.genres = genres;
-        this.ratings = ratings;
         this.reviews = reviews;
         this.author = author;
         this.imageUrl = imageUrl;
@@ -125,24 +120,16 @@ public class Book implements Serializable {
         this.genres = genres;
     }
 
-    public Set<BookRating> getRatings() {
-        return ratings;
-    }
-
-    public void setRatings(Set<BookRating> ratings) {
-        this.ratings = ratings;
-    }
-
-    public void addRating(BookRating rating){
-        this.ratings.add(rating);
-    }
-
     public Set<Review> getReviews() {
         return reviews;
     }
 
     public void setReviews(Set<Review> reviews) {
         this.reviews = reviews;
+    }
+
+    public void addReview(Review review){
+        this.reviews.add(review);
     }
 
     public Author getAuthor() {

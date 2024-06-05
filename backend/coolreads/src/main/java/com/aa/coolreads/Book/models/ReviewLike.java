@@ -4,6 +4,7 @@ import com.aa.coolreads.User.models.Customer;
 import jakarta.persistence.*;
 
 @Entity
+@IdClass(ReviewLikeId.class)
 public class ReviewLike {
     @Enumerated(EnumType.STRING)
     private LikeType likeType;
