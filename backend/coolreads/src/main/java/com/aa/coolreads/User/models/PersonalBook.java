@@ -1,10 +1,7 @@
 package com.aa.coolreads.User.models;
 
 import com.aa.coolreads.Book.models.Book;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,7 +10,7 @@ import java.util.Date;
 public class PersonalBook implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Integer pagesRead;

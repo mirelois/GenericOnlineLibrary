@@ -11,13 +11,16 @@ import java.util.Set;
 @Entity
 public class Book implements Serializable {
     @Id
+    @Column(length = 17)
     private String isbn;
 
+    @Column(length = 100)
     private String title;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Temporal(TemporalType.DATE)
     private Date launchDate;
 
     private int totalPageNumbers;
@@ -34,6 +37,7 @@ public class Book implements Serializable {
     private Set<Review> reviews;
 
     @ManyToOne
+    @JoinColumn(name="author_username", referencedColumnName="username")
     private Author  author;
 
     public Book(){}
