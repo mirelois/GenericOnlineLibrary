@@ -1,6 +1,7 @@
 package com.aa.coolreads.Book.controllers;
 
 import com.aa.coolreads.Book.dto.BookDTO;
+import com.aa.coolreads.Book.dto.BookReviewDTO;
 import com.aa.coolreads.Book.dto.FullBookDTO;
 import com.aa.coolreads.Book.dto.SimpleReviewDTO;
 import com.aa.coolreads.Book.exception.*;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/book")
@@ -49,6 +52,11 @@ public class BookController {
         } catch (BookNotFoundException | CustomerNotFoundException | InvalidRatingExeption e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
+    }
+
+    @GetMapping("/{isbn}/review")
+    public Set<BookReviewDTO> getReview(@PathVariable String isbn, @RequestParam Integer page, @RequestParam Integer size){
+        return this.bookService.getReviews(isbn, page, size);
     }
 
     /*

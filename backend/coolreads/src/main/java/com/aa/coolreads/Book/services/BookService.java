@@ -9,7 +9,9 @@ import com.aa.coolreads.Book.mappers.FullBookMapper;
 import com.aa.coolreads.Book.models.Book;
 import com.aa.coolreads.Book.models.Genre;
 import com.aa.coolreads.Book.models.Publisher;
+import com.aa.coolreads.Book.models.Review;
 import com.aa.coolreads.Book.repositories.BookRepository;
+import com.aa.coolreads.Book.repositories.BookReviewRepository;
 import com.aa.coolreads.Book.repositories.GenreRepository;
 import com.aa.coolreads.Book.repositories.PublisherRepository;
 import com.aa.coolreads.User.exception.AuthorNotFoundException;
@@ -20,15 +22,21 @@ import com.aa.coolreads.User.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.apache.commons.validator.routines.ISBNValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
     private final BookRepository bookRepository;
+
+    private final BookReviewRepository bookReviewRepository;
 
     private final PublisherRepository publisherRepository;
 
@@ -39,8 +47,9 @@ public class BookService {
     private final FullBookMapper bookMapper;
 
     @Autowired
-    public BookService(BookRepository bookRepository, PublisherRepository publisherRepository, GenreRepository genreRepository, CustomerRepository customerRepository, FullBookMapper fullBookMapper) {
+    public BookService(BookRepository bookRepository, BookReviewRepository bookReviewRepository, PublisherRepository publisherRepository, GenreRepository genreRepository, CustomerRepository customerRepository, FullBookMapper fullBookMapper) {
         this.bookRepository = bookRepository;
+        this.bookReviewRepository = bookReviewRepository;
         this.publisherRepository = publisherRepository;
         this.genreRepository = genreRepository;
         this.customerRepository = customerRepository;
@@ -104,7 +113,9 @@ public class BookService {
     public FullBookDTO getBookByISBN(String isbn) throws BookNotFoundException {
         Book book = findBookByIsbn(isbn);
 
-        return this.bookMapper.toFullBookDTO(book);
+        double averageRating = this.bookReviewRepository.getBookAverageRating(isbn);
+
+        return this.bookMapper.toFullBookDTO(book, averageRating);
     }
 
     private void checkIfValidISBN(String isbn) throws InvalidISBNExeption {
@@ -141,6 +152,14 @@ public class BookService {
         }else{
             throw new InvalidRatingExeption(rating);
         }
+    }
+
+    public Set<BookReviewDTO> getReviews(String isbn, Integer pageNumber, Integer pageSize) {
+
+        PageRequest pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Review> reviewsPage = this.bookReviewRepository.findByIsbn(isbn, pageable);
+
+        return reviewsPage.stream().map(this.bookMapper::toBookReviewDTO).collect(Collectors.toSet());
     }
 
     @Transactional

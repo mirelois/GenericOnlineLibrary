@@ -48,25 +48,11 @@ public class FullBookMapper {
         return new BookReviewDTO(review.getRating(), review.getDescription(), review.getPostDate(), toLikesDTO(review.getReviewLikes()), toSetBookReviewCommentDTO(review.getReviewComments()));
     }
 
-    public FullBookDTO toFullBookDTO(Book book) {
+    public FullBookDTO toFullBookDTO(Book book, double averageRating) {
         Set<String> genres = book.getGenres().stream().map(Genre::getGenreType).collect(Collectors.toSet());
 
-        Double rating;
-        double ratingSum = 0;
-        int ratingCount = 0;
-        Set<BookReviewDTO> reviews = new HashSet<>();
-        for(Review review : book.getReviews()) {
-            rating = review.getRating();
-            if(rating != null) {
-                ratingSum += rating;
-                ratingCount++;
-            }
-
-            reviews.add(toBookReviewDTO(review));
-        }
-
         return new FullBookDTO(book.getIsbn(), book.getTitle(), book.getDescription(), book.getLaunchDate(),
-                book.getTotalPageNumbers(), book.getPublisher().getName(), genres, book.getImageUrl(), book.getAuthor().getUsername(), ratingSum/ratingCount, reviews);
+                book.getTotalPageNumbers(), book.getPublisher().getName(), genres, book.getImageUrl(), book.getAuthor().getUsername(), averageRating);
     }
 
     public BookDTO toBookDTO(Book book) {
