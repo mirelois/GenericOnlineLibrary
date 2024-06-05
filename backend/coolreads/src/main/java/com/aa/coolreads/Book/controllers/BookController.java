@@ -41,8 +41,7 @@ public class BookController {
         }
     }
 
-
-    @PostMapping("/{isbn}/rate")
+    @PostMapping("/{isbn}/review")
     public void reviewBook(@PathVariable String isbn, @RequestParam String username, @RequestBody SimpleReviewDTO simpleReviewDTO){
         try{
             this.bookService.insertReview(isbn, username, simpleReviewDTO);
@@ -63,24 +62,34 @@ public class BookController {
         return this.bookService.getReviewComments(isbn, review_username, page, size);
     }
 
-    /*
-    @PatchMapping("/{isbn}/rate")
-    public void UpdateBookRating(@PathVariable String isbn, @RequestBody BookRatingDTO bookRatingDTO){
+    @PostMapping("/{isbn}/rate")
+    public void insertBookRating(@PathVariable String isbn, @RequestParam String username, @RequestParam Double rating){
         try{
-            this.bookService.updateRating(isbn, bookRatingDTO);
+            this.bookService.insertRating(isbn, username, rating);
         } catch (BookNotFoundException | CustomerNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (InvalidRatingException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{isbn}/rate")
+    public void UpdateBookRating(@PathVariable String isbn, @RequestParam String username, @RequestParam Double rating){
+        try{
+            this.bookService.updateRating(isbn, username, rating);
+        } catch (BookNotFoundException | CustomerNotFoundException | ReviewNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (InvalidRatingException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
     @DeleteMapping("/{isbn}/rate")
-    public void DeleteRateBook(@PathVariable String isbn, @RequestParam String customerUsername){
+    public void DeleteRateBook(@PathVariable String isbn, @RequestParam String username){
         try{
-            this.bookService.deleteRating(isbn, customerUsername);
-        } catch (BookNotFoundException | CustomerNotFoundException e){
+            this.bookService.deleteRating(isbn, username);
+        } catch (BookNotFoundException | CustomerNotFoundException | ReviewNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-
-     */
 }

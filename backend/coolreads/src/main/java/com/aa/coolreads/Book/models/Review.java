@@ -38,6 +38,23 @@ public class Review implements Serializable {
 
     public Review(){}
 
+    public Review(Double rating, Customer customer, Book book) {
+        this.rating = rating;
+        this.reviewLikes = new HashSet<>();
+        this.reviewComments = new HashSet<>();
+        this.customer = customer;
+        this.book = book;
+    }
+
+    public Review(String description, Date postDate, Customer customer, Book book) {
+        this.description = description;
+        this.postDate = postDate;
+        this.reviewLikes = new HashSet<>();
+        this.reviewComments = new HashSet<>();
+        this.customer = customer;
+        this.book = book;
+    }
+
     public Review(String description, Date postDate, Double rating, Customer customer, Book book) {
         this.description = description;
         this.postDate = postDate;
