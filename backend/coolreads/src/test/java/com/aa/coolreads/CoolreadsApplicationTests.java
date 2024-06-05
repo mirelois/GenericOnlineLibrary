@@ -116,7 +116,6 @@ class CoolreadsApplicationTests {
     void testInsertReview(){
 
         SimpleReviewDTO reviewDTO = new SimpleReviewDTO(
-                6.5,
                 "description",
                 new Date(2024, 12, 1)
         );

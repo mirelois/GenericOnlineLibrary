@@ -3,7 +3,6 @@ package com.aa.coolreads.Book.dto;
 import java.util.Date;
 
 public class SimpleReviewDTO {
-    private Double rating;
 
     private String description;
 
@@ -11,18 +10,9 @@ public class SimpleReviewDTO {
 
     public SimpleReviewDTO(){}
 
-    public SimpleReviewDTO(Double rating, String description, Date postDate) {
-        this.rating = rating;
+    public SimpleReviewDTO(String description, Date postDate) {
         this.description = description;
         this.postDate = postDate;
-    }
-
-    public Double getRating() {
-        return rating;
-    }
-
-    public void setRating(Double rating) {
-        this.rating = rating;
     }
 
     public String getDescription() {

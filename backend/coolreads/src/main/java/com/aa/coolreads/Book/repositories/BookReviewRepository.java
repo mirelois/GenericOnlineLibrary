@@ -32,5 +32,7 @@ public interface BookReviewRepository extends JpaRepository<Review, ReviewId> {
 
     @Query(value = "SELECT COALESCE(COUNT(*), 0) FROM ReviewComment rc WHERE rc.review = :review")
     int getReviewCommentSize(Review review);
+
+
 }
 

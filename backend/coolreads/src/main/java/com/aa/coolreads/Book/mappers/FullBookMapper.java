@@ -63,7 +63,7 @@ public class FullBookMapper {
     }
 
     public Review toReview(SimpleReviewDTO simpleReviewDTO, Customer customer, Book book){
-        return new Review(simpleReviewDTO.getDescription(), simpleReviewDTO.getPostDate(), simpleReviewDTO.getRating(), customer, book);
+        return new Review(simpleReviewDTO.getDescription(), simpleReviewDTO.getPostDate(), customer, book);
     }
 
 }
