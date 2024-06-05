@@ -8,16 +8,22 @@ import java.util.Set;
 
 public class BookReviewDTO extends SimpleReviewDTO{
 
+    private String customerUrl;
+
+    private String customerUsername;
+
     private Map<LikeType, Integer> likes;
 
     private Set<BookReviewCommentDTO> reviewComments;
 
     public BookReviewDTO() {}
 
-    public BookReviewDTO(Double rating, String description, Date postDate, Map<LikeType, Integer> likes, Set<BookReviewCommentDTO> reviewComments) {
+    public BookReviewDTO(Double rating, String description, Date postDate, Set<BookReviewCommentDTO> reviewComments, Map<LikeType, Integer> likes, String customerUsername, String customerUrl) {
         super(rating, description, postDate);
-        this.likes = likes;
         this.reviewComments = reviewComments;
+        this.likes = likes;
+        this.customerUsername = customerUsername;
+        this.customerUrl = customerUrl;
     }
 
     public Map<LikeType, Integer> getLikes() {
@@ -34,5 +40,21 @@ public class BookReviewDTO extends SimpleReviewDTO{
 
     public void setReviewComments(Set<BookReviewCommentDTO> reviewComments) {
         this.reviewComments = reviewComments;
+    }
+
+    public String getCustomerUrl() {
+        return customerUrl;
+    }
+
+    public void setCustomerUrl(String customerUrl) {
+        this.customerUrl = customerUrl;
+    }
+
+    public String getCustomerUsername() {
+        return customerUsername;
+    }
+
+    public void setCustomerUsername(String customerUsername) {
+        this.customerUsername = customerUsername;
     }
 }
