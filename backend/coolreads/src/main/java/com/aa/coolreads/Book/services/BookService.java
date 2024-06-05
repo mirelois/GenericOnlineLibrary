@@ -173,7 +173,7 @@ public class BookService {
     }
 
     @Transactional
-    public void insertReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException, InvalidRatingException {
+    public void insertReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException{
 
         Book book = findBookByIsbn(isbn);
 

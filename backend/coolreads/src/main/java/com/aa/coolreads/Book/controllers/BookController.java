@@ -42,12 +42,21 @@ public class BookController {
     }
 
     @PostMapping("/{isbn}/review")
-    public void reviewBook(@PathVariable String isbn, @RequestParam String username, @RequestBody SimpleReviewDTO simpleReviewDTO){
+    public void insertReview(@PathVariable String isbn, @RequestParam String username, @RequestBody SimpleReviewDTO simpleReviewDTO){
         try{
             this.bookService.insertReview(isbn, username, simpleReviewDTO);
         } catch (BookNotFoundException | CustomerNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (InvalidRatingException e){
+        }
+    }
+
+    @PatchMapping("/{isbn}/review")
+    public void updateReview(@PathVariable String isbn, @RequestParam String username, @RequestBody SimpleReviewDTO simpleReviewDTO){
+        try{
+            this.bookService.updateReview(isbn, username, simpleReviewDTO);
+        } catch (BookNotFoundException | CustomerNotFoundException | ReviewNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (InsufficientReviewParametersException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
