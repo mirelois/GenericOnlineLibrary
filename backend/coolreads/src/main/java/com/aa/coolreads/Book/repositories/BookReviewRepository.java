@@ -1,6 +1,7 @@
 package com.aa.coolreads.Book.repositories;
 
 import com.aa.coolreads.Book.models.Review;
+import com.aa.coolreads.Book.models.ReviewComment;
 import com.aa.coolreads.Book.models.ReviewId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,5 +26,11 @@ public interface BookReviewRepository extends JpaRepository<Review, ReviewId> {
 
     @Query("SELECT r FROM Review r WHERE r.book.isbn = :isbn")
     Page<Review> findByIsbn(@Param("isbn") String isbn, PageRequest pageable);
+
+    @Query("SELECT rc FROM ReviewComment rc WHERE rc.review= :review")
+    Page<ReviewComment> findCommentByReview(Review review, PageRequest pageable);
+
+    @Query(value = "SELECT COALESCE(COUNT(*), 0) FROM ReviewComment rc WHERE rc.review = :review")
+    int getReviewCommentSize(Review review);
 }
 

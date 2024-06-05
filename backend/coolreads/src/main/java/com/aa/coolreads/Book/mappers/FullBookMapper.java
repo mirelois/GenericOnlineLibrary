@@ -44,8 +44,8 @@ public class FullBookMapper {
         return reviewComment.stream().map(comment -> new BookReviewCommentDTO(comment.getComment(), comment.getCustomer().getUsername())).collect(Collectors.toSet());
     }
 
-    public BookReviewDTO toBookReviewDTO(Review review){
-        return new BookReviewDTO(review.getRating(), review.getDescription(), review.getPostDate(), toSetBookReviewCommentDTO(review.getReviewComments()), toLikesDTO(review.getReviewLikes()), review.getCustomer().getUsername(), review.getCustomer().getProfileImageUrl());
+    public BookReviewDTO toBookReviewDTO(Review review, Integer commentsSize){
+        return new BookReviewDTO(review.getRating(), review.getDescription(), review.getPostDate(), commentsSize, toLikesDTO(review.getReviewLikes()), review.getCustomer().getUsername(), review.getCustomer().getProfileImageUrl());
     }
 
     public FullBookDTO toFullBookDTO(Book book, double averageRating) {

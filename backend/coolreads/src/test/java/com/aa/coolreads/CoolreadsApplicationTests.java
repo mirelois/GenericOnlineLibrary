@@ -131,7 +131,7 @@ class CoolreadsApplicationTests {
             throw new RuntimeException(e);
         } catch (CustomerNotFoundException e) {
             throw new RuntimeException(e);
-        } catch (InvalidRatingExeption e) {
+        } catch (InvalidRatingException e) {
             throw new RuntimeException(e);
         }
     }

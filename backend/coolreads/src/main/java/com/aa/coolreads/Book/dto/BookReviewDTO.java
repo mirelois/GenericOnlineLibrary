@@ -14,14 +14,14 @@ public class BookReviewDTO extends SimpleReviewDTO{
 
     private Map<LikeType, Integer> likes;
 
-    private Set<BookReviewCommentDTO> reviewComments;
+    private Integer commentsSize;
 
     public BookReviewDTO() {}
 
-    public BookReviewDTO(Double rating, String description, Date postDate, Set<BookReviewCommentDTO> reviewComments, Map<LikeType, Integer> likes, String customerUsername, String customerUrl) {
+    public BookReviewDTO(Double rating, String description, Date postDate, Integer commentsSize, Map<LikeType, Integer> likes, String customerUsername, String customerUrl) {
         super(rating, description, postDate);
-        this.reviewComments = reviewComments;
         this.likes = likes;
+        this.commentsSize = commentsSize;
         this.customerUsername = customerUsername;
         this.customerUrl = customerUrl;
     }
@@ -32,14 +32,6 @@ public class BookReviewDTO extends SimpleReviewDTO{
 
     public void setLikes(Map<LikeType, Integer> likes) {
         this.likes = likes;
-    }
-
-    public Set<BookReviewCommentDTO> getReviewComments() {
-        return reviewComments;
-    }
-
-    public void setReviewComments(Set<BookReviewCommentDTO> reviewComments) {
-        this.reviewComments = reviewComments;
     }
 
     public String getCustomerUrl() {
@@ -56,5 +48,13 @@ public class BookReviewDTO extends SimpleReviewDTO{
 
     public void setCustomerUsername(String customerUsername) {
         this.customerUsername = customerUsername;
+    }
+
+    public Integer getCommentsSize() {
+        return commentsSize;
+    }
+
+    public void setCommentsSize(Integer commentsSize) {
+        this.commentsSize = commentsSize;
     }
 }

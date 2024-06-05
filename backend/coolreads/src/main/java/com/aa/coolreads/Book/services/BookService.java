@@ -1,10 +1,7 @@
 package com.aa.coolreads.Book.services;
 
-import com.aa.coolreads.Book.dto.BookReviewDTO;
-import com.aa.coolreads.Book.dto.FullBookDTO;
-import com.aa.coolreads.Book.dto.SimpleReviewDTO;
+import com.aa.coolreads.Book.dto.*;
 import com.aa.coolreads.Book.exception.*;
-import com.aa.coolreads.Book.dto.BookDTO;
 import com.aa.coolreads.Book.mappers.FullBookMapper;
 import com.aa.coolreads.Book.models.Book;
 import com.aa.coolreads.Book.models.Genre;
@@ -26,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -144,14 +140,9 @@ public class BookService {
         this.bookRepository.save(this.bookMapper.toBook(bookDTO, publisher, genres, author));
     }
 
-    private void checkIfValidRating(Double rating) throws InvalidRatingExeption {
-        if (rating < 0 || rating > 5.0){
-            if (!(rating % 0.5 == 0)){
-                throw new InvalidRatingExeption(rating);
-            }
-        }else{
-            throw new InvalidRatingExeption(rating);
-        }
+    private void checkIfValidRating(Double rating) throws InvalidRatingException {
+        if (rating < 0.0 || rating > 5.0 || rating % 0.5 != 0)
+            throw new InvalidRatingException(rating);
     }
 
     public Set<BookReviewDTO> getReviews(String isbn, Integer pageNumber, Integer pageSize) {
@@ -159,11 +150,11 @@ public class BookService {
         PageRequest pageable = PageRequest.of(pageNumber, pageSize);
         Page<Review> reviewsPage = this.bookReviewRepository.findByIsbn(isbn, pageable);
 
-        return reviewsPage.stream().map(this.bookMapper::toBookReviewDTO).collect(Collectors.toSet());
+        return reviewsPage.get().map(review -> this.bookMapper.toBookReviewDTO(review, this.bookReviewRepository.getReviewCommentSize(review))).collect(Collectors.toSet());
     }
 
     @Transactional
-    public void insertReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException, InvalidRatingExeption {
+    public void insertReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException, InvalidRatingException {
 
         checkIfValidRating(simpleReviewDTO.getRating());
 
@@ -171,9 +162,7 @@ public class BookService {
 
         Customer customer = findCustomerByUsername(username);
 
-        book.addReview(this.bookMapper.toReview(simpleReviewDTO, customer, book));
-
-        this.bookRepository.save(book);
+        this.bookReviewRepository.save(this.bookMapper.toReview(simpleReviewDTO, customer, book));
     }
 
     /*

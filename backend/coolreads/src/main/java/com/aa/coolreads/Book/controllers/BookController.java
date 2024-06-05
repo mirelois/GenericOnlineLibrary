@@ -49,8 +49,10 @@ public class BookController {
     public void reviewBook(@PathVariable String isbn, @RequestParam String username, @RequestBody SimpleReviewDTO simpleReviewDTO){
         try{
             this.bookService.insertReview(isbn, username, simpleReviewDTO);
-        } catch (BookNotFoundException | CustomerNotFoundException | InvalidRatingExeption e){
+        } catch (BookNotFoundException | CustomerNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (InvalidRatingException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
