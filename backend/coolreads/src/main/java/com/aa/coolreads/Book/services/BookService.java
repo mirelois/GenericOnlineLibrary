@@ -133,8 +133,21 @@ public class BookService {
         this.bookRepository.save(this.bookMapper.toBook(bookDTO, publisher, genres, author));
     }
 
+    private void checkIfValidRating(Double rating) throws InvalidRatingExeption {
+        if (rating < 0 || rating > 5.0){
+            if (!(rating % 0.5 == 0)){
+                throw new InvalidRatingExeption(rating);
+            }
+        }else{
+            throw new InvalidRatingExeption(rating);
+        }
+    }
+
     @Transactional
-    public void insertReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException {
+    public void insertReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException, InvalidRatingExeption {
+
+        checkIfValidRating(simpleReviewDTO.getRating());
+
         Book book = findBookByIsbn(isbn);
 
         Customer customer = findCustomerByUsername(username);
