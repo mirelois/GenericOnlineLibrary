@@ -3,29 +3,37 @@
     <div class="my-review">
         <div class="review-box">
         </div>
-        <img class="foto-icon" alt="" src="/img/perfil1.png">
+        <img class="foto-icon" alt="" :src="imageReviewer">
         <div class="reviewer">
         <span>review by</span>
-        <span class="sophie-mayer"> Sophie Mayer</span>
+        <span class="sophie-mayer">{{ usernameReviewer }}</span>
 			<div>
-				<Rating id="estrelas" v-model="bookrate" readonly :cancel="false" />
+				<Rating id="estrelas" :modelValue="reviewRate" @update:modelValue="reviewRate = $event" readonly :cancel="false" />
 			</div>
 		</div>
-        <div class="review">"Soul" by Olivia Wilson is a captivating journey into the depths of the human experience. With richly drawn characters and evocative prose, Wilson explores the essence of humanity, touching upon universal truths that resonate deeply. A profound and thought-provoking read that lingers in the mind long after the last page.
-		</div>
+        <div class="review">{{ reviewDescription }}</div>
+		<EmojiReactionComponent></EmojiReactionComponent>
     </div> 
 	</main>
 </template>
 <script>
 import Rating from 'primevue/rating';
+import EmojiReactionComponent from './EmojiReactionComponent.vue';
 export default{
+	props:{
+		reviewRate: 0,
+		reviewDescription: '',
+		imageReviewer:'',
+		usernameReviewer:''
+	},
 	data(){
 		return{
 			bookrate:2
 		}
 	},
 	components: {
-		Rating
+		Rating,
+		EmojiReactionComponent
 	}
 }
 </script>

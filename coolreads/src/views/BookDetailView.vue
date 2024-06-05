@@ -28,9 +28,9 @@ import Rating from 'primevue/rating';
 			<div class="group-stars">
 				<Rating id="estrelas" v-model="bookrate" readonly :cancel="false" />
 			</div>
-			<div class="classificacao">3.0/5</div>
-    		<div class="nr-rates">20 ratings</div>
-    		<div class="nr-reviews">1 reviews</div>
+			<div class="classificacao">{{ ratingAverage }}/5</div>
+    		<div class="nr-rates">{{ nrratings }} ratings</div>
+    		<div class="nr-reviews">{{ nrreviews }} reviews</div>
 			<div>
 				<StateComponent :stateValue ="stateSelected" @bookStateSelected="getBookState"></StateComponent>
 			</div>
@@ -40,13 +40,16 @@ import Rating from 'primevue/rating';
 	<div v-bind:style="{ 'color': reviewcolor, 'font-weight': reviewfont }" @click="changeTabStyle(`Reviews`)" class="reviews-title">Reviews 
 			<img class="line-icon" alt="" src="/img/line.svg"> 
 			<div v-if="activeTab=='Reviews'">
-			<MyReviewComponent></MyReviewComponent>
-			<ReviewComponent></ReviewComponent>
+			<MyReviewComponent :username="username" :isbn="isbn"></MyReviewComponent>
+			<div class="review-div" v-for="review in reviews" v-if="!review">
+					<ReviewComponent :reviewRate="review.rating" :reviewDescription="review.description"
+					:imageReviewer="review.customerUrl" :usernameReviewer="review.customerUsername"></ReviewComponent>					
+			</div>
 			</div>
     		</div>
 	<div v-bind:style="{ 'color': authorcolor, 'font-weight': authorfont }" @click="changeTabStyle(`Author`)" class="author-title">Author 
 			<div class="author-content" v-if="activeTab=='Author'">
-				<MyReviewComponent></MyReviewComponent>
+				author info
 			</div>
     		</div>
 	</div>
@@ -72,7 +75,14 @@ export default {
 			authorcolor: "#5d5d5e",
 			authorfont: "normal",
 			activeTab:"Reviews",
-			stateSelected:"+ Want To Read"
+			stateSelected:"+ Want To Read",
+			ratingAverage:0.0,
+			reviews:[],
+			nrreviews:0,
+			nrratings:0,
+			username:'techguru',
+			isbn:'',
+			nrpageReview:0
 		}
 	},
 	components: {
@@ -81,8 +91,9 @@ export default {
 		StateComponent,
 		FooterComponent
     },created(){
-		let isbn = this.$route.params.bookisbn;
-		this.getBook(isbn);
+		this.isbn = this.$route.params.bookisbn;
+		this.getBook(this.isbn);
+		this.getReviews(this.isbn);
 	},methods:{
 		getBook(isbn){
 			axios.get("http://localhost:8080/book/"+isbn).then(book =>{
@@ -91,7 +102,19 @@ export default {
 				this.genres = book.data.genres;
 				this.description = book.data.description;
 				this.imageurl = book.data.imageUrl;
+				this.ratingAverage = book.data.ratingAverage;
 				console.log(book);
+			}).catch(err=>{
+				console.log(err)
+			})
+		},
+		getReviews(isbn){
+			axios.get("http://localhost:8080/book/"+isbn+"/review?page="+this.nrpageReview+"&size=5").then(review =>{
+				this.reviews=review.data
+				let descreview = this.reviews.filter(b=> b.description!="");
+				this.nrreviews = descreview.length;
+				this.nrratings = this.reviews.length;
+				console.log(review.data)
 			}).catch(err=>{
 				console.log(err)
 			})
@@ -117,7 +140,6 @@ export default {
             console.log(state);
             console.log(this.stateSelected);
 			this.stateSelected = "+ "+state;
-
 		}
 	}
 
@@ -146,6 +168,10 @@ export default {
 	width: 3000px;
 	height: 1078px;
 	object-fit: cover;
+}
+
+.review-div{
+	padding-bottom: 20px;
 }
 
 .frame-child {

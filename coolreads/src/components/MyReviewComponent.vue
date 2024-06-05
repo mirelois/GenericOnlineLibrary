@@ -9,17 +9,44 @@
 				<Rating id="estrelas" v-model="bookrate" :cancel="false" />
 			</div>
 		</div>
-        <input type="text" class="review-area"></input> 
-        <button class="publish">Publish</button> 
+        <input type="text" v-model="textreview" class="review-area"></input> 
+        <button class="publish" @click="publishReview">Publish</button> 
     </div> 
 	</main>
 </template>
 <script>
 import Rating from 'primevue/rating';
+import axios from "axios";
 export default{
+	props:{
+		username:'',
+		isbn:''
+	},
 	data(){
 		return{
-			bookrate:0
+			bookrate:0,
+			textreview:''
+		}
+	},
+	methods:{
+		publishReview(){
+			const headers = {
+        		'Content-Type': 'application/json',
+		    };
+			const date = new Date();
+			const isoDateString = date.toISOString();
+			axios.post("http://localhost:8080/book/"+this.isbn+"/rate?username="+this.username,
+			{
+				rating:this.bookrate,
+				description:this.textreview,
+				postDate: isoDateString
+			},
+			{ headers: headers } 
+			).then(resp =>{
+				console.log(resp)
+			}).catch(err=>{
+				console.log(err)
+			})
 		}
 	},
 	components: {
