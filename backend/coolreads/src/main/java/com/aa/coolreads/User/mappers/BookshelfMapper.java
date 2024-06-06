@@ -2,8 +2,10 @@ package com.aa.coolreads.User.mappers;
 
 import com.aa.coolreads.User.dto.BookShelfCreationDTO;
 import com.aa.coolreads.User.dto.BookShelfDTO;
+import com.aa.coolreads.User.dto.PersonalBookDTO;
 import com.aa.coolreads.User.models.Bookshelf;
 import com.aa.coolreads.User.models.Customer;
+import com.aa.coolreads.User.models.PersonalBook;
 import com.aa.coolreads.User.models.Privacy;
 import org.springframework.stereotype.Component;
 
@@ -16,5 +18,9 @@ public class BookshelfMapper {
 
     public BookShelfCreationDTO bookShelfCreationDTO(Bookshelf bookshelf){
         return new BookShelfCreationDTO(bookshelf.getName(), bookshelf.getPrivacy().name());
+    }
+
+    public PersonalBookDTO toPersonalBookDTO(PersonalBook personalBook){
+        return new PersonalBookDTO(personalBook.getPagesRead(), personalBook.getInsertDate(), personalBook.getBookshelf().getName(), personalBook.getBook().getIsbn());
     }
 }

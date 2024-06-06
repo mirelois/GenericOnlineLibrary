@@ -107,7 +107,7 @@ public class BookService {
     public FullBookDTO getBookByISBN(String isbn) throws BookNotFoundException {
         Book book = findBookByIsbn(isbn);
 
-        double averageRating = this.bookReviewRepository.getBookAverageRating(isbn);
+        double averageRating = this.bookRatingRepository.getBookAverageRating(isbn);
 
         return this.bookMapper.toFullBookDTO(book, averageRating);
     }
