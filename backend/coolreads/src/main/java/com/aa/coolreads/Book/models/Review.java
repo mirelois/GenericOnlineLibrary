@@ -18,8 +18,6 @@ public class Review implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date postDate;
 
-    private Double rating;
-
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ReviewLike> reviewLikes;
 
@@ -38,14 +36,6 @@ public class Review implements Serializable {
 
     public Review(){}
 
-    public Review(Double rating, Customer customer, Book book) {
-        this.rating = rating;
-        this.reviewLikes = new HashSet<>();
-        this.reviewComments = new HashSet<>();
-        this.customer = customer;
-        this.book = book;
-    }
-
     public Review(String description, Date postDate, Customer customer, Book book) {
         this.description = description;
         this.postDate = postDate;
@@ -55,20 +45,9 @@ public class Review implements Serializable {
         this.book = book;
     }
 
-    public Review(String description, Date postDate, Double rating, Customer customer, Book book) {
+    public Review(String description, Date postDate, Customer customer, Book book, Set<ReviewLike> reviewLikes, Set<ReviewComment> reviewComments) {
         this.description = description;
         this.postDate = postDate;
-        this.rating = rating;
-        this.reviewLikes = new HashSet<>();
-        this.reviewComments = new HashSet<>();
-        this.customer = customer;
-        this.book = book;
-    }
-
-    public Review(String description, Date postDate, Double rating, Customer customer, Book book, Set<ReviewLike> reviewLikes, Set<ReviewComment> reviewComments) {
-        this.description = description;
-        this.postDate = postDate;
-        this.rating = rating;
         this.reviewLikes = reviewLikes;
         this.reviewComments = reviewComments;
         this.customer = customer;
@@ -105,14 +84,6 @@ public class Review implements Serializable {
 
     public void setReviewComments(Set<ReviewComment> reviewComments) {
         this.reviewComments = reviewComments;
-    }
-
-    public Double getRating() {
-        return rating;
-    }
-
-    public void setRating(Double rating) {
-        this.rating = rating;
     }
 
     public Customer getCustomer() {
