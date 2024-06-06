@@ -1,3 +1,4 @@
+
 <template>
     <main>
         <div class="navegador">
@@ -36,6 +37,10 @@
                     <div class="c">Bookshelf</div>
                 </div> 
             </a>
+            <div class="registration-login">
+                <a href="/signup" class="registration-button">Registo</a>
+                <a href="/login" class="login-button">Login</a>
+            </div>
         </div>
     </main>
 </template>
@@ -341,5 +346,28 @@ a:hover { text-decoration: underline; }
     position: relative;
     width: 33px;
     height: 33px;
+}
+.registration-login {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    top: 10px;
+    right: 20px; 
+}
+
+.registration-button,
+.login-button {
+    padding: 10px 20px;
+    background-color: #da9f46d9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none; 
+}
+
+.registration-button:hover,
+.login-button:hover {
+    background-color: #c3882f;
 }
 </style>
