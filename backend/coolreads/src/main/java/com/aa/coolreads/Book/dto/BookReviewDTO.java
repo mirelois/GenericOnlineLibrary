@@ -8,8 +8,6 @@ import java.util.Set;
 
 public class BookReviewDTO extends SimpleReviewDTO{
 
-    private Double rating;
-
     private String customerUrl;
 
     private String customerUsername;
@@ -20,9 +18,8 @@ public class BookReviewDTO extends SimpleReviewDTO{
 
     public BookReviewDTO() {}
 
-    public BookReviewDTO(Double rating, String description, Date postDate, Integer commentsSize, Map<LikeType, Integer> likes, String customerUsername, String customerUrl) {
+    public BookReviewDTO(String description, Date postDate, Integer commentsSize, Map<LikeType, Integer> likes, String customerUsername, String customerUrl) {
         super(description, postDate);
-        this.rating = rating;
         this.likes = likes;
         this.commentsSize = commentsSize;
         this.customerUsername = customerUsername;
@@ -59,13 +56,5 @@ public class BookReviewDTO extends SimpleReviewDTO{
 
     public void setCommentsSize(Integer commentsSize) {
         this.commentsSize = commentsSize;
-    }
-
-    public Double getRating() {
-        return rating;
-    }
-
-    public void setRating(Double rating) {
-        this.rating = rating;
     }
 }

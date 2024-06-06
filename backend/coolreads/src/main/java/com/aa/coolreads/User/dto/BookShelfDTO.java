@@ -4,35 +4,15 @@ import com.aa.coolreads.User.models.Privacy;
 
 import java.util.Set;
 
-public class BookShelfDTO {
-    private String name;
-
-    private Privacy privacy;
+public class BookShelfDTO extends BookShelfCreationDTO{
 
     private Set<PersonalBookDTO> personalBooks;
 
     public BookShelfDTO(){}
 
-    public BookShelfDTO(String name, Privacy privacy, Set<PersonalBookDTO> personalBooks) {
-        this.name = name;
-        this.privacy = privacy;
+    public BookShelfDTO(String name, String privacy, Set<PersonalBookDTO> personalBooks) {
+        super(name, privacy);
         this.personalBooks = personalBooks;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Privacy getPrivacy() {
-        return privacy;
-    }
-
-    public void setPrivacy(Privacy privacy) {
-        this.privacy = privacy;
     }
 
     public Set<PersonalBookDTO> getPersonalBooks() {

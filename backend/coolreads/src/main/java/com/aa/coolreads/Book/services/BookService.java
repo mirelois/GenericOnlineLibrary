@@ -4,10 +4,7 @@ import com.aa.coolreads.Book.dto.*;
 import com.aa.coolreads.Book.exception.*;
 import com.aa.coolreads.Book.mappers.FullBookMapper;
 import com.aa.coolreads.Book.models.*;
-import com.aa.coolreads.Book.repositories.BookRepository;
-import com.aa.coolreads.Book.repositories.BookReviewRepository;
-import com.aa.coolreads.Book.repositories.GenreRepository;
-import com.aa.coolreads.Book.repositories.PublisherRepository;
+import com.aa.coolreads.Book.repositories.*;
 import com.aa.coolreads.User.exception.AuthorNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.models.Author;
@@ -32,6 +29,8 @@ public class BookService {
 
     private final BookReviewRepository bookReviewRepository;
 
+    private final BookRatingRepository bookRatingRepository;
+
     private final PublisherRepository publisherRepository;
 
     private final GenreRepository genreRepository;
@@ -41,9 +40,10 @@ public class BookService {
     private final FullBookMapper bookMapper;
 
     @Autowired
-    public BookService(BookRepository bookRepository, BookReviewRepository bookReviewRepository, PublisherRepository publisherRepository, GenreRepository genreRepository, CustomerRepository customerRepository, FullBookMapper fullBookMapper) {
+    public BookService(BookRepository bookRepository, BookReviewRepository bookReviewRepository, BookRatingRepository bookRatingRepository, PublisherRepository publisherRepository, GenreRepository genreRepository, CustomerRepository customerRepository, FullBookMapper fullBookMapper) {
         this.bookRepository = bookRepository;
         this.bookReviewRepository = bookReviewRepository;
+        this.bookRatingRepository = bookRatingRepository;
         this.publisherRepository = publisherRepository;
         this.genreRepository = genreRepository;
         this.customerRepository = customerRepository;
@@ -161,18 +161,6 @@ public class BookService {
     }
 
     @Transactional
-    public void insertRating(String isbn, String username, Double rating) throws BookNotFoundException, CustomerNotFoundException, InvalidRatingException {
-
-        checkIfValidRating(rating);
-
-        Book book = findBookByIsbn(isbn);
-
-        Customer customer = findCustomerByUsername(username);
-
-        this.bookReviewRepository.save(new Review(rating, customer, book));
-    }
-
-    @Transactional
     public void insertReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException{
 
         Book book = findBookByIsbn(isbn);
@@ -200,27 +188,50 @@ public class BookService {
     }
 
     @Transactional
-    public void updateRating(String isbn, String username, Double rating) throws BookNotFoundException, CustomerNotFoundException, InvalidRatingException, ReviewNotFoundException{
+    public void deleteReview(String isbn, String username) throws CustomerNotFoundException, BookNotFoundException {
+        findBookByIsbn(isbn);
+        findCustomerByUsername(username);
+
+        this.bookReviewRepository.deleteById(new ReviewId(username, isbn));
+    }
+
+    @Transactional
+    public RatingDTO getRating(String isbn, String username) throws RatingNotFoundException {
+        Rating rating = this.bookRatingRepository.findById(new RatingId(isbn, username)).orElseThrow(() -> new RatingNotFoundException(isbn, username));
+        return this.bookMapper.toRatingDTO(rating);
+    }
+
+    @Transactional
+    public void insertRating(String isbn, String username, Double rating) throws BookNotFoundException, CustomerNotFoundException, InvalidRatingException {
 
         checkIfValidRating(rating);
 
         Book book = findBookByIsbn(isbn);
+
         Customer customer = findCustomerByUsername(username);
 
-        Review review = this.bookReviewRepository.findById(new ReviewId(customer.getUsername(), book.getIsbn())).orElseThrow(() -> new ReviewNotFoundException(isbn, username));
-
-        review.setRating(rating);
-        this.bookReviewRepository.save(review);
+        this.bookRatingRepository.save(this.bookMapper.toRating(rating, book, customer));
     }
 
     @Transactional
-    public void deleteRating(String isbn, String username) throws BookNotFoundException, CustomerNotFoundException, ReviewNotFoundException{
-        Book book = findBookByIsbn(isbn);
-        Customer customer = findCustomerByUsername(username);
+    public void updateRating(String isbn, String username, Double rating) throws BookNotFoundException, CustomerNotFoundException, InvalidRatingException, RatingNotFoundException {
 
-        Review review = this.bookReviewRepository.findById(new ReviewId(customer.getUsername(), book.getIsbn())).orElseThrow(() -> new ReviewNotFoundException(isbn, username));
+        checkIfValidRating(rating);
 
-        review.setRating(null);
-        this.bookReviewRepository.save(review);
+        findBookByIsbn(isbn);
+        findCustomerByUsername(username);
+
+        Rating ratingEntity = this.bookRatingRepository.findById(new RatingId(isbn, username)).orElseThrow(() -> new RatingNotFoundException(isbn, username));
+        ratingEntity.setRating(rating);
+
+        this.bookRatingRepository.save(ratingEntity);
+    }
+
+    @Transactional
+    public void deleteRating(String isbn, String username) throws BookNotFoundException, CustomerNotFoundException{
+        findBookByIsbn(isbn);
+        findCustomerByUsername(username);
+
+        this.bookRatingRepository.deleteById(new RatingId(isbn, username));
     }
 }

@@ -40,16 +40,18 @@ import Rating from 'primevue/rating';
 	<div v-bind:style="{ 'color': reviewcolor, 'font-weight': reviewfont }" @click="changeTabStyle(`Reviews`)" class="reviews-title">Reviews 
 			<img class="line-icon" alt="" src="/img/line.svg"> 
 			<div v-if="activeTab=='Reviews'">
-			<MyReviewComponent :username="username" :isbn="isbn"></MyReviewComponent>
+			<MyReviewComponent @newpost="getReviews(this.isbn,1)" :username="username" :profileImg="profileImg" :isbn="isbn"></MyReviewComponent>
 			<div class="review-div" v-for="review in reviews" v-if="!review">
-					<ReviewComponent :emojiIds="review.emojiIds" :reviewRate="review.rating" :reviewDescription="review.description"
+					<ReviewComponent :likesCount="review.likes" :emojiIds="review.emojiIds" :reviewRate="review.rating" :reviewDescription="review.description"
 					:imageReviewer="review.customerUrl" :usernameReviewer="review.customerUsername"></ReviewComponent>					
 			</div>
 			</div>
     		</div>
 	<div v-bind:style="{ 'color': authorcolor, 'font-weight': authorfont }" @click="changeTabStyle(`Author`)" class="author-title">Author 
 			<div class="author-content" v-if="activeTab=='Author'">
-				author info
+				<br>Author: {{ author }}</br>
+				<br>Publisher: {{ publisher }}</br>
+				<br>Launch Date: {{ launchDate }}</br>
 			</div>
     		</div>
 	</div>
@@ -67,6 +69,8 @@ export default {
 			bookrate:3,
 			title:"",
 			author:"",
+			publisher:"",
+			launchDate:"",
 			genres:["None"],
 			description:"",
 			imageurl:"",
@@ -81,6 +85,7 @@ export default {
 			nrreviews:0,
 			nrratings:0,
 			username:'techguru',
+			profileImg: 'https://randomuser.me/api/portraits/men/1.jpg',
 			isbn:'',
 			nrpageReview:0
 		}
@@ -93,7 +98,7 @@ export default {
     },created(){
 		this.isbn = this.$route.params.bookisbn;
 		this.getBook(this.isbn);
-		this.getReviews(this.isbn);
+		this.getReviews(this.isbn,0);
 	},methods:{
 		getBook(isbn){
 			axios.get("http://localhost:8080/book/"+isbn).then(book =>{
@@ -103,14 +108,17 @@ export default {
 				this.description = book.data.description;
 				this.imageurl = book.data.imageUrl;
 				this.ratingAverage = book.data.ratingAverage;
+				this.publisher = book.data.publisherName;
+				this.launchDate = book.data.launchDate;
 				console.log(book);
 			}).catch(err=>{
 				console.log(err)
 			})
 		},
-		getReviews(isbn){
+		getReviews(isbn,refresh){
 			axios.get("http://localhost:8080/book/"+isbn+"/review?page="+this.nrpageReview+"&size=5").then(review =>{
-				this.reviews= this.reviews.concat(review.data)
+				if(refresh==0) this.reviews= this.reviews.concat(review.data);
+				else this.reviews = review.data;
 				let descreview = this.reviews.filter(b=> b.description!="");
 				this.nrreviews = descreview.length;
 				this.nrratings = this.reviews.length;
@@ -394,6 +402,8 @@ export default {
 .author-content {
 	margin-top: 140px;
 	margin-left: -200px;
+	color:#a5a3a3;
+	font-size: 25px;
 }
 
 .p-rating .p-rating-item.p-rating-item-active .p-rating-icon {

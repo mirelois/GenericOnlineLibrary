@@ -5,26 +5,26 @@
     </head>    
     <div class="reaction-bar">
     <input type="checkbox" class="hide-input" :id="emojiIds[0]" :checked="emojiActivated[emojiIds[0]]" @click="changeEmoji(emojiIds[0])">
-    <label :for="emojiIds[0]" class="react" style="--r:35px">
+    <label :for="emojiIds[0]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Like }}</div>
     <i class="fas fa-thumbs-up" style="color:blue"></i>
     </label>
     
     <input type="checkbox"  class="hide-input" :id="emojiIds[1]" :checked="emojiActivated[emojiIds[1]]" @click="changeEmoji(emojiIds[1])">
-    <label :for="emojiIds[1]" class="react" style="--r:35px">
+    <label :for="emojiIds[1]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Haha }}</div>
       <i class="fas fa-laugh-squint" style="color:gold"></i>
     </label>
     <input type="checkbox" class="hide-input" :id="emojiIds[2]" :checked="emojiActivated[emojiIds[2]]" @click="changeEmoji(emojiIds[2])">
-    <label :for="emojiIds[2]" class="react" style="--r:35px">
+    <label :for="emojiIds[2]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Wow }}</div>
         <i class="fas fa-sad-tear" style="color:gold"></i>
     </label>
     
     <input type="checkbox"  class="hide-input" :id="emojiIds[3]" :checked="emojiActivated[emojiIds[3]]" @click="changeEmoji(emojiIds[3])">
-    <label :for="emojiIds[3]" class="react" style="--r:35px">
+    <label :for="emojiIds[3]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Sad }}</div>
         <i class="fas fa-surprise" style="color:gold"></i>
     </label>
 
     <input type="checkbox" :id="emojiIds[4]" class="hide-input" :checked="emojiActivated[emojiIds[4]]" @click="changeEmoji(emojiIds[4])">
-    <label :for="emojiIds[4]" class="react" style="--r:35px">
+    <label :for="emojiIds[4]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Clown }}</div>
     <i data-icon="🤡"></i>
     </label>
     </div>
@@ -36,7 +36,8 @@ export default{
     emojiIds: {
       type: Array,
       default: () => [0, 1, 2, 3, 4]
-    }
+    },
+    likes:{}
   },
   data(){
     return {
@@ -70,7 +71,7 @@ export default{
   width: var(--r);
   height: var(--r);
   border-radius:50%;
-  margin: calc(var(--r)/3);
+  margin: calc(var(--r)/1.5);
   line-height: var(--r);
   text-align:center;
   transform:rotate(0);
@@ -169,16 +170,24 @@ input:checked + .react i:after {
 }
 
 .reaction-bar {
-  background-color: #31363F;
-  border-radius: 30px;
-  position: absolute;
-  top: 150px;
-  left: 30px;
-  font-weight: 300;
-  color: #fff;
-  display: inline-flex;
-  width: auto;
-  height: 80px;
-  padding-top: 12px;
+    background-color: #31363F;
+    border-radius: 30px;
+    position: absolute;
+    top: 150px;
+    left: 30px;
+    font-weight: 300;
+    color: #fff;
+    display: inline-flex;
+    width: auto;
+    height: 80px;
+    padding-top: 5px;
+    padding-right: 25px;
+}
+
+.nr-react {
+    margin-top: -35px;
+    margin-right: -60px;
+    color: white;
+    font-size: 23px;
 }
 </style>

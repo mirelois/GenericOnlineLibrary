@@ -66,16 +66,17 @@ export default{
     padding-top: 11px;
     padding-right: 11px;
 }
+
 .statedown-icon-d {
-    position: absolute;
-    height: 30px;
-    width: 30px;
-    top: 370%;
-    right:4%;
-    bottom: 45%;
-    max-width: 100%;
-    max-height: 100%;
-    z-index:11;
+  position: absolute;
+  height: 35px;
+  width: 25px;
+  top: 370%;
+  right: 4%;
+  max-width: 100%;
+  max-height: 100%;
+  z-index: 11;
+  padding-left: 5px;
 }
 
 .statedown-icon-d:hover {
