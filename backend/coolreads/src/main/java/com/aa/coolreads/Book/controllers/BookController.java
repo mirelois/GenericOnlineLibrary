@@ -75,6 +75,29 @@ public class BookController {
         }
     }
 
+    /*
+    @GetMapping("/{isbn}/review/like")
+    public void getLike(@PathVariable String isbn, @RequestParam String username){
+
+    }
+
+    @PostMapping("/{isbn}/review/like")
+    public void insertLike(@PathVariable String isbn, @RequestParam String username, @RequestBody String likeType){
+
+    }
+
+    @PatchMapping("/{isbn}/review/like")
+    public void updateLike(@PathVariable String isbn, @RequestParam String username, @RequestBody String likeType){
+
+    }
+
+    @DeleteMapping("/{isbn}/review/like")
+    public void deleteLike(@PathVariable String isbn, @RequestParam String username){
+
+    }
+
+     */
+
     @GetMapping("/{isbn}/review/comment")
     public Set<BookReviewCommentDTO> getReviewComment(@PathVariable String isbn, @RequestParam String review_username, @RequestParam Integer page, @RequestParam Integer size){
         return this.bookService.getReviewComments(isbn, review_username, page, size);

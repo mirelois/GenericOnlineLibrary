@@ -7,6 +7,7 @@ import com.aa.coolreads.User.dto.CustomerDTO;
 import com.aa.coolreads.User.dto.NewCustomerDTO;
 import com.aa.coolreads.User.dto.PersonalBookDTO;
 import com.aa.coolreads.User.models.Customer;
+import com.aa.coolreads.User.models.Privacy;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ public class CustomerMapper {
     public CustomerDTO toCustomerDTO(Customer customer){
         CustomerDTO customerDTO = (CustomerDTO) toNewCustomerDTO(customer);
 
-        customerDTO.setBookshelves(customer.getBookshelves().stream().map(e -> new BookShelfDTO(e.getName(), e.getPrivacy(), e.getPersonalBooks().stream().map(b -> new PersonalBookDTO(b.getPagesRead(), b.getInsertDate(), b.getBookshelf().getName(), b.getBook().getIsbn())).collect(Collectors.toSet()))).collect(Collectors.toSet()));
+        customerDTO.setBookshelves(customer.getBookshelves().stream().map(e -> new BookShelfDTO(e.getName(), e.getPrivacy().name(), e.getPersonalBooks().stream().map(b -> new PersonalBookDTO(b.getPagesRead(), b.getInsertDate(), b.getBookshelf().getName(), b.getBook().getIsbn())).collect(Collectors.toSet()))).collect(Collectors.toSet()));
 
         return customerDTO;
     }
