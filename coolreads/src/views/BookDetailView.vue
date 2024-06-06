@@ -42,7 +42,7 @@ import Rating from 'primevue/rating';
 			<div v-if="activeTab=='Reviews'">
 			<MyReviewComponent :username="username" :isbn="isbn"></MyReviewComponent>
 			<div class="review-div" v-for="review in reviews" v-if="!review">
-					<ReviewComponent :reviewRate="review.rating" :reviewDescription="review.description"
+					<ReviewComponent :emojiIds="review.emojiIds" :reviewRate="review.rating" :reviewDescription="review.description"
 					:imageReviewer="review.customerUrl" :usernameReviewer="review.customerUsername"></ReviewComponent>					
 			</div>
 			</div>
@@ -110,10 +110,14 @@ export default {
 		},
 		getReviews(isbn){
 			axios.get("http://localhost:8080/book/"+isbn+"/review?page="+this.nrpageReview+"&size=5").then(review =>{
-				this.reviews=review.data
+				this.reviews= this.reviews.concat(review.data)
 				let descreview = this.reviews.filter(b=> b.description!="");
 				this.nrreviews = descreview.length;
 				this.nrratings = this.reviews.length;
+				for (let i = 0; i < this.reviews.length; i++) {
+					let ids = ["r"+(4*i+1),"r"+(4*i+2),"r"+(4*i+3),"r"+(4*i+4),"r"+(4*i+5)];
+					this.reviews[i]["emojiIds"]=ids;
+				}
 				console.log(review.data)
 			}).catch(err=>{
 				console.log(err)

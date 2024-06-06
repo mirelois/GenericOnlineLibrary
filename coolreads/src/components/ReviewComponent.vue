@@ -12,7 +12,7 @@
 			</div>
 		</div>
         <div class="review">{{ reviewDescription }}</div>
-		<EmojiReactionComponent></EmojiReactionComponent>
+		<EmojiReactionComponent :emojiIds="emojiIds"></EmojiReactionComponent>
     </div> 
 	</main>
 </template>
@@ -24,7 +24,8 @@ export default{
 		reviewRate: 0,
 		reviewDescription: '',
 		imageReviewer:'',
-		usernameReviewer:''
+		usernameReviewer:'',
+		emojiIds:[]
 	},
 	data(){
 		return{

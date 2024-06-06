@@ -4,32 +4,63 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
     </head>    
     <div class="reaction-bar">
-    <input type="checkbox" class="hide-input" id="r1">
-    <label for="r1" class="react" style="--r:35px">
+    <input type="checkbox" class="hide-input" :id="emojiIds[0]" :checked="emojiActivated[emojiIds[0]]" @click="changeEmoji(emojiIds[0])">
+    <label :for="emojiIds[0]" class="react" style="--r:35px">
     <i class="fas fa-thumbs-up" style="color:blue"></i>
     </label>
     
-    <input type="checkbox"  class="hide-input" id="r2">
-    <label for="r2" class="react" style="--r:35px">
+    <input type="checkbox"  class="hide-input" :id="emojiIds[1]" :checked="emojiActivated[emojiIds[1]]" @click="changeEmoji(emojiIds[1])">
+    <label :for="emojiIds[1]" class="react" style="--r:35px">
       <i class="fas fa-laugh-squint" style="color:gold"></i>
     </label>
-    <input type="checkbox" class="hide-input" id="r3">
-    <label for="r3" class="react" style="--r:35px">
+    <input type="checkbox" class="hide-input" :id="emojiIds[2]" :checked="emojiActivated[emojiIds[2]]" @click="changeEmoji(emojiIds[2])">
+    <label :for="emojiIds[2]" class="react" style="--r:35px">
         <i class="fas fa-sad-tear" style="color:gold"></i>
     </label>
     
-    <input type="checkbox"  class="hide-input" id="r4">
-    <label for="r4" class="react" style="--r:35px">
+    <input type="checkbox"  class="hide-input" :id="emojiIds[3]" :checked="emojiActivated[emojiIds[3]]" @click="changeEmoji(emojiIds[3])">
+    <label :for="emojiIds[3]" class="react" style="--r:35px">
         <i class="fas fa-surprise" style="color:gold"></i>
     </label>
 
-    <input type="checkbox" id="r5" class="hide-input">
-    <label for="r5" class="react" style="--r:35px">
+    <input type="checkbox" :id="emojiIds[4]" class="hide-input" :checked="emojiActivated[emojiIds[4]]" @click="changeEmoji(emojiIds[4])">
+    <label :for="emojiIds[4]" class="react" style="--r:35px">
     <i data-icon="🤡"></i>
     </label>
     </div>
 </main>
 </template>
+<script>
+export default{
+  props:{
+    emojiIds: {
+      type: Array,
+      default: () => [0, 1, 2, 3, 4]
+    }
+  },
+  data(){
+    return {
+      emojiActivated:{}
+    }
+  },
+  created(){
+      this.setup();
+  },methods:{
+    changeEmoji(id){
+      for(let i=0; i<this.emojiIds.length;i++){
+        this.emojiActivated[this.emojiIds[i]]=false;
+      }
+      this.emojiActivated[id]=true;
+      console.log(this.emojiActivated)
+    },
+    setup(){
+      this.emojiIds.forEach(id => {
+        this.emojiActivated[id]=false;
+      });
+    }
+  }
+}
+</script>
 <style>
 .react {
   --r:100px;
@@ -131,7 +162,6 @@ input:checked + .react i:after {
   transform:rotate(55deg) scale(1);
 }
 
-
 .hide-input {
   position:absolute;
   visibility:hidden;
@@ -151,5 +181,4 @@ input:checked + .react i:after {
   height: 80px;
   padding-top: 12px;
 }
-
 </style>

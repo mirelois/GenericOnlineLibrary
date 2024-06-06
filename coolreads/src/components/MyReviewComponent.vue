@@ -6,7 +6,7 @@
         <img class="foto-icon" alt="" src="/img/perfil1.png">
         <div class="reviewer">
 			<div class="mystar-class">
-				<Rating id="estrelas" v-model="bookrate" :cancel="false" />
+				<Rating id="estrelas" v-model="bookrate" @click="publishRating" :cancel="false" />
 			</div>
 		</div>
         <input type="text" v-model="textreview" class="review-area"></input> 
@@ -30,23 +30,46 @@ export default{
 	},
 	methods:{
 		publishReview(){
+			console.log("aquiiiii");
+			console.log(this.textreview);
 			const headers = {
         		'Content-Type': 'application/json',
 		    };
 			const date = new Date();
 			const isoDateString = date.toISOString();
-			axios.post("http://localhost:8080/book/"+this.isbn+"/rate?username="+this.username,
-			{
-				rating:this.bookrate,
-				description:this.textreview,
-				postDate: isoDateString
-			},
-			{ headers: headers } 
-			).then(resp =>{
-				console.log(resp)
-			}).catch(err=>{
-				console.log(err)
-			})
+			if(this.textreview!=""){
+				axios.post("http://localhost:8080/book/"+this.isbn+"/review?username="+this.username,
+				{
+					description:this.textreview,
+					postDate: isoDateString
+				},
+				{ headers: headers } 
+				).then(resp =>{
+					console.log(resp)
+				}).catch(err=>{
+					console.log(err)
+				})
+			}
+		},
+		publishRating(){
+			let rating = this.bookrate.toFixed(1);
+			console.log(rating);
+			const headers = {
+        		'Content-Type': 'application/json',
+		    };
+			if(rating!=0){
+				axios.post("http://localhost:8080/book/"+this.isbn+"/rate?username="+this.username+"&rating="+rating,
+				{ headers: headers } 
+				).then(resp =>{
+					console.log(resp)
+				}).catch(err=>{
+					console.log(err)
+				})
+			}else{
+				console.log("obrigar utilizador a inserir rating");
+				return;
+			} 
+
 		}
 	},
 	components: {
