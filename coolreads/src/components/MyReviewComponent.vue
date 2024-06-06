@@ -3,7 +3,7 @@
     <div class="my-review">
         <div class="review-box">
         </div>
-        <img class="foto-icon" alt="" src="/img/perfil1.png">
+        <img class="foto-icon" alt="" :src="profileImg">
         <div class="reviewer">
 			<div class="mystar-class">
 				<Rating id="estrelas" v-model="bookrate" @click="publishRating" :cancel="false" />
@@ -20,7 +20,8 @@ import axios from "axios";
 export default{
 	props:{
 		username:'',
-		isbn:''
+		isbn:'',
+		profileImg:''
 	},
 	data(){
 		return{
@@ -30,8 +31,6 @@ export default{
 	},
 	methods:{
 		publishReview(){
-			console.log("aquiiiii");
-			console.log(this.textreview);
 			const headers = {
         		'Content-Type': 'application/json',
 		    };
@@ -45,15 +44,18 @@ export default{
 				},
 				{ headers: headers } 
 				).then(resp =>{
+					this.$emit('newpost');
+
 					console.log(resp)
 				}).catch(err=>{
 					console.log(err)
 				})
 			}
+			this.textreview='';
+			this.bookrate=0;
 		},
 		publishRating(){
 			let rating = this.bookrate.toFixed(1);
-			console.log(rating);
 			const headers = {
         		'Content-Type': 'application/json',
 		    };
@@ -69,7 +71,6 @@ export default{
 				console.log("obrigar utilizador a inserir rating");
 				return;
 			} 
-
 		}
 	},
 	components: {

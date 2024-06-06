@@ -5,14 +5,14 @@
         </div>
         <img class="foto-icon" alt="" :src="imageReviewer">
         <div class="reviewer">
-        <span>review by</span>
+        <span>review by </span>
         <span class="sophie-mayer">{{ usernameReviewer }}</span>
 			<div>
 				<Rating id="estrelas" :modelValue="reviewRate" @update:modelValue="reviewRate = $event" readonly :cancel="false" />
 			</div>
 		</div>
         <div class="review">{{ reviewDescription }}</div>
-		<EmojiReactionComponent :emojiIds="emojiIds"></EmojiReactionComponent>
+		<EmojiReactionComponent :likes="likesCount" :emojiIds="emojiIds"></EmojiReactionComponent>
     </div> 
 	</main>
 </template>
@@ -25,7 +25,8 @@ export default{
 		reviewDescription: '',
 		imageReviewer:'',
 		usernameReviewer:'',
-		emojiIds:[]
+		emojiIds:[],
+		likesCount:{}
 	},
 	data(){
 		return{
