@@ -84,19 +84,19 @@ export default defineComponent({
   top: 0px;
   left: 0px;
   background: linear-gradient(#222831, #222831), #d9d9d9;
-  width: 648px; /* 720px * 0.9 */
+  width: 648px;
   height: 100%;
 }
 .coolreads {
   position: absolute;
   top: 64px;
-  left: 72px; /* 80px * 0.9 */
-  width: 160px; /* 177px * 0.9 */
-  height: 25px; /* 28px * 0.9 */
+  left: 72px;
+  width: 160px;
+  height: 25px;
 }
 
 .welcomeToCoolreads {
-  margin: 9; /* 10 * 0.9 */
+  margin: 9;
 }
 
 .welcomeToCoolreadsContainer1 {
@@ -104,11 +104,11 @@ export default defineComponent({
 }
 
 .welcomeToCoolreadsContainer {
-  width: 511px; /* 568px * 0.9 */
+  width: 511px;
   position: absolute;
-  top: 378px; /* 420px * 0.9 */
-  left: 27px; /* 30px * 0.9 */
-  font-size: 50.4px; /* 56px * 0.9 */
+  top: 378px;
+  left: 27px;
+  font-size: 50.4px;
   line-height: 1.2;
   font-family: Inika;
   background: linear-gradient(180deg, #fff, rgba(255, 255, 255, 0.44));
@@ -125,59 +125,59 @@ export default defineComponent({
 
 .coolreads1 {
   position: absolute;
-  top: 9px; /* 10px * 0.9 */
+  top: 9px;
   left: 0px;
   letter-spacing: 0.1em;
   line-height: 100%;
-  font-size: 27px; /* 30px * 0.9 */
+  font-size: 27px;
   font-weight: 550;
   color: #fff;
 }
 .coolreadsWrapper {
   position: absolute;
-  top: 6px; /* 7px * 0.9 */
-  left: 29px; /* 32px * 0.9 */
-  width: 138px; /* 153px * 0.9 */
-  height: 25px; /* 28px * 0.9 */
+  top: 6px;
+  left: 29px;
+  width: 138px;
+  height: 25px;
 }
 .c {
   position: absolute;
   top: 0px;
   left: 0px;
-  font-size: 36px; /* 40px * 0.9 */
+  font-size: 36px;
   font-family: Inika;
   color: #c48930;
 }
 .titlename {
   position: absolute;
-  top: 43px; /* 48px * 0.9 */
-  left: 43px; /* 48px * 0.9 */
-  width: 166px; /* 185px * 0.9 */
-  height: 51px; /* 57px * 0.9 */
+  top: 43px;
+  left: 43px;
+  width: 166px;
+  height: 51px;
 }
 .titlenameWrapper {
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 648px; /* 720px * 0.9 */
-  height: 810px; /* 900px * 0.9 */
+  width: 648px;
+  height: 810px;
   overflow: hidden;
-  font-size: 25.2px; /* 28px * 0.9 */
+  font-size: 25.2px;
   font-family: Inika;
 }
 .bg {
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 648px; /* 720px * 0.9 */
-  height: 810px; /* 900px * 0.9 */
+  width: 648px;
+  height: 810px;
 }
 .title {
   position: relative;
   line-height: 100%;
   text-align: center;
   font-weight: 600;
-  margin-bottom: 21.6px; /* 24px * 0.9 */
+  margin-bottom: 21.6px;
 }
 .textButton {
   position: relative;
@@ -201,7 +201,7 @@ export default defineComponent({
 .emailWrapper {
   align-self: stretch;
   display: flex;
-  font-size: 14.4px; /* 16px * 0.9 */
+  font-size: 14.4px;
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
@@ -212,21 +212,21 @@ export default defineComponent({
   line-height: 100%;
 }
 .inputTextChild {
-  width: 21.6px; /* 24px * 0.9 */
-  height: 21.6px; /* 24px * 0.9 */
+  width: 21.6px;
+  height: 21.6px;
 }
 .inputText {
   align-self: center;
   flex: none;
-  border-radius: 7.2px; /* 8px * 0.9 */
-  border: 2.7px solid #d1e9ff; /* 3px * 0.9 */
+  border-radius: 7.2px;
+  border: 2.7px solid #d1e9ff;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  padding: 7.2px 10.8px; /* 8px 12px * 0.9 */
-  width: 270px; /* 300px * 0.9 */
-  gap: 4.5px; /* 5px * 0.9 */
+  padding: 7.2px 10.8px;
+  width: 270px;
+  gap: 4.5px; 
 }
 .inputTextWrapper {
   align-self: center;
@@ -235,19 +235,19 @@ export default defineComponent({
   flex-direction: row;
   align-items:center;
   justify-content: center;
-  font-size: 12.6px; /* 14px * 0.9 */
+  font-size: 12.6px;
 }
 .frameGroup {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10.8px; /* 12px * 0.9 */
+  gap: 10.8px;
 }
 .iconeye {
-  width: 21.6px; /* 24px * 0.9 */
+  width: 21.6px;
   position: relative;
-  height: 21.6px; /* 24px * 0.9 */
+  height: 21.6px;
 }
 .iconeyeWrapper {
   display: flex;
@@ -258,15 +258,15 @@ export default defineComponent({
 .inputText1 {
   align-self: center;
   flex: none;
-  border-radius: 7.2px; /* 8px * 0.9 */
-  border: 0.9px solid #d0d5dd; /* 1px * 0.9 */
+  border-radius: 7.2px;
+  border: 0.9px solid #d0d5dd;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  padding: 7.2px 10.8px; /* 8px 12px * 0.9 */
-  width: 270px; /* 300px * 0.9 */
-  gap: 4.5px; /* 5px * 0.9 */
+  padding: 7.2px 10.8px; 
+  width: 270px;
+  gap: 4.5px;
 }
 .input {
   align-self: center;
@@ -275,7 +275,7 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   height: auto;
-  font-size: 12.6px; /* 14px * 0.9 */
+  font-size: 12.6px;
   color: #98a2b3;
 }
 .frameParent {
@@ -283,42 +283,42 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 21.6px; /* 24px * 0.9 */
+  gap: 21.6px;
   color: #344054;
 }
 .button {
   align-self: center;
-  border-radius: 7.2px; /* 8px * 0.9 */
+  border-radius: 7.2px;
   background-color: #2f3134;
-  height: 36px; /* 40px * 0.9 */
+  height: 36px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 270px; /* 300px * 0.9 */
-  padding: 14.4px; /* 16px * 0.9 */
+  width: 270px;
+  padding: 14.4px;
   box-sizing: border-box;
 }
 .icongoogleOriginal {
-  width: 18px; /* 20px * 0.9 */
+  width: 18px;
   position: relative;
-  height: 18px; /* 20px * 0.9 */
+  height: 18px;
   overflow: hidden;
   flex-shrink: 0;
 }
 .button1 {
   align-self: center;
-  border-radius: 7.2px; /* 8px * 0.9 */
+  border-radius: 7.2px;
   background-color: #d1e9ff;
-  height: 43.2px; /* 48px * 0.9 */
+  height: 43.2px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: 10.8px 14.4px; /* 12px 16px * 0.9 */
+  padding: 10.8px 14.4px;
   box-sizing: border-box;
-  width: 270px; /* 300px * 0.9 */
-  gap: 7.2px; /* 8px * 0.9 */
+  width: 270px;
+  gap: 7.2px;
   color: #1570ef;
 }
 .alreadyHaveAn {
@@ -339,8 +339,8 @@ export default defineComponent({
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 7.2px; /* 8px * 0.9 */
-  font-size: 12.6px; /* 14px * 0.9 */
+  gap: 7.2px;
+  font-size: 12.6px;
   color: #98a2b3;
 }
 .buttonParent {
@@ -349,39 +349,39 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 21.6px; /* 24px * 0.9 */
+  gap: 21.6px;
   color: #fcfcfd;
 }
 .form {
   position: absolute;
   top: 0px;
-  left: 765px; /* 850px * 0.9 */
+  left: 765px;
   background-color: #fff;
-  width: 917px; /* 1019px * 0.9 */
-  height: 1080px; /* 1200px * 0.9 */
+  width: 917px;
+  height: 1080px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 43.2px 64.8px; /* 48px 72px * 0.9 */
+  padding: 43.2px 64.8px;
   box-sizing: border-box;
-  gap: 28.8px; /* 32px * 0.9 */
-  font-size: 25.2px; /* 28px * 0.9 */
+  gap: 28.8px;
+  font-size: 25.2px;
 }
 .signuppage {
   width: 100%;
   position: relative;
   background-color: #fff;
-  height: 900px; /* 1000px * 0.9 */
+  height: 900px;
   text-align: left;
-  font-size: 50.4px; /* 56px * 0.9 */
+  font-size: 50.4px;
   color: #ffffff;
   font-family: Inika;
 }
 
 .button .textButton,
 .button1 .textButton {
-  font-size: 14.4px; /* 16px * 0.9 */
+  font-size: 14.4px;
   font-family: Inika;
 }
 </style>
