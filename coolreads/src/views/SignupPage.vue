@@ -41,6 +41,9 @@
             <div class="input">
               <div class="inputText1">
                 <div class="context">Enter your password</div>
+                <div class="iconeye-wrapper">
+							    <img class="iconeye" alt="" src="/img/iconeye.svg">
+						    </div>
               </div>
             </div>
           </div>
@@ -50,6 +53,7 @@
             <div class="textButton">Create account</div>
           </div>
           <div class="button1">
+            <img class="icongoogle-original" alt="" src="/img/GoogleLogo.svg">
             <div class="textButton">Continue with Google</div>
           </div>
           <div class="alreadyHaveAnAccountParent">
@@ -102,7 +106,13 @@ export default defineComponent({
 .welcomeToCoolreadsContainer1 {
   width: 100%;
 }
-
+.icongoogle-original {
+width: 15px;
+position: relative;
+height: 15px;
+overflow: hidden;
+flex-shrink: 0;
+}
 .welcomeToCoolreadsContainer {
   width: 511px;
   position: absolute;
@@ -245,9 +255,10 @@ export default defineComponent({
   gap: 10.8px;
 }
 .iconeye {
-  width: 21.6px;
+  width: 18.6px;
   position: relative;
-  height: 21.6px;
+  height: 18.6px;
+  top: 3px;
 }
 .iconeyeWrapper {
   display: flex;
