@@ -149,7 +149,12 @@ public class BookService {
         PageRequest pageable = PageRequest.of(pageNumber, pageSize);
         Page<Review> reviewsPage = this.bookReviewRepository.findByIsbn(isbn, pageable);
 
-        return reviewsPage.get().map(review -> this.bookMapper.toBookReviewDTO(review, this.bookReviewRepository.getReviewCommentSize(review))).collect(Collectors.toSet());
+        return reviewsPage.get().map(review -> {
+            BookReviewDTO bookReviewDTO = this.bookMapper.toBookReviewDTO(review, this.bookReviewRepository.getReviewCommentSize(review));
+            Optional<Double> rating = this.bookRatingRepository.findByBookIsbnAndUsername(isbn, bookReviewDTO.getCustomerUsername());
+            rating.ifPresent(bookReviewDTO::setRating);
+            return bookReviewDTO;
+        }).collect(Collectors.toSet());
     }
 
     public Set<BookReviewCommentDTO> getReviewComments(String isbn, String review_username, Integer pageNumber, Integer pageSize){

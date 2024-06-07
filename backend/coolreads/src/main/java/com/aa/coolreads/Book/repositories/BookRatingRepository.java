@@ -6,8 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface BookRatingRepository extends JpaRepository<Rating, RatingId> {
 
     @Query(value = "SELECT COALESCE(AVG(r.rating), 0) FROM Rating r WHERE r.book.isbn = :isbn")
     double getBookAverageRating(@Param("isbn") String isbn);
+
+    @Query(value = "SELECT r.rating FROM Rating r where r.book.isbn = :isbn AND r.customer.username = :username")
+    Optional<Double> findByBookIsbnAndUsername(String isbn, String username);
 }

@@ -36,6 +36,8 @@ public class BookshelfService {
         this.bookshelfMapper = bookshelfMapper;
     }
 
+
+
     @Transactional
     public void insertBookshelf(BookShelfCreationDTO bookShelfCreationDTO, String username) throws IllegalArgumentException, CustomerNotFoundException {
         Privacy privacy = Privacy.valueOf(bookShelfCreationDTO.getPrivacy().toUpperCase());
