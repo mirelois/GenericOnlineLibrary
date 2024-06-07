@@ -6,9 +6,19 @@ import FooterComponent from '../components/FooterComponent.vue';
 <template>
   <main>
     <NavComponent></NavComponent>
-    <ShelfSideBarComponent></ShelfSideBarComponent>
+    <ShelfSideBarComponent :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
   </main>
 </template>
+<script>
+export default{
+  data(){
+    return{
+      username:'techguru',
+			profileImg: 'https://randomuser.me/api/portraits/men/1.jpg'
+    }
+  }
+}
+</script>
 <style>
 @media (min-width: 1024px) {
     #app {

@@ -50,6 +50,11 @@ VALUES (
 
 docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO book_genres (book_isbn, genres_genre_type) VALUES ('1','scifi'),('1','fantasy');";
 
-docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO review (book_isbn, customer_username, description, post_date, rating) VALUES
-('1','techguru','Excelente leitura, muito envolvente e bem escrito.', '2024-05-01', 5),
-('1','historybuff','História interessante, mas o ritmo é um pouco lento.', '2024-05-02', 3);";
+docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO review (book_isbn, customer_username, description, post_date) VALUES
+('1','techguru','Excelente leitura, muito envolvente e bem escrito.', '2024-05-01'),
+('1','historybuff','História interessante, mas o ritmo é um pouco lento.', '2024-05-02');";
+
+docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO rating (book_isbn, customer_username, rating) VALUES
+('1','techguru',5),
+('1','historybuff',3);";
+
