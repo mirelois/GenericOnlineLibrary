@@ -5,6 +5,7 @@ import com.aa.coolreads.Book.models.Book;
 import com.aa.coolreads.Book.repositories.BookRepository;
 import com.aa.coolreads.User.dto.BookShelfCreationDTO;
 import com.aa.coolreads.User.dto.PersonalBookDTO;
+import com.aa.coolreads.User.dto.SimpleBookShelfDTO;
 import com.aa.coolreads.User.exception.BookshelfNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.mappers.BookshelfMapper;
@@ -45,13 +46,13 @@ public class BookshelfService {
     }
 
     @Transactional
-    public Set<BookShelfCreationDTO> getBookshelf(String username) throws CustomerNotFoundException {
+    public Set<SimpleBookShelfDTO> getBookshelf(String username) throws CustomerNotFoundException {
 
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
         PageRequest pageRequest = PageRequest.of(0, Integer.MAX_VALUE); // deixar assim enquanto o joão não quiser paginação XD
 
-        return this.bookshelfRepository.findBookshelvesByCustomer(customer, pageRequest).get().map(this.bookshelfMapper::bookShelfCreationDTO).collect(Collectors.toSet());
+        return this.bookshelfRepository.findBookshelvesByCustomer(customer, pageRequest).get().map(bookshelf -> this.bookshelfMapper.toSimpleBookShelfDTO(bookshelf, this.personalBooksRepository.getBooksSize(bookshelf))).collect(Collectors.toSet());
     }
 
     @Transactional

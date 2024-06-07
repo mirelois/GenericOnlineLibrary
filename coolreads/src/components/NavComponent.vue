@@ -1,4 +1,3 @@
-
 <template>
     <main>
         <div class="navegador">
@@ -10,7 +9,7 @@
             </div>
             <div v-if="isProfileOpen==true" tabindex="0" class="dropdown-profile">
                 <div class="viewprofileoption" id="viewProfileOptionContainer">
-                <div class="view-profile"><a>View Profile</a></div>
+                    <a href="/profile"><<div class="view-profile"><a>View Profile</a></div></a>
                 </div>
                 <div class="signoutoption" id="signoutOptionContainer">
                 <div class="view-profile"><a>Sign Out</a></div>

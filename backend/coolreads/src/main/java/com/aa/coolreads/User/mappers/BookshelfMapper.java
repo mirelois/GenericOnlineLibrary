@@ -3,6 +3,7 @@ package com.aa.coolreads.User.mappers;
 import com.aa.coolreads.Book.models.Book;
 import com.aa.coolreads.User.dto.BookShelfCreationDTO;
 import com.aa.coolreads.User.dto.PersonalBookDTO;
+import com.aa.coolreads.User.dto.SimpleBookShelfDTO;
 import com.aa.coolreads.User.models.Bookshelf;
 import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.models.PersonalBook;
@@ -16,8 +17,8 @@ public class BookshelfMapper {
         return new Bookshelf(name, privacy, customer);
     }
 
-    public BookShelfCreationDTO bookShelfCreationDTO(Bookshelf bookshelf){
-        return new BookShelfCreationDTO(bookshelf.getName(), bookshelf.getPrivacy().name());
+    public SimpleBookShelfDTO toSimpleBookShelfDTO(Bookshelf bookshelf, Integer bookCount){
+        return new SimpleBookShelfDTO(bookshelf.getName(), bookshelf.getPrivacy().name(), bookCount);
     }
 
     public PersonalBookDTO toPersonalBookDTO(PersonalBook personalBook){

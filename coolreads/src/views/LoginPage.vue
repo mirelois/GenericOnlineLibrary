@@ -25,13 +25,17 @@
 				<div class ="input">
 					<div class ="input-text1">
 						<div class="context">Enter your password</div>
+						<div class="iconeye-wrapper">
+							<img class="iconeye" alt="" src="/img/iconeye.svg">
+						</div>
 					</div>
 				</div>
 			</div>
-        <div class="buttonlogin">
+        <div class="buttonlogin" id="buttonloginContainer">
           <div class="textButton">Login now</div>
         </div>
-		<div class="buttongoogle">
+		<div class="buttongoogle" id="buttongoogleContainer">
+			<img class="icongoogle-original" alt="" src="/img/GoogleLogo.svg">
           <div class="textButton">Continue with Google</div>
         </div>
         <div class="dont-have-an-account-parent">
@@ -245,9 +249,9 @@ export default defineComponent({
   font-family: Inika;
 }
 .icongoogle-original {
-  	width: 20px;
+  	width: 15px;
   	position: relative;
-  	height: 20px;
+  	height: 15px;
   	overflow: hidden;
   	flex-shrink: 0;
 }
