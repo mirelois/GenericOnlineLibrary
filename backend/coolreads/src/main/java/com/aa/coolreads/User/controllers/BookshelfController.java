@@ -3,6 +3,7 @@ package com.aa.coolreads.User.controllers;
 import com.aa.coolreads.Book.exception.BookNotFoundException;
 import com.aa.coolreads.User.dto.BookShelfCreationDTO;
 import com.aa.coolreads.User.dto.PersonalBookDTO;
+import com.aa.coolreads.User.dto.SimpleBookShelfDTO;
 import com.aa.coolreads.User.exception.BookshelfNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.services.BookshelfService;
@@ -26,7 +27,7 @@ public class BookshelfController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<BookShelfCreationDTO>> getBookshelves(@PathVariable String username) {
+    public ResponseEntity<Set<SimpleBookShelfDTO>> getBookshelves(@PathVariable String username) {
         try {
             return ResponseEntity.ok().body(this.bookshelfService.getBookshelf(username));
         } catch (CustomerNotFoundException e) {

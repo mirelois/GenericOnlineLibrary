@@ -13,8 +13,10 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
     @Query(value = "SELECT pb FROM PersonalBook pb WHERE pb.bookshelf = :bookshelf")
     Page<PersonalBook> findBooks(Bookshelf bookshelf, PageRequest pageable);
 
-
     @Modifying
     @Query("DELETE FROM PersonalBook pb WHERE pb.bookshelf = :bookshelf AND pb.book.isbn = :isbn")
     void deletePersonalBookByIsbnAndBookshelf(String isbn, Bookshelf bookshelf);
+
+    @Query(value = "SELECT pb FROM PersonalBook pb WHERE pb.bookshelf = :bookshelf")
+    Integer getBooksSize(Bookshelf bookshelf);
 }
