@@ -2,33 +2,29 @@
 	<main>
 	<div class="shelf-sidebar">
 		<b class="title">Your Bookshelves</b>
-		<div class="shelves-parent">
-			<div class="shelves">Want To Read</div>
-			<div class="shelves1">3</div>
-		</div>
-		<div class="shelves-group">
-			<div class="shelves1">1</div>
-			<div class="shelves3">Currently Reading </div>
-		</div>
-		<div class="shelves-container">
-			<div class="shelves1">5</div>
-			<div class="shelves5">Read</div>
-		</div>
-		<div class="group-div">
-			<div class="shelves1">0</div>
-			<div class="shelves7">Did Not Finish</div>
-		</div>
-		<div class="shelves-parent1">
-			<div class="shelves1">1</div>
-			<div class="shelves7">Aasimov Rules</div>
-		</div>
-		<div class="shelves-parent2" id="groupContainer5">
-			<div class="shelves10" id="shelvesText">All</div>
-			<div class="shelves1">10</div>
-		</div>
 		<div class="create-bookshelf-btn" id="createBookshelfBtnContainer">
 			<button @click="showCreateBookshelfMenu" class="createbs">+ Create Bookshelf</button>
 			<img class="transfer-icon" alt="" src="/img/transfer.svg">
+		</div>
+		<div class="shelves-parent">
+			<div class="shelves"><a href="/bookshelves/want_to_read">Want To Read</a></div>
+			<div class="shelves1">-</div>
+		</div>
+		<div class="shelves-group">
+			<div class="shelves1">-</div>
+			<div class="shelves3"><a href="/bookshelves/currently_reading">Currently Reading</a></div>
+		</div>
+		<div class="shelves-container">
+			<div class="shelves1">-</div>
+			<div class="shelves5"><a href="/bookshelves/read">Read</a></div>
+		</div>
+		<div class="shelves-parent2" id="groupContainer5">
+			<div class="shelves10" id="shelvesText">All</div>
+			<div class="shelves1">-</div>
+		</div>
+		<div v-for="(bookshelf,index) in mybookshelves" :key="index" class="children-shelves-parent">
+			<div class="shelves1">-</div>
+			<a :href="`/bookshelves/${bookshelf.name}`">{{ bookshelf.name }}</a>
 		</div>
 	</div>
 	<div v-show="showPopup" id="popup1" class="overlay">
@@ -62,6 +58,7 @@ export default{
 			showPopup:false,
 			bookshelfname:'',
 			msg:'',
+			mybookshelves:[]
 		}
 	},methods:{
 		showCreateBookshelfMenu(){
@@ -80,13 +77,26 @@ export default{
 				},
 				{ headers: headers } 
 				).then(resp =>{
-					if(resp.status==200) this.msg="The bookshelf you inserted was created successfully.";
+					if(resp.status==200){
+						this.msg="The bookshelf you inserted was created successfully.";
+						this.mybookshelves.push({"name":this.bookshelfname,"privacy":"public","nr":0})
+					} 
 					else this.msg = "The bookshelf you inserted already exists";
 					this.showPopup = true;
 				}).catch(err=>{
 					console.log(err)
 				})
+		},
+		getBookshelves(){
+			axios.get("http://localhost:8080/customer/"+this.username+"/bookshelf").then(resp =>{
+				this.mybookshelves = resp.data;
+				console.log(this.mybookshelves);
+			}).catch(err=>{
+				console.log(err)
+			})
 		}
+	},created(){
+		this.getBookshelves();
 	}
 }
 </script>
@@ -117,15 +127,26 @@ export default{
   	top: 0px;
   	left: 243px;
   	display: inline-block;
+	margin-bottom:20px;
   	width: 19px;
+	height:30px;
 }
 .shelves-parent {
   	position: absolute;
-  	top: 99px;
+  	top: 160px;
   	left: 41px;
   	width: 262px;
   	height: 26px;
 }
+
+.children-shelves-parent {
+	position:relative;
+	top: 280px;
+	left: 31px;
+	height:40px;
+	margin-bottom:5px;
+}
+
 .shelves3 {
   	position: absolute;
   	top: 0px;
@@ -133,7 +154,7 @@ export default{
 }
 .shelves-group {
   	position: absolute;
-  	top: 131px;
+  	top: 200px;
   	left: 41px;
   	width: 262px;
   	height: 26px;
@@ -144,10 +165,11 @@ export default{
   	left: 0px;
   	display: inline-block;
   	width: 168px;
+	height:30px;
 }
 .shelves-container {
   	position: absolute;
-  	top: 163px;
+  	top: 242px;
   	left: 41px;
   	width: 262px;
   	height: 26px;
@@ -200,11 +222,14 @@ export default{
   	display: inline-block;
   	width: 168px;
   	cursor: pointer;
+	height:30px;
 }
+
 .shelves-parent2 {
   	position: absolute;
-  	top: 67px;
+  	top: 120px;
   	left: 41px;
+	height:30px;
   	width: 262px;
   	height: 26px;
   	cursor: pointer;
@@ -223,7 +248,7 @@ export default{
 }
 .createbs {
 	position: absolute;
-	height: 100%;
+	height: 40px;
 	width: 73.32%;
 	top: 25%;
 	left: 12%;
@@ -248,7 +273,7 @@ export default{
 }
 .create-bookshelf-btn {
   	position: absolute;
-  	top: 269px;
+  	top: 60px;
   	left: 41px;
   	width: 262px;
   	height: 39px;
@@ -257,11 +282,11 @@ export default{
 }
 
 .shelf-sidebar {
-	width: 350px;
-	position: fixed;
+	width: 400px;
+	position: absolute;
 	border-radius: 5px;
 	background: #000;
-	height: 332px;
+	height: 100%;
 	text-align: left;
 	font-size: 20px;
 	color: #fff;
@@ -341,6 +366,7 @@ export default{
 	color: #bababa;
 	font-family: Inika;
 	margin-left: -800px;
+	margin-top: -350px;
 }
 
 .overlay {

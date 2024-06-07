@@ -1,15 +1,15 @@
 <template>
-<div class="state-component">
+    <div class="state-component">
         <div class="listbox-title">
             <img class="statedown-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
             </div>
             <div class="listbox-main">
-            <div class="listboxbg">{{stateValue}}
-            </div>
+            <button @click="choosen_state" class="listboxbg">{{stateValue}}
+            </button>
         <div v-if="showStateMenu===true">
             <StateSelectorComponent @optionStateSelected="optionofStateSelected"></StateSelectorComponent>
         </div>
-        </div>    
+        </div> 
     </div>
 </template>
 <script>
@@ -28,6 +28,9 @@ export default{
         },
         optionofStateSelected(state){
             this.$emit('bookStateSelected', state);
+        },
+        choosen_state(){
+            this.$emit('choosen_state', this.stateValue);
         }
     },components:{
         StateSelectorComponent
@@ -37,15 +40,15 @@ export default{
 <style>
 
 .listbox-title {
-  position: absolute;
-  font-family: "Inika-Regular", Helvetica;
-  height: 6.92%;
-  width: 90.91%;
-  top: -20px;
-  right: 4.55%;
-  bottom: 93.08%;
-  left: 4.55%;
-  font-size: 25px;
+    position: absolute;
+    font-family: "Inika-Regular", Helvetica;
+    height: 6.92%;
+    width: 90.91%;
+    top: -20px;
+    right: 4.55%;
+    bottom: 93.08%;
+    left: 4.55%;
+    font-size: 25px;
 }
 .listboxbg {
     position: absolute;
@@ -66,7 +69,13 @@ export default{
     padding-top: 11px;
     padding-right: 11px;
 }
-
+.listboxbg:active{
+    transform: scale(0.98); 
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24); 
+}
+.listboxbg:hover {
+    cursor:pointer;
+}
 .statedown-icon-d {
   position: absolute;
   height: 35px;

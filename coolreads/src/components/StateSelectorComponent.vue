@@ -26,7 +26,7 @@
     </main>
 </template>
 <script>
-  export default {
+export default {
     data(){
       return{
         close_state_selector:false
@@ -87,6 +87,14 @@
     border-width: 0px 0px 0px 0px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
+.state-book-row:hover{
+  cursor: pointer;
+}
+.state-book-row:active{
+  transform: scale(0.98); 
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24); 
+}
+
 .state-card .overlap-group {
   position: absolute;
   width: 1012px;

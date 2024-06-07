@@ -32,7 +32,14 @@ import Rating from 'primevue/rating';
     		<div class="nr-rates">{{ nrratings }} ratings</div>
     		<div class="nr-reviews">{{ nrreviews }} reviews</div>
 			<div>
-				<StateComponent :stateValue ="stateSelected" @bookStateSelected="getBookState"></StateComponent>
+				<StateComponent @choosen_state="showConfirm=true" :stateValue ="stateSelected" @bookStateSelected="getBookState"></StateComponent>
+			</div>
+			<AddToBookshelfComponent @click="showAddtoBookshelf=true"></AddToBookshelfComponent>			
+			<div v-if="showAddtoBookshelf==true">
+				<BookshelfSelectorComponent :bookISBN="isbn" :username="username" @closebookshelvesoptions="showAddtoBookshelf=false"></BookshelfSelectorComponent>
+			</div>
+			<div v-if="showConfirm==true">
+				<ConfirmComponent @confirmation_response="book_management" :state="stateSelected"></ConfirmComponent>
 			</div>
     		<div class="separator">
     		</div>
@@ -68,6 +75,9 @@ import Rating from 'primevue/rating';
 <script>
 import StateComponent from '../components/StateComponent.vue';
 import axios from "axios";
+import ConfirmComponent from '@/components/ConfirmComponent.vue';
+import AddToBookshelfComponent from '@/components/AddToBookshelfComponent.vue';
+import BookshelfSelectorComponent from '@/components/BookshelfSelectorComponent.vue';
 export default {
 	data(){
 		return{
@@ -83,7 +93,7 @@ export default {
 			authorcolor: "#5d5d5e",
 			authorfont: "normal",
 			activeTab:"Reviews",
-			stateSelected:"+ Want To Read",
+			stateSelected:"Want To Read",
 			ratingAverage:0.0,
 			reviews:[],
 			nrreviews:0,
@@ -93,14 +103,18 @@ export default {
 			isbn:'',
 			nrpageReview:0,
 			showLoading:false,
-			showMoretxt:true
+			showMoretxt:true,
+			showConfirm:false,
+			showAddtoBookshelf:false
 		}
 	},
 	components: {
         NavComponent,
 		Rating,
 		StateComponent,
-		FooterComponent
+		FooterComponent,
+		ConfirmComponent,
+		AddToBookshelfComponent
     },created(){
 		this.isbn = this.$route.params.bookisbn;
 		this.getBook(this.isbn);
@@ -166,7 +180,11 @@ export default {
 			console.log("heerree");
             console.log(state);
             console.log(this.stateSelected);
-			this.stateSelected = "+ "+state;
+			this.stateSelected = state;
+		},
+		book_management(resp){
+			if(resp=='no') this.showConfirm=false;
+			console.log(resp)
 		}
 	}
 

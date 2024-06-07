@@ -10,7 +10,7 @@ import FooterComponent from '../components/FooterComponent.vue';
   </main>
 </template>
 <script>
-export default{
+export default {
   data(){
     return{
       username:'techguru',
@@ -18,6 +18,8 @@ export default{
     }
   }
 }
+
+
 </script>
 <style>
 @media (min-width: 1024px) {
