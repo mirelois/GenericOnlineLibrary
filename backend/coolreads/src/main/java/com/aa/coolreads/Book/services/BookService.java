@@ -157,6 +157,7 @@ public class BookService {
         }).collect(Collectors.toSet());
     }
 
+    @Transactional
     public Set<BookReviewCommentDTO> getReviewComments(String isbn, String review_username, Integer pageNumber, Integer pageSize){
 
         PageRequest pageable = PageRequest.of(pageNumber, pageSize);

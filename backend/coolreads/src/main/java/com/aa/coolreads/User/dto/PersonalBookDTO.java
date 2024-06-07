@@ -9,16 +9,13 @@ public class PersonalBookDTO {
 
     private Date insertDate;
 
-    private String bookshelfName;
-
     private String bookISBN;
 
     public PersonalBookDTO(){}
 
-    public PersonalBookDTO(Integer pagesRead, Date insertDate, String bookshelfName, String bookISBN) {
+    public PersonalBookDTO(Integer pagesRead, Date insertDate, String bookISBN) {
         this.pagesRead = pagesRead;
         this.insertDate = insertDate;
-        this.bookshelfName = bookshelfName;
         this.bookISBN = bookISBN;
     }
 
@@ -36,14 +33,6 @@ public class PersonalBookDTO {
 
     public void setInsertDate(Date insertDate) {
         this.insertDate = insertDate;
-    }
-
-    public String getBookshelfName() {
-        return bookshelfName;
-    }
-
-    public void setBookshelfName(String bookshelfName) {
-        this.bookshelfName = bookshelfName;
     }
 
     public String getBookISBN() {
