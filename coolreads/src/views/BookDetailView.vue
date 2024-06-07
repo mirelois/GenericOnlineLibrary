@@ -26,7 +26,7 @@ import Rating from 'primevue/rating';
 			</div>
     		<div class="descricao"> {{ description }}</div>
 			<div class="group-stars">
-				<Rating id="estrelas" v-model="bookrate" readonly :cancel="false" />
+				<Rating id="estrelas" v-model="ratingAverage" readonly :cancel="false" />
 			</div>
 			<div class="classificacao">{{ ratingAverage }}/5</div>
     		<div class="nr-rates">{{ nrratings }} ratings</div>
@@ -40,10 +40,15 @@ import Rating from 'primevue/rating';
 	<div v-bind:style="{ 'color': reviewcolor, 'font-weight': reviewfont }" @click="changeTabStyle(`Reviews`)" class="reviews-title">Reviews 
 			<img class="line-icon" alt="" src="/img/line.svg"> 
 			<div v-if="activeTab=='Reviews'">
-			<MyReviewComponent @newpost="getReviews(this.isbn,1)" :username="username" :profileImg="profileImg" :isbn="isbn"></MyReviewComponent>
+			<MyReviewComponent @newpost="getReviews(this.isbn)" :username="username" :profileImg="profileImg" :isbn="isbn"></MyReviewComponent>
 			<div class="review-div" v-for="review in reviews" v-if="!review">
 					<ReviewComponent :likesCount="review.likes" :emojiIds="review.emojiIds" :reviewRate="review.rating" :reviewDescription="review.description"
 					:imageReviewer="review.customerUrl" :usernameReviewer="review.customerUsername"></ReviewComponent>					
+			</div>
+			<div v-show="showLoading==true">
+					<img alt="" width="30px" height="30px" src="/img/kOnzy.gif">
+				</div>
+			<div v-if="showMoretxt==true" @click="getMoreReviews" class="loadtxt">Load More Reviews
 			</div>
 			</div>
     		</div>
@@ -66,7 +71,6 @@ import axios from "axios";
 export default {
 	data(){
 		return{
-			bookrate:3,
 			title:"",
 			author:"",
 			publisher:"",
@@ -87,7 +91,9 @@ export default {
 			username:'techguru',
 			profileImg: 'https://randomuser.me/api/portraits/men/1.jpg',
 			isbn:'',
-			nrpageReview:0
+			nrpageReview:0,
+			showLoading:false,
+			showMoretxt:true
 		}
 	},
 	components: {
@@ -98,7 +104,7 @@ export default {
     },created(){
 		this.isbn = this.$route.params.bookisbn;
 		this.getBook(this.isbn);
-		this.getReviews(this.isbn,0);
+		this.getReviews(this.isbn);
 	},methods:{
 		getBook(isbn){
 			axios.get("http://localhost:8080/book/"+isbn).then(book =>{
@@ -115,10 +121,14 @@ export default {
 				console.log(err)
 			})
 		},
-		getReviews(isbn,refresh){
-			axios.get("http://localhost:8080/book/"+isbn+"/review?page="+this.nrpageReview+"&size=5").then(review =>{
-				if(refresh==0) this.reviews= this.reviews.concat(review.data);
-				else this.reviews = review.data;
+		getReviews(isbn){
+			axios.get("http://localhost:8080/book/"+isbn+"/review?page="+this.nrpageReview+"&size=1").then(review =>{
+				if(review.data.length==0){
+					this.showMoretxt=false;
+					return;
+				}
+				this.reviews= this.reviews.concat(review.data);
+				//else this.reviews = review.data;
 				let descreview = this.reviews.filter(b=> b.description!="");
 				this.nrreviews = descreview.length;
 				this.nrratings = this.reviews.length;
@@ -130,6 +140,11 @@ export default {
 			}).catch(err=>{
 				console.log(err)
 			})
+		},
+		getMoreReviews(){
+			this.nrpageReview = this.nrpageReview + 1;
+			this.getReviews(this.isbn);
+			this.showLoading = false;
 		},
 		changeTabStyle(tab){
 			if(tab=="Author"){
@@ -203,6 +218,13 @@ export default {
 	overflow: auto;
 	flex-shrink: 0;
 }
+
+.loadtxt{
+	font-size:20px;
+	color:#a5a3a3;
+	text-decoration:underline;
+}
+
 
 .bookpagecomponent-child {
 	width: 3000px;
