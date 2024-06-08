@@ -22,6 +22,15 @@ public class BookController {
         this.bookService = bookService;
     }
 
+    @GetMapping("/name")
+    public Set<BookDTO> getBooks(@RequestParam String title){
+        try{
+            return bookService.findBooksByTitle(title);
+        } catch (BookNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
     @GetMapping("/{isbn}")
     public FullBookDTO getBook(@PathVariable String isbn){
         try{

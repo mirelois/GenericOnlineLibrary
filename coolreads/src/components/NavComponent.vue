@@ -22,7 +22,11 @@
                 <img class="vuesax-outline-home" src="/img/home-2.svg"/>Home
             </div></a>
             <div>
-                <input type="text" class="my-search-box" placeholder="Search for books, readers and writers . . ." name="search">
+                <input type="text" v-model="inputtxt" class="my-search-box" placeholder="Search for books, readers and writers . . ." name="search">
+                <div v-if="inputtxt!=''" id="myDropdown" class="dropdown-content">
+                    <a href="#1">{{textInserted}}</a>
+                    <a v-for="r in getResults" :href="`/books/${r.isbn}`">{{r.name}}</a>
+                </div>
             </div>
             <a href="/bookmenu"><div class="books-section">
                 <img class="book-light" src="/img/Book_light.svg"/>Books
@@ -48,13 +52,23 @@ export default {
     data(){
         return {
             isProfileOpen:false,
-            backgroundColor: "#000000"
+            backgroundColor: "#000000",
+            inputtxt:'',
+            results:[
+                {"isbn":'2323',"name":"harry potter e a pedra filosofal"},
+                {"isbn":'123123',"name":"harry potter e a camera dos segredos"},
+                {"isbn":'32432',"name":"harry potter e o prisioneiro de azkaban"},
+                {"isbn":'5642',"name":"harry potter e o calice de fogo"},
+                {"isbn":'2345',"name":"harry potter e a ordem da fenix"},
+                {"isbn":'32423',"name":"harry potter e o principe misterioso"},
+                {"isbn":'232',"name":"harry potter e o talismas da morte"}
+            ]
         }
     },
     computed: {
         computedColor: function () {
-        return this.backgroundColor;
-        }
+            return this.backgroundColor;
+        }        
     },
     methods: {
         openProfile() {
@@ -63,7 +77,15 @@ export default {
             
             this.isProfileOpen = !this.isProfileOpen
             console.log("here:"+isProfileOpen)
-
+        }
+    },
+    computed:{
+        textInserted(){
+            return this.inputtxt;
+        },
+        getResults(){
+            // fazer get dos books com um titulo que inclui o inputxt
+            return this.results.filter((r)=>r.name.toLowerCase().includes(this.inputtxt)); // temporario
         }
     }
 }
@@ -71,6 +93,26 @@ export default {
 
 
 <style>
+.dropdown-content {
+    display: block;
+    position: absolute;
+    background-color: #a8a8a8;
+    width: 550px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    top: 89px;
+    left: 465px;
+    padding-left: 35px;
+    min-width: 550px;
+    z-index: 31;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
 
 a {
     color:white;
@@ -263,14 +305,22 @@ a:hover { text-decoration: underline; }
   height: 70px;
   top: 22px;
   left: 462px;
-  font-size: 22px;
   padding-left: 35px;
+  font-size: 22px;
   background: url("/img/Search.svg") no-repeat left;
     background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0);
   border-radius: 15px;
-  border-width: 0px;
+  border-width: 3px;
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
   overflow: hidden;
   background-color: #6b6b6b;
+  z-index: 32;
+  border-style: solid;
+  border-color: black;
 }
 
 ::placeholder {

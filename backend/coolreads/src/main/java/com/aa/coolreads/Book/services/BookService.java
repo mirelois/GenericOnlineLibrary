@@ -112,6 +112,14 @@ public class BookService {
         return this.bookMapper.toFullBookDTO(book, averageRating);
     }
 
+    @Transactional
+    public Set<BookDTO> findBooksByTitle(String title) throws BookNotFoundException {
+        PageRequest pageable = PageRequest.of(0, 5);
+        Page<Book> books =  this.bookRepository.findBooksByTitle(title,pageable);
+        return books.stream().map(this.bookMapper::toBookDTO).collect(Collectors.toSet());
+    }
+
+
     private void checkIfValidISBN(String isbn) throws InvalidISBNExeption {
 
         ISBNValidator isbnValidator = new ISBNValidator();
