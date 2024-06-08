@@ -16,7 +16,7 @@ import { ref } from 'vue'
 export default {
     props:{
         username:'',
-        isbn:''
+        bookISBN:''
     },
     data(){
         return {
@@ -45,11 +45,11 @@ export default {
             const date = new Date();
 			const isoDateString = date.toISOString();
             this.checkedOptions.forEach(bookshelf => {
-                axios.post("http://localhost:8080/customer/"+this.username+"/bookshelf/"+bookshelf+"?username="+this.username,
+                axios.post("http://localhost:8080/customer/"+this.username+"/bookshelf/"+bookshelf,
 				{
                     pagesRead:0,
 					insertDate:isoDateString,
-					bookISBN: this.isbn
+					bookISBN: this.bookISBN
 				},
 				{ headers: headers } 
 				).then(resp =>{

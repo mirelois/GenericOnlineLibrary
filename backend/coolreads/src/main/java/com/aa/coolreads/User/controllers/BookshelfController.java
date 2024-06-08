@@ -55,7 +55,7 @@ public class BookshelfController {
     }
 
     @PostMapping("/{name}")
-    public ResponseEntity<Void> insertBook(@PathVariable String name, @RequestParam String username, @RequestBody PersonalBookDTO book){
+    public ResponseEntity<Void> insertBook(@PathVariable String name, @PathVariable String username, @RequestBody PersonalBookDTO book){
         try{
             this.bookshelfService.insertBook(name, username, book);
             return ResponseEntity.ok().build();
@@ -65,7 +65,7 @@ public class BookshelfController {
     }
 
     @DeleteMapping("/{name}")
-    public ResponseEntity<Void> deleteBook(@PathVariable String name, @RequestParam String username, @RequestParam String isbn){
+    public ResponseEntity<Void> deleteBook(@PathVariable String name, @PathVariable String username, @RequestParam String isbn){
         try{
             this.bookshelfService.deleteBook(name, username, isbn);
             return ResponseEntity.ok().build();

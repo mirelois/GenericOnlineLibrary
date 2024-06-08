@@ -59,14 +59,15 @@
     height: 35px;
 }
 .ribbon {
-  width: auto;
-  position: absolute;
-  height: 35px;
-  text-align: left;
-  font-size: 20px;
-  color: #888585;
-  font-family: Karla;
-  margin-top: -2675px;
-  margin-left: 1300px;
+    width: auto;
+    position: absolute;
+    height: 35px;
+    text-align: left;
+    font-size: 20px;
+    color: #888585;
+    font-family: Karla;
+    margin-top: -2675px;
+    margin-left: 1300px;
+    cursor:pointer;
 }
 </style>
