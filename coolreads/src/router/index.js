@@ -15,7 +15,7 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/bookshelves/:name',
+      path: '/bookshelves/:bookshelfname',
       name: 'bookshelves',
       component: BookshelfView
     },

@@ -44,7 +44,7 @@ import FooterComponent from '../components/FooterComponent.vue';
                         <div class="book">
                             <div class="overlap-group">
                                 <div v-for="book in displayBooksPerPage" v-if="!book">
-                                    <BookComponent :cover="book.cover" ></BookComponent>
+                                    <BookComponent :cover="book.coverImage" :bookISBN="book.bookISBN" ></BookComponent>
                                 </div>
                             </div>
                         </div>
@@ -70,6 +70,7 @@ import FooterComponent from '../components/FooterComponent.vue';
     <NavComponent></NavComponent>
 </template>
 <script>
+import axios from "axios";
 export default {
     components: {
         NavComponent,
@@ -77,22 +78,7 @@ export default {
     },
     data(){
         return {
-                bookshelf:[
-                { titulo:"biografia", rate:2.3,launchDate:"2011-10-11", cover: "/img/biografia.png", id: 1 },
-                { titulo:"desporto", rate:3.3,launchDate:"2021-11-11",cover: "/img/desporto.png", id: 2 },
-                { titulo:"misterio", rate:1.3,launchDate:"2013-05-21",cover: "/img/misterio.png", id: 3 },
-                { titulo:"musica",rate:1.4,launchDate:"2019-06-22",cover: "/img/musica.png", id: 4 },
-                { titulo:"biografia",rate:4.3, launchDate:"2019-03-11",cover: "/img/biografia.png", id: 1 },
-                { titulo:"musica",rate:1.4,launchDate:"2019-06-22",cover: "/img/musica.png", id: 4 },
-                { titulo:"biografia",rate:4.3, launchDate:"2019-03-11",cover: "/img/biografia.png", id: 1 },
-                { titulo:"musica",rate:1.4,launchDate:"2019-06-22",cover: "/img/musica.png", id: 4 },
-                { titulo:"biografia",rate:4.3, launchDate:"2019-03-11",cover: "/img/biografia.png", id: 1 },
-                { titulo:"musica",rate:1.4,launchDate:"2019-06-22",cover: "/img/musica.png", id: 4 },
-                { titulo:"biografia",rate:4.3, launchDate:"2019-03-11",cover: "/img/biografia.png", id: 1 },
-                { titulo:"desporto",rate:4.5, launchDate:"2021-01-21",cover: "/img/desporto.png", id: 2 },
-                { titulo:"misterio",rate:3.3,launchDate:"2022-05-21", cover: "/img/misterio.png", id: 3 },
-                { titulo:"fantasia",rate:2.4,launchDate:"2023-02-11",cover: "/img/fantasia.png", id: 5 }
-            ],
+            bookshelf:[],  //{ titulo:"biografia", rate:2.3,launchDate:"2011-10-11", cover: "/img/biografia.png", id: 1 },
             activate : [],
             showDropdownMenu:false,
             page: 0,
@@ -100,7 +86,9 @@ export default {
             nrpages : 0,
             search_input: '',
             filtered: [],
-            selectedOption: 'Select Sorting Operation'
+            selectedOption: 'Select Sorting Operation',
+            bookshelfname:'',
+            username:'techguru'
         }
     },
     methods: {
@@ -109,7 +97,7 @@ export default {
         },
         sortBooks(param){
             if(param=="Date"){
-                this.filtered.sort((a,b)=> new Date(a.launchDate) - new Date(b.launchDate))
+                this.filtered.sort((a,b)=> new Date(a.insertDate) - new Date(b.insertDate))
                 console.log(this.filtered)
             }
             if(param=="Rate"){
@@ -117,10 +105,10 @@ export default {
                 console.log(this.filtered)
             }
             else{
-                this.filtered.sort((a,b)=>a.titulo.localeCompare(b.titulo))
+                this.filtered.sort((a,b)=>a.title.localeCompare(b.title))
             }
             this.selectedOption = param
-            this.page = 0; // Reset to the first page after sorting
+            this.page = 0; 
             this.nrpages = Math.ceil(this.filtered.length / this.maxPerPage);
             this.initializeActivate();
         },
@@ -143,24 +131,33 @@ export default {
         initializeActivate(){
             this.activate = new Array(this.nrpages).fill(false)
             this.activate[0] = true;
+        },
+        getBooks(){
+            this.bookshelfname = this.$route.params.bookshelfname;
+            axios.get('http://localhost:8080/customer/'+this.username+'/bookshelf/'+this.bookshelfname).then(books=>{
+                this.bookshelf = books.data;
+                console.log("allbooks");
+                console.log(books.data);
+            }).catch(err=>{
+                console.log(err)
+            })
         }
     },
     created(){
+        this.getBooks();
         this.nrpages = Math.ceil(this.filtered.length / this.maxPerPage);
         this.initializeActivate();
     },
     computed: {
         displayBooksPerPage(){
             if (this.search_input !== '') {
-                this.filtered = this.bookshelf.filter(b => b.titulo.toLowerCase().includes(this.search_input))
+                this.filtered = this.bookshelf.filter(b => b.title.toLowerCase().includes(this.search_input))
             }else{
                 this.filtered = this.bookshelf
             }
             const startIndex = this.maxPerPage * this.page;
             const endIndex = startIndex + this.maxPerPage;
             this.nrpages = Math.ceil(this.filtered.length / this.maxPerPage);
-            //console.log(startIndex)
-            //console.log(endIndex)
             if(startIndex>=0 && startIndex<this.filtered.length && endIndex>0 && endIndex<this.filtered.length) return this.filtered.slice(startIndex, endIndex);
             else if(endIndex>=this.filtered.length) {
                 const endIndex=this.filtered.length;

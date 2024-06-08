@@ -23,7 +23,7 @@
 			<div class="shelves1">-</div>
 		</div>
 		<div v-for="(bookshelf,index) in mybookshelves" :key="index" class="children-shelves-parent">
-			<div class="shelves1">-</div>
+			<div class="shelves1">{{ bookshelf.bookCount }}</div>
 			<a :href="`/bookshelves/${bookshelf.name}`">{{ bookshelf.name }}</a>
 		</div>
 	</div>
@@ -79,7 +79,7 @@ export default{
 				).then(resp =>{
 					if(resp.status==200){
 						this.msg="The bookshelf you inserted was created successfully.";
-						this.mybookshelves.push({"name":this.bookshelfname,"privacy":"public","nr":0})
+						this.mybookshelves.push({"name":this.bookshelfname,"privacy":"public","bookCount":0})
 					} 
 					else this.msg = "The bookshelf you inserted already exists";
 					this.showPopup = true;

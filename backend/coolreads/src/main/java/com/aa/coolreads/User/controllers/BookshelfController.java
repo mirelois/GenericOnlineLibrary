@@ -46,9 +46,9 @@ public class BookshelfController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<Set<PersonalBookDTO>> getBooks(@PathVariable String username, @PathVariable String name, @RequestParam Integer page, @RequestParam Integer size){
+    public ResponseEntity<Set<PersonalBookDTO>> getBooks(@PathVariable String username, @PathVariable String name){ //, @RequestParam Integer page, @RequestParam Integer size
         try{
-            return ResponseEntity.ok().body(this.bookshelfService.getBooks(name, username, page, size));
+            return ResponseEntity.ok().body(this.bookshelfService.getBooks(name, username));//, page, size
         } catch (BookshelfNotFoundException | CustomerNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

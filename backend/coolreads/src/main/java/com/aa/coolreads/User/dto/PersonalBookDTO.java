@@ -11,12 +11,18 @@ public class PersonalBookDTO {
 
     private String bookISBN;
 
+    private String coverImage;
+
+    private String title;
+
     public PersonalBookDTO(){}
 
-    public PersonalBookDTO(Integer pagesRead, Date insertDate, String bookISBN) {
+    public PersonalBookDTO(Integer pagesRead, Date insertDate, String bookISBN, String coverImage, String title) {
         this.pagesRead = pagesRead;
         this.insertDate = insertDate;
         this.bookISBN = bookISBN;
+        this.coverImage = coverImage;
+        this.title = title;
     }
 
     public Integer getPagesRead() {
@@ -42,4 +48,21 @@ public class PersonalBookDTO {
     public void setBookISBN(String bookISBN) {
         this.bookISBN = bookISBN;
     }
+
+    public String getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
 }

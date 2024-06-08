@@ -3,7 +3,7 @@
         <div class="book">
             <div class="property-minorbook">
                 <div class="overlap-group">
-                    <a href="/books/1"><img class="book-2" :src="cover"/></a>
+                    <a :href="`/books/${bookISBN}`"><img class="book-2" :src="cover"/></a>
                     <img class="remove" src="/img/minus-circle.svg"/>
                 </div>
             </div>
@@ -13,7 +13,8 @@
 <script>
 export default{
     props: {
-        cover: String
+        cover: String,
+        bookISBN: String
     }
 }
 </script>

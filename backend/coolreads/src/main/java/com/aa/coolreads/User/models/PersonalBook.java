@@ -56,7 +56,6 @@ public class PersonalBook implements Serializable {
         this.insertDate = insertDate;
     }
 
-
     public Book getBook() {
         return book;
     }

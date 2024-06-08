@@ -83,13 +83,13 @@ public class BookshelfService {
     }
 
     @Transactional
-    public Set<PersonalBookDTO> getBooks(String name, String username, Integer page, Integer size) throws CustomerNotFoundException, BookshelfNotFoundException {
+    public Set<PersonalBookDTO> getBooks(String name, String username) throws CustomerNotFoundException, BookshelfNotFoundException {//, Integer page, Integer size
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
         Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(name, customer).orElseThrow(() -> new BookshelfNotFoundException(name));
 
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return this.personalBooksRepository.findBooks(bookshelf, pageRequest).get().map(this.bookshelfMapper::toPersonalBookDTO).collect(Collectors.toSet());
+        PageRequest pageRequest = PageRequest.of(0, Integer.MAX_VALUE);
+        return this.personalBooksRepository.findBooks(bookshelf,pageRequest).get().map(this.bookshelfMapper::toPersonalBookDTO).collect(Collectors.toSet());//, pageRequest
     }
 
     @Transactional

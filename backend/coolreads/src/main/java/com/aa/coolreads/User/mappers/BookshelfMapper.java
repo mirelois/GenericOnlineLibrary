@@ -22,7 +22,7 @@ public class BookshelfMapper {
     }
 
     public PersonalBookDTO toPersonalBookDTO(PersonalBook personalBook){
-        return new PersonalBookDTO(personalBook.getPagesRead(), personalBook.getInsertDate(), personalBook.getBook().getIsbn());
+        return new PersonalBookDTO(personalBook.getPagesRead(), personalBook.getInsertDate(), personalBook.getBook().getIsbn(), personalBook.getBook().getImageUrl(), personalBook.getBook().getTitle());
     }
 
     public PersonalBook toPersonalBook(PersonalBookDTO personalBookDTO, Book book, Bookshelf bookshelf){

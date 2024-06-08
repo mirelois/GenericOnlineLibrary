@@ -55,7 +55,7 @@ public class CustomerMapper {
     public CustomerDTO toCustomerDTO(Customer customer){
         CustomerDTO customerDTO = (CustomerDTO) toNewCustomerDTO(customer);
 
-        customerDTO.setBookshelves(customer.getBookshelves().stream().map(e -> new BookShelfDTO(e.getName(), e.getPrivacy().name(), e.getPersonalBooks().stream().map(b -> new PersonalBookDTO(b.getPagesRead(), b.getInsertDate(), b.getBook().getIsbn())).collect(Collectors.toSet()))).collect(Collectors.toSet()));
+        customerDTO.setBookshelves(customer.getBookshelves().stream().map(e -> new BookShelfDTO(e.getName(), e.getPrivacy().name(), e.getPersonalBooks().stream().map(b -> new PersonalBookDTO(b.getPagesRead(), b.getInsertDate(), b.getBook().getIsbn(),b.getBook().getImageUrl(),b.getBook().getTitle())).collect(Collectors.toSet()))).collect(Collectors.toSet()));
 
         return customerDTO;
     }
