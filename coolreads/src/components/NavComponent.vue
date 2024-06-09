@@ -24,8 +24,10 @@
             <div>
                 <input type="text" v-model="inputtxt" class="my-search-box" placeholder="Search for books, readers and writers . . ." name="search">
                 <div v-if="inputtxt!=''" id="myDropdown" class="dropdown-content">
-                    <a href="#1">{{textInserted}}</a>
-                    <a v-for="r in getResults" :href="`/books/${r.isbn}`">{{r.name}}</a>
+                    <div class="txtinserted">Results for: {{textInserted}}</div>
+                    <div class="myresult" v-for="result in results">
+                        <a :href="`/books/${result.isbn}`" :key="result.isbn">{{result.title}}<img :src="result.imageUrl" class="result-img" width="30px" height="50px" /></a>
+                    </div>
                 </div>
             </div>
             <a href="/bookmenu"><div class="books-section">
@@ -48,21 +50,14 @@
     </main>
 </template>
 <script>
+import axios from 'axios';
 export default {
     data(){
         return {
             isProfileOpen:false,
             backgroundColor: "#000000",
             inputtxt:'',
-            results:[
-                {"isbn":'2323',"name":"harry potter e a pedra filosofal"},
-                {"isbn":'123123',"name":"harry potter e a camera dos segredos"},
-                {"isbn":'32432',"name":"harry potter e o prisioneiro de azkaban"},
-                {"isbn":'5642',"name":"harry potter e o calice de fogo"},
-                {"isbn":'2345',"name":"harry potter e a ordem da fenix"},
-                {"isbn":'32423',"name":"harry potter e o principe misterioso"},
-                {"isbn":'232',"name":"harry potter e o talismas da morte"}
-            ]
+            results:[]
         }
     },
     computed: {
@@ -77,15 +72,33 @@ export default {
             
             this.isProfileOpen = !this.isProfileOpen
             console.log("here:"+isProfileOpen)
+        },
+        getResults(){
+            // fazer get dos books com um titulo que inclui o inputxtGET http://localhost:8080/book/name?title={{$random.alphanumeric(8)}}
+            axios.get('http://localhost:8080/book/name?title='+this.inputtxt).then((books)=>{
+                this.results = books.data;
+                let index = 0;
+                this.results.forEach(b => {
+                    if (b.title.length > 50) {
+                    this.results[index].title = this.results[index].title.slice(0, 50) + '...';
+                    index+=1;
+                } 
+                });
+                console.log(this.results);
+            }).catch(erro=>{
+                console.log(erro);
+            })
+            
         }
     },
     computed:{
         textInserted(){
             return this.inputtxt;
-        },
-        getResults(){
-            // fazer get dos books com um titulo que inclui o inputxt
-            return this.results.filter((r)=>r.name.toLowerCase().includes(this.inputtxt)); // temporario
+        }
+    },
+    watch:{
+        inputtxt() {
+            this.getResults();
         }
     }
 }
@@ -105,6 +118,16 @@ export default {
     padding-left: 35px;
     min-width: 550px;
     z-index: 31;
+}
+.txtinserted{
+    margin-top:10px;
+}
+.result-img{
+    margin-left:10px;
+}
+
+.myresult{
+    display:flexbox;
 }
 
 .dropdown-content a {
