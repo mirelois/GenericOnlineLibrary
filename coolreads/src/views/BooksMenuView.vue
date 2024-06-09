@@ -6,49 +6,49 @@ import NavComponent from '../components/NavComponent.vue';
         <b class="order-by">Genres</b>
         <b class="for-you">For You</b>
         <div class="allcategories">
-            <div class="image-4-parent" id="groupContainer">
+            <div class="image-4-parent" @click="navigateToCategory('Adventure')">
             <img class="image-4-icon" alt="" src="/img/aventura.png">
             <b class="adventure">Adventure</b>
             </div>
-            <div class="image-6-parent" id="groupContainer1">
+            <div class="image-6-parent" @click="navigateToCategory('Mystery')">
             <img class="image-4-icon" alt="" src="/img/misterio.png">
             <b class="mystery">Mystery</b>
             </div>
-            <div class="image-5-parent" id="groupContainer2">
+            <div class="image-5-parent" @click="navigateToCategory('Biography')">
             <img class="image-4-icon" alt="" src="/img/biografia.png">
             <b class="biography">Biography</b>
             </div>
-            <div class="image-2-parent" id="groupContainer3">
+            <div class="image-2-parent" @click="navigateToCategory('Sci-Fi')">
             <img class="image-4-icon" alt="" src="/img/ficcao.png">
             <b class="sci-fi">Sci-Fi</b>
             </div>
-            <div class="image-3-parent" id="groupContainer4">
+            <div class="image-3-parent" @click="navigateToCategory('Fantasy')">
             <img class="image-4-icon" alt="" src="/img/fantasia.png">
             <b class="fantasy">Fantasy</b>
             </div>
-            <div class="image-9-parent" id="groupContainer5">
+            <div class="image-9-parent" @click="navigateToCategory('Music')">
             <img class="image-4-icon" alt="" src="/img/musica.png">
             <b class="music">Music</b>
             </div>
-            <div class="rectangle-parent" id="groupContainer6">
+            <div class="rectangle-parent" @click="navigateToCategory('Sports')">
             <div class="group-child">
             </div>
             <img class="image-4-icon" alt="" src="/img/desporto.png">
             <b class="sports">Sports</b>
             </div>
-            <div class="rectangle-group" id="groupContainer7">
+            <div class="rectangle-group" @click="navigateToCategory('Romance')">
             <div class="group-item">
             </div>
             <img class="image-4-icon" alt="" src="/img/romance.png">
             <b class="music">Romance</b>
             </div>
-            <div class="rectangle-container" id="groupContainer8">
+            <div class="rectangle-container" @click="navigateToCategory('Horror')">
             <div class="group-item">
             </div>
             <img class="image-12-icon" alt="" src="/img/terror.png">
             <b class="horror">Horror</b>
             </div>
-            <div class="image-7-parent" id="groupContainer9">
+            <div class="image-7-parent" @click="navigateToCategory('Manga')">
             <img class="image-7-icon" alt="" src="/img/manga.png">
             <b class="manga">Manga</b>
             </div>
@@ -56,6 +56,22 @@ import NavComponent from '../components/NavComponent.vue';
         <NavComponent></NavComponent>
     </main> 
 </template>
+
+<script>
+import { defineComponent } from 'vue'
+import router from '../router/index'
+
+export default defineComponent({
+  name: 'BooksMenuView',
+  methods: {
+    navigateToCategory(category) {
+      router.push({ name: 'bookCategoria', params: { category } });
+    }
+  }
+})
+</script>
+
+
 <style>
 
 .order-by {
