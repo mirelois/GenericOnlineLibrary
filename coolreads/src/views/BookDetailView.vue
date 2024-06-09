@@ -11,6 +11,9 @@ import Rating from 'primevue/rating';
     		<img class="canva-brown-rusty-mystery-nove-icon" alt="" :src="imageurl">
         		<div class="frame-child"></div>
       	</div>
+	  	<div v-if="showConfirm==true">
+				<ConfirmComponent @confirmation_response="book_management" :header_msg="confirm_msg"></ConfirmComponent>
+		</div>
 		<div class="bookpagecomponent-child"></div>
     </div>
 	<img class="capa-icon" alt="" :src="imageurl">
@@ -37,9 +40,6 @@ import Rating from 'primevue/rating';
 			<AddToBookshelfComponent @click="showAddtoBookshelf=true"></AddToBookshelfComponent>			
 			<div v-if="showAddtoBookshelf==true">
 				<BookshelfSelectorComponent :bookISBN="isbn" :username="username" @closebookshelvesoptions="showAddtoBookshelf=false"></BookshelfSelectorComponent>
-			</div>
-			<div v-if="showConfirm==true">
-				<ConfirmComponent @confirmation_response="book_management" :state="stateSelected"></ConfirmComponent>
 			</div>
     		<div class="separator">
     		</div>
@@ -105,7 +105,8 @@ export default {
 			showLoading:false,
 			showMoretxt:true,
 			showConfirm:false,
-			showAddtoBookshelf:false
+			showAddtoBookshelf:false,
+			confirm_msg:'Are you sure you want to add the book to Want to Read ?'
 		}
 	},
 	components: {
@@ -180,6 +181,7 @@ export default {
 			console.log("heerree");
             console.log(state);
             console.log(this.stateSelected);
+			this.confirm_msg = 'Are you sure you want to add the book to '+ state+' ?';
 			this.stateSelected = state;
 		},
 		book_management(resp){

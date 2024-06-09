@@ -6,7 +6,14 @@
         <input type="checkbox" :id="option.name" :value="option.name" v-model="checkedOptions">
         <span class="checkmark"></span>
     </label>
-    <label class="container"><button @click="insertBook">INSERT</button></label>
+    <label class="container"><button class="insert-bookshelf-btn" @click="insertBook">INSERT</button></label>
+    <div v-show="showPopup" id="popup1" class="overlay">
+    <div class="popup">
+      <h2>{{ msg }}</h2>
+      <a class="close" @click="showPopup=false" href="#">&times;</a>
+    </div>
+    </div>
+
 </div>
 </main>
 </template>
@@ -21,7 +28,9 @@ export default {
     data(){
         return {
             options:[],
-            checkedOptions: ref([])
+            checkedOptions: ref([]),
+            msg:'',
+            showPopup:false
         }
     }
     ,
@@ -39,30 +48,35 @@ export default {
         insertBook(){
             console.log("selecionados:");
             console.log(this.checkedOptions);
-			const headers = {
-        		'Content-Type': 'application/json',
-		    };
+			      const headers = {
+        		  'Content-Type': 'application/json',
+		        };
             const date = new Date();
-			const isoDateString = date.toISOString();
+			      const isoDateString = date.toISOString();
             this.checkedOptions.forEach(bookshelf => {
                 axios.post("http://localhost:8080/customer/"+this.username+"/bookshelf/"+bookshelf,
-				{
-                    pagesRead:0,
-					insertDate:isoDateString,
-					bookISBN: this.bookISBN
-				},
-				{ headers: headers } 
-				).then(resp =>{
-
-				}).catch(err=>{
-					console.log(err)
-				})                
-            });
-        }
-    },
-    created(){
-        this.getOptions();
-    }
+				            {
+                      pagesRead:0,
+                      insertDate:isoDateString,
+                      bookISBN: this.bookISBN
+				            },
+                    { headers: headers } 
+            				).then(resp =>{
+                      if(resp.status==200){
+                        this.msg="The book was inserted successfully.";
+                      }else{
+                        this.msg="Something went wrong."
+                      }
+                    }).catch(err=>{
+                      console.log(err)
+                    })                
+                });
+            this.showPopup = true;
+            }
+      },
+      created(){
+          this.getOptions();
+      }
 }
 
 </script>
@@ -83,9 +97,19 @@ export default {
 }
 
 .close-bookshelves-options{
-    cursor:pointer;
-    margin-left:250px;
-    margin-top:5px;
+  cursor:pointer;
+  margin-left:250px;
+  margin-top:5px;
+}
+
+.insert-bookshelf-btn {
+  color: white;
+  background-color: black;
+  height: 50px;
+  width: 100px;
+  font-size: 18px;
+  border-radius: 10px;
+  margin-top: 25px;
 }
 
 .container input {

@@ -3,7 +3,7 @@
             <div class="confirm-bookshelfadd-child">
             </div>
         <div class="are-you-sure-container">
-            <p class="are-you-sure">Are you sure you want to add the book to {{ state }}?</p>
+            <p class="are-you-sure">{{ header_msg }}</p>
         </div>
         <button @click="sendConfirmation(`yes`)" class="confirm-bookshelfadd-item">YES</button>
         <button @click="sendConfirmation(`no`)" class="confirm-bookshelfadd-inner">NO</button>
@@ -12,7 +12,7 @@
 <script>
 export default {
 	props:{
-		state:''
+		header_msg:''
 	}, 
 	methods:{
 		sendConfirmation(response){
@@ -51,6 +51,7 @@ export default {
 	background-color: #86ff92;
 	width: 159px;
 	height: 60px;
+	cursor:pointer;
 }
 
 .yes {
@@ -67,6 +68,7 @@ export default {
 	background-color: #ff8888;
 	width: 159px;
 	height: 60px;
+	cursor:pointer;
 }
 
 .no {
@@ -87,7 +89,7 @@ export default {
 	color: #000;
 	font-family: Michroma;
 	z-index: 22;
-	margin-top: -3000px;
-	margin-left: 1000px;
+	margin-top: -400px;
+	margin-left: 800px;
 }
 </style>

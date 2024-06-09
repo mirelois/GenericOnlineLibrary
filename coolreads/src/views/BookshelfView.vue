@@ -20,7 +20,7 @@ import FooterComponent from '../components/FooterComponent.vue';
             <div class="order-by-placeholder">{{selectedOption}}</div>
         </div>
         </div>
-        <div v-if="showDropdownMenu==true" class="clip-list">
+        <div v-show="showDropdownMenu==true" class="clip-list">
             <div class="dropdown-list">
             <div class="item-option-d" @click="sortBooks(`Date`)">
             <div class="item-content">Date</div>
@@ -44,13 +44,16 @@ import FooterComponent from '../components/FooterComponent.vue';
                         <div class="book">
                             <div class="overlap-group">
                                 <div v-for="book in displayBooksPerPage" v-if="!book">
-                                    <BookComponent :cover="book.coverImage" :bookISBN="book.bookISBN" ></BookComponent>
+                                    <BookComponent @removeBook="showConfirmDeletion" :cover="book.coverImage" :bookISBN="book.bookISBN" ></BookComponent>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div v-if="showConfirmDel==true">
+           <ConfirmComponent @confirmation_response="confirmdeleteBook" :header_msg="confirm_msg"></ConfirmComponent>
         </div>
         <div class="pagination">
             <div class="pagination-child">
@@ -71,10 +74,12 @@ import FooterComponent from '../components/FooterComponent.vue';
 </template>
 <script>
 import axios from "axios";
+import ConfirmComponent from '@/components/ConfirmComponent.vue';
 export default {
     components: {
         NavComponent,
-        BookComponent
+        BookComponent,
+        ConfirmComponent
     },
     data(){
         return {
@@ -88,7 +93,10 @@ export default {
             filtered: [],
             selectedOption: 'Select Sorting Operation',
             bookshelfname:'',
-            username:'techguru'
+            username:'techguru',
+            showConfirmDel:false,
+            confirm_msg:'Are you sure you want to remove the book?',
+            removeBook:''
         }
     },
     methods: {
@@ -141,6 +149,23 @@ export default {
             }).catch(err=>{
                 console.log(err)
             })
+        },
+        confirmdeleteBook(resp){
+            if(resp=="no") this.showConfirmDel= false;
+            else{
+                axios.delete('http://localhost:8080/customer/'+this.username+'/bookshelf/'+this.bookshelfname+'?isbn='+this.removeBook).then(resp=>{
+                    //how to update the lists in memory??
+                    this.bookshelf = this.bookshelf.filter(b=> b.bookISBN!=this.removeBook)
+                    this.showConfirmDel = false;
+                }).catch(error=>{
+                    console.log(error)
+                })
+            }
+            console.log(resp)
+        },
+        showConfirmDeletion(book){
+            this.removeBook = book;
+            this.showConfirmDel=true;
         }
     },
     created(){
@@ -155,6 +180,7 @@ export default {
             }else{
                 this.filtered = this.bookshelf
             }
+            console.log("olee")
             const startIndex = this.maxPerPage * this.page;
             const endIndex = startIndex + this.maxPerPage;
             this.nrpages = Math.ceil(this.filtered.length / this.maxPerPage);
