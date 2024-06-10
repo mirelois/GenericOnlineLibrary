@@ -6,50 +6,122 @@ import FooterComponent from '../components/FooterComponent.vue';
 </script>
 
 <template>
-  <div class="body">
-    <b class="category-fantasy">Category - {{ category }}</b>
-	<input type="text" class="my-search-box" placeholder="Search for books..." />
-    <div class="separator"></div>
-    <div class="separator"></div>
-    <div class="books-search-result">
-      <div class="book-row">
-        <img class="book-icon" alt="" src="/img/desporto.png">
-        <img class="book-icon" alt="" src="/img/aventura.png">
-        <img class="book-icon" alt="" src="/img/misterio.png">
-        <img class="book-icon" alt="" src="/img/biografia.png">
-        <img class="book-icon" alt="" src="/img/ficcao.png">
-      </div>
-      <div class="book-row">
-        <img class="book-icon" alt="" src="/img/fantasia.png">
-        <img class="book-icon" alt="" src="/img/musica.png">
-        <img class="book-icon" alt="" src="/img/romance.png">
-        <img class="book-icon" alt="" src="/img/manga.png">
-        <img class="book-icon" alt="" src="/img/fantasia.png">
-      </div>
-      <div class="book-row">
-        <img class="book-icon" alt="" src="/img/manga.png">
-        <img class="book-icon" alt="" src="/img/terror.png">
-        <img class="book-icon" alt="" src="/img/manga.png">
-        <img class="book-icon" alt="" src="/img/romance.png">
-        <img class="book-icon" alt="" src="/img/musica.png">
-      </div>
-    </div>
-  </div>
-  <NavComponent></NavComponent>
-</template>
+	<div class="body">
+	  <NavComponent></NavComponent>
+	  <b class="category-fantasy">Category - {{ category }}</b>
+	  <input type="text" class="my-search-box" placeholder="Search for books..." />
+	  <div class="sort-component">
+		<div class="listbox-title" @click="showMenu">
+		  <img v-if="showDropdownMenu" class="chevron-icon-d" alt="" src="/img/updroplist.svg">
+		  <img v-if="!showDropdownMenu" class="chevron-icon-d" alt="" src="/img/downdroplist.svg">
+		  <div class="order-by-title">Order By</div>
+		</div>
+		<div class="listbox-main">
+		  <div class="listboxbg"></div>
+		  <div class="placeholder-text">
+			<div class="order-by-placeholder">{{ selectedOption }}</div>
+		  </div>
+		</div>
+		<div v-show="showDropdownMenu" class="clip-list">
+		  <div class="dropdown-list">
+			<div class="item-option-d" @click="sortBooks('Date')">
+			  <div class="item-content">Date</div>
+			</div>
+			<div class="item-option-d" @click="sortBooks('Title')">
+			  <div class="item-content">Title</div>
+			</div>
+			<div class="item-option-d" @click="sortBooks('Rate')">
+			  <div class="item-content">Rate</div>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="separator"></div>
+	  <div class="separator"></div>
+	  <div class="books-search-result">
+		<div class="book-row">
+		  <img class="book-icon" alt="" src="/img/desporto.png">
+		  <img class="book-icon" alt="" src="/img/aventura.png">
+		  <img class="book-icon" alt="" src="/img/misterio.png">
+		  <img class="book-icon" alt="" src="/img/biografia.png">
+		  <img class="book-icon" alt="" src="/img/ficcao.png">
+		</div>
+		<div class="book-row">
+		  <img class="book-icon" alt="" src="/img/fantasia.png">
+		  <img class="book-icon" alt="" src="/img/musica.png">
+		  <img class="book-icon" alt="" src="/img/romance.png">
+		  <img class="book-icon" alt="" src="/img/manga.png">
+		  <img class="book-icon" alt="" src="/img/fantasia.png">
+		</div>
+		<div class="book-row">
+		  <img class="book-icon" alt="" src="/img/manga.png">
+		  <img class="book-icon" alt="" src="/img/terror.png">
+		  <img class="book-icon" alt="" src="/img/manga.png">
+		  <img class="book-icon" alt="" src="/img/romance.png">
+		  <img class="book-icon" alt="" src="/img/musica.png">
+		</div>
+	  </div>
+	  <div class="pagination">
+            <div class="pagination-child">
+            </div>
+            <div class="div">
+            <div class="parent">
+            <img class="vector-icon" @click="backPage()" alt="" src="/img/back.svg">
+            <div v-for="(n,index) in nrpages" class="div3" :class="activate[n -1]==true? 'child':''">{{n}}</div>
+            <img class="vector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
+            </div>
+            </div>
+            <div class="newfooter">
+                <FooterComponent></FooterComponent>
+            </div>
+        </div>
+	</div>
+  </template>
+  
 
 <script>
-import { defineComponent } from 'vue'
-import { useRoute } from 'vue-router'
+import { defineComponent } from 'vue';
+import NavComponent from '../components/NavComponent.vue';
+import FooterComponent from '../components/FooterComponent.vue';
 
 export default defineComponent({
-  name: 'BookCategoryView',
+  components: {
+    NavComponent,
+    FooterComponent
+  },
   data() {
     return {
-      category: this.$route.params.category
-    }
+      category: this.$route.params.category,
+      showDropdownMenu: false,
+      selectedOption: 'Select an option'
+    };
+  },
+  methods: {
+    showMenu() {
+		this.showDropdownMenu = !this.showDropdownMenu;
+	},
+    sortBooks(option) {
+		this.selectedOption = option;
+		this.showDropdownMenu = false;
+    },
+	nextPage(){
+		console.log(this.page)
+		console.log(this.nrpages)
+		if(this.page+2<=this.nrpages){
+			this.activate[this.page] = !this.activate[this.page]
+			this.page = this.page + 1;
+			this.activate[this.page] = !this.activate[this.page]
+		}
+    },
+    backPage(){
+		if(this.page-1>=0){
+			this.activate[this.page] = !this.activate[this.page]
+			this.page = this.page - 1;
+			this.activate[this.page] = !this.activate[this.page]
+		}
+	}
   }
-})
+});
 </script>
 
 
@@ -71,50 +143,45 @@ margin: 0; line-height: normal;
   background-color: #858585;
   margin-bottom: 20px;
 }
-.c {
-  	position: relative;
-}
-.logo {
-  	position: absolute;
-  	top: 0px;
-  	left: 33px;
-  	height: 115px;
-  	display: flex;
-  	flex-direction: column;
-  	align-items: center;
-  	justify-content: center;
-  	padding: 10px;
-  	box-sizing: border-box;
-  	font-size: 96px;
-  	color: #c48930;
-}
-.vuesaxoutlineframe-icon {
-  	width: 31.7px;
-  	position: relative;
-  	height: 31.7px;
-}
 .my-search-box {
   position: absolute;
   width: 865px;
   height: 70px;
-  top: 405px;
+  top: 385px;
   left: 415px;
   padding-left: 35px;
   font-size: 22px;
   background: url("/img/Search.svg") no-repeat left;
-    background-color: rgba(0, 0, 0, 0);
   background-color: rgba(0, 0, 0, 0);
   border-radius: 15px;
   border-width: 3px;
-    border-top-width: 3px;
-    border-right-width: 3px;
-    border-bottom-width: 3px;
-    border-left-width: 3px;
-  overflow: hidden;
+  border-top-width: 3px;
+  border-right-width: 3px;
+  border-bottom-width: 3px;
+  border-left-width: 3px;
   background-color: #6b6b6b;
   z-index: 32;
   border-style: solid;
   border-color: black;
+}
+.books-search-result {
+  	position: absolute;
+  	left: 427px;
+  	width: 914px;
+	top: 695px;
+  	height: 672.3px;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	justify-content: flex-start;
+  	gap: 52.9px;
+}
+.book-row {
+  	display: flex;
+  	flex-direction: row;
+  	align-items: flex-end;
+  	justify-content: flex-start;
+  	gap: 56.7px;
 }
 .chevron-icon {
   	width: 34px;
@@ -254,13 +321,7 @@ margin: 0; line-height: normal;
   	height: 188.8px;
   	object-fit: cover;
 }
-.book-row {
-  	display: flex;
-  	flex-direction: row;
-  	align-items: flex-end;
-  	justify-content: flex-start;
-  	gap: 56.7px;
-}
+
 .books-search-result {
   	position: absolute;
   	left: 427px;
@@ -306,17 +367,10 @@ margin: 0; line-height: normal;
   	height: 68.4px;
 }
 .vector-icon {
-  	position: absolute;
-  	height: 23.39%;
-  	width: 1.66%;
-  	top: 38.01%;
-  	right: 82.63%;
-  	bottom: 38.6%;
-  	left: 15.71%;
-  	max-width: 100%;
-  	overflow: hidden;
-  	max-height: 100%;
-  	object-fit: contain;
+	
+	width: 9px;
+  	position: relative;
+  	height: 16px;
 }
 .child {
   	position: absolute;
@@ -390,26 +444,45 @@ margin: 0; line-height: normal;
   	font-weight: 500;
 }
 .listbox-title {
-  	position: absolute;
-  	height: 6.92%;
-  	width: 90.91%;
-  	top: 0%;
-  	right: 4.55%;
-  	bottom: 93.08%;
-  	left: 4.55%;
+  position: absolute;
+  font-family: "Inika-Regular", Helvetica;
+  height: 6.92%;
+  width: 90.91%;
+  top: -25px;
+  right: 4.55%;
+  bottom: 93.08%;
+  left: 4.55%;
+  font-size: 25px;
 }
 .listboxbg {
-  	position: absolute;
-  	height: 100%;
-  	width: 100%;
-  	top: 0%;
-  	right: 0%;
-  	bottom: 0%;
-  	left: 0%;
-  	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
-  	border-radius: 25px;
-  	background-color: #e7e7e7;
+  position: absolute;
+  height: 70%;
+  width: 100%;
+  top: 0%;
+  right: 0%;
+  bottom: 0%;
+  left: 0%;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
+  background-color: #c2c2c2;
 }
+.chevron-icon-d {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  top: 330%;
+  right: 7.86%;
+  bottom: 45%;
+  left: 88.57%;
+  max-width: 100%;
+  max-height: 100%;
+  z-index: 11;
+}
+
+.chevron-icon-d:hover {
+  cursor: pointer;
+}
+
 .chevron-icon1 {
   	position: absolute;
   	height: 8.33%;
@@ -429,23 +502,34 @@ margin: 0; line-height: normal;
   	left: 0%;
 }
 .placeholder-text {
-  	position: absolute;
-  	height: 33.33%;
-  	width: 65.71%;
-  	top: 33.33%;
-  	right: 28.57%;
-  	bottom: 33.33%;
-  	left: 5.71%;
+  position: absolute;
+  height: 33.33%;
+  width: 65.71%;
+  top: 33.33%;
+  right: 28.57%;
+  bottom: 33.33%;
+  left: 5.71%;
+}
+.item-content {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+}
+.order-by-placeholder {
+  position: absolute;
+  top: -46%;
+  left: 0%;
+  font-size: 18px;
 }
 .listbox-main {
-  	position: absolute;
-  	height: 20.76%;
-  	width: 90.91%;
-  	top: 9.69%;
-  	right: 4.55%;
-  	bottom: 69.55%;
-  	left: 4.55%;
-  	color: #666;
+  position: absolute;
+  height: 20.76%;
+  width: 90.91%;
+  top: 9.69%;
+  right: 4.55%;
+  bottom: 69.55%;
+  left: 4.55%;
+  color: #666;
 }
 .div9 {
   	position: absolute;
@@ -461,21 +545,21 @@ margin: 0; line-height: normal;
   	flex-shrink: 0;
 }
 .dropdown-list {
-  	position: absolute;
-  	width: 90.91%;
-  	top: 68px;
-  	right: 4.55%;
-  	left: 4.55%;
-  	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
-  	border-radius: 8px;
-  	height: 1px;
-  	overflow: hidden;
-  	display: flex;
-  	flex-direction: column;
-  	align-items: center;
-  	justify-content: center;
-  	gap: 1px;
-  	opacity: 0;
+  position: absolute;
+  width: auto;
+  top: 0px;
+  right: 7%;
+  left: 0%;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  height: 1px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
+  z-index: 10;
 }
 .clip-list-child {
   	position: absolute;
@@ -486,24 +570,39 @@ margin: 0; line-height: normal;
   	overflow: hidden;
 }
 .clip-list {
-  	position: absolute;
-  	height: 59.52%;
-  	width: 92.86%;
-  	top: 40.48%;
-  	right: 0%;
-  	bottom: 0%;
-  	left: 7.14%;
-  	overflow: hidden;
-  	color: #333;
+  position: absolute;
+  height: 59.52%;
+  width: 92.86%;
+  top: 12.48%;
+  right: 0%;
+  bottom: 0%;
+  left: 7.14%;
+  color: #333;
 }
+
 .sort-component {
-  	position: absolute;
-  	top: 575px;
-  	left: 427px;
-  	width: 308px;
-  	height: 289px;
-  	font-family: Montserrat;
+  width: 400px;
+  top: 500px;
+  left: 400px;
+  margin: 20px auto;
+  text-align: left;
+  font-size: 16px;
+  color: #fff;
+  font-family: Montserrat;
+  position: absolute;
 }
+.item-option-d {
+  align-self: stretch;
+  position: relative;
+  background-color: #c2c2c2;
+  height: 44px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.item-option-d:hover {
+  cursor: pointer;
+}
+
 .bookspage-item {
   	position: absolute;
   	top: 760px;
@@ -516,7 +615,7 @@ margin: 0; line-height: normal;
 .category-fantasy {
   	position: absolute;
     color: #fff;
-  	top: 319px;
+  	top: 259px;
   	left: 427px;
   	font-size: 44px;
     font-family: Inika;
