@@ -154,7 +154,6 @@ export default {
             if(resp=="no") this.showConfirmDel= false;
             else{
                 axios.delete('http://localhost:8080/customer/'+this.username+'/bookshelf/'+this.bookshelfname+'?isbn='+this.removeBook).then(resp=>{
-                    //how to update the lists in memory??
                     this.bookshelf = this.bookshelf.filter(b=> b.bookISBN!=this.removeBook)
                     this.showConfirmDel = false;
                 }).catch(error=>{
@@ -666,7 +665,7 @@ export default {
 
 body {
 	margin-left: -80px !important;
-  background-color: #222831;
+    background-color: #222831;
 }
 
 

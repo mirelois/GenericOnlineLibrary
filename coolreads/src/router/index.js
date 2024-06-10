@@ -7,6 +7,7 @@ import SignupPage from '@/views/SignupPage.vue'
 import ProfilePageView from '@/views/ProfilePageView.vue'
 import LoginPage from '@/views/LoginPage.vue'
 import BookCategoryView from '../views/BookCategoryView.vue' 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -16,7 +17,7 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/bookshelves/:name',
+      path: '/bookshelves/:bookshelfname',
       name: 'bookshelves',
       component: BookshelfView
     },
@@ -26,9 +27,9 @@ const router = createRouter({
       component: BooksMenuView
     },
     {
-      path: '/books/category/:category',
-      name: 'bookCategoria',
-      component: BookCategoryView,
+      path: '/books/:bookisbn',
+      name: 'bookdetail',
+      component: BookDetailView
     },
     {
       path: '/about',

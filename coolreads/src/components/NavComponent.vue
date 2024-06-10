@@ -105,7 +105,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .dropdown-content {
     display: block;
     position: absolute;

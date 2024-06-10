@@ -7,19 +7,16 @@
         <span class="checkmark"></span>
     </label>
     <label class="container"><button class="insert-bookshelf-btn" @click="insertBook">INSERT</button></label>
-    <div v-show="showPopup" id="popup1" class="overlay">
-    <div class="popup">
-      <h2>{{ msg }}</h2>
-      <a class="close" @click="showPopup=false" href="#">&times;</a>
-    </div>
-    </div>
-
+    <div v-show="showPopup==true">
+		  <ToastComponent :msg="msg" @close_toast="showPopup=false"></ToastComponent>
+	  </div>
 </div>
 </main>
 </template>
 <script>
 import axios from "axios";
-import { ref } from 'vue'
+import { ref } from 'vue';
+import ToastComponent from "./ToastComponent.vue";
 export default {
     props:{
         username:'',
@@ -33,7 +30,9 @@ export default {
             showPopup:false
         }
     }
-    ,
+    ,components:{
+      ToastComponent
+    },
     methods:{
         getOptions(){
             axios.get("http://localhost:8080/customer/"+this.username+"/bookshelf").then(resp =>{

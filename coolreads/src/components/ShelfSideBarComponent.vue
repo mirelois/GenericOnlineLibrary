@@ -7,16 +7,16 @@
 			<img class="transfer-icon" alt="" src="/img/transfer.svg">
 		</div>
 		<div class="shelves-parent">
-			<div class="shelves"><a href="/bookshelves/want_to_read">Want To Read</a></div>
+			<div class="shelves"><a  class="prateleiralink" href="/bookshelves/want_to_read">Want To Read</a></div>
 			<div class="shelves1">-</div>
 		</div>
 		<div class="shelves-group">
 			<div class="shelves1">-</div>
-			<div class="shelves3"><a href="/bookshelves/currently_reading">Currently Reading</a></div>
+			<div class="shelves3"><a class="prateleiralink" href="/bookshelves/currently_reading">Currently Reading</a></div>
 		</div>
 		<div class="shelves-container">
 			<div class="shelves1">-</div>
-			<div class="shelves5"><a href="/bookshelves/read">Read</a></div>
+			<div class="shelves5"><a class="prateleiralink" href="/bookshelves/read">Read</a></div>
 		</div>
 		<div class="shelves-parent2" id="groupContainer5">
 			<div class="shelves10" id="shelvesText">All</div>
@@ -24,14 +24,11 @@
 		</div>
 		<div v-for="(bookshelf,index) in mybookshelves" :key="index" class="children-shelves-parent">
 			<div class="shelves1">{{ bookshelf.bookCount }}</div>
-			<a :href="`/bookshelves/${bookshelf.name}`">{{ bookshelf.name }}</a>
+			<a class="prateleiralink" :href="`/bookshelves/${bookshelf.name}`">{{ bookshelf.name }}</a>
 		</div>
 	</div>
-	<div v-show="showPopup" id="popup1" class="overlay">
-	<div class="popup">
-		<h2>{{ msg }}</h2>
-		<a class="close" @click="showPopup=false" href="#">&times;</a>
-	</div>
+	<div v-show="showPopup==true">
+		<ToastComponent :msg="msg" @close_toast="showPopup=false"></ToastComponent>
 	</div>
 	<div v-if="showAdddBookshelf==true" id="createBookshelfInfoContainer" class="popup-overlay">
 		<div class="create-bookshelf-info">
@@ -47,6 +44,7 @@
 </template>
 <script>
 import axios from "axios";
+import ToastComponent from "./ToastComponent.vue";
 export default{
 	props:{
 		username:"",
@@ -97,10 +95,12 @@ export default{
 		}
 	},created(){
 		this.getBookshelves();
+	},components:{
+		ToastComponent
 	}
 }
 </script>
-<style>
+<style scoped>
 .bookshelfcreate-close {
   position: absolute;
   margin-left: 50px;
@@ -138,7 +138,9 @@ export default{
   	width: 262px;
   	height: 26px;
 }
-
+.prateleiralink{
+	color:white;
+}
 .children-shelves-parent {
 	position:relative;
 	top: 280px;
@@ -369,46 +371,4 @@ export default{
 	margin-top: -350px;
 }
 
-.overlay {
-  position: fixed;
-  top: 300px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  transition: opacity 500ms;
-}
-.overlay:target {
-  visibility: visible;
-  opacity: 1;
-}
-
-.popup {
-  margin: 70px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 5px;
-  width: 30%;
-  position: relative;
-  transition: all 5s ease-in-out;
-  z-index:30;
-}
-
-.popup h2 {
-  margin-top: 0;
-  color: #333;
-  font-family: Tahoma, Arial, sans-serif;
-}
-.popup .close {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  transition: all 200ms;
-  font-size: 30px;
-  font-weight: bold;
-  text-decoration: none;
-  color: #333;
-}
-.popup .close:hover {
-  color: #111111;
-}
 </style>

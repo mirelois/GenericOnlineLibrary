@@ -54,12 +54,12 @@ export default defineComponent({
 
 
 <style scoped>
-
+/*
 @import url('https://fonts.googleapis.com/css2?family=Inika:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap');
-
+*/
 .body {
 margin: 0; line-height: normal;
 }

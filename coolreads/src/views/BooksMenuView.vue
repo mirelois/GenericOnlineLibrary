@@ -72,7 +72,7 @@ export default defineComponent({
 </script>
 
 
-<style>
+<style scoped>
 
 .order-by {
     position: absolute;
