@@ -1,5 +1,6 @@
 package com.aa.coolreads.User.services;
 
+import com.aa.coolreads.User.dto.PostCreationDTO;
 import com.aa.coolreads.User.dto.PostDTO;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.mappers.PostMapper;
@@ -31,7 +32,7 @@ public class PostService {
     }
 
     @Transactional
-    public void insertPost(PostDTO postDTO, String username) throws CustomerNotFoundException {
+    public void insertPost(PostCreationDTO postDTO, String username) throws CustomerNotFoundException {
 
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
@@ -45,6 +46,12 @@ public class PostService {
         Page<Post> postPage = this.postRepository.findByCustomerUsername(username, pageable);
 
         return postPage.get().map(this.postMapper::toPostDTO).collect(Collectors.toSet());
+    }
+
+    @Transactional
+    public void deletePost(Long postId) {
+
+        this.postRepository.deleteById(postId);
 
     }
 

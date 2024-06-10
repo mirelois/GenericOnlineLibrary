@@ -5,15 +5,17 @@ import com.aa.coolreads.Book.dto.FullBookDTO;
 import com.aa.coolreads.Book.dto.SimpleReviewDTO;
 import com.aa.coolreads.Book.exception.*;
 import com.aa.coolreads.Book.services.BookService;
+import com.aa.coolreads.User.dto.PostCreationDTO;
+import com.aa.coolreads.User.dto.PostDTO;
 import com.aa.coolreads.User.exception.AuthorNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
+import com.aa.coolreads.User.models.Post;
+import com.aa.coolreads.User.services.PostService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
 
 @SpringBootTest
 class CoolreadsApplicationTests {
@@ -131,6 +133,30 @@ class CoolreadsApplicationTests {
         } catch (CustomerNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    //---------Post Tests---------
+
+    @Autowired
+    private PostService postService;
+
+    @Test
+    void testPostOperations(){
+
+        PostCreationDTO postDTO = new PostCreationDTO("This is a post", "This is the content of the post");
+
+        try {
+            postService.insertPost(postDTO, "techguru");
+        } catch (CustomerNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        Set<PostDTO> posts =  postService.getPostsByUsername("techguru", 0, 10);
+
+        Iterator<PostDTO> it = posts.iterator();
+
+        postService.deletePost(it.next().getId());
+
     }
 }
 
