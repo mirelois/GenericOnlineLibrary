@@ -61,7 +61,7 @@ public class CustomerMapper {
     public Customer toCustomer(RegisterDTO registerDTO){
         return (Customer) this.userBuilder.setUsername(registerDTO.getUsername())
                 .setPassword(registerDTO.getPassword())
-                .setEmail(registerDTO.getEmail());
+                .setEmail(registerDTO.getEmail()).build();
     }
 
 

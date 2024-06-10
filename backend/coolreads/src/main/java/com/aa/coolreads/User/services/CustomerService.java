@@ -42,6 +42,7 @@ public class CustomerService {
         return this.customerMapper.toCustomerDTO(customer);
     }
 
+    @Transactional
     public CustomerDTO getMyCustomer() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
