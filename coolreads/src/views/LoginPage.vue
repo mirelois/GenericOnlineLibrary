@@ -7,7 +7,7 @@
 		<div class ="frame-parent">
 			<div class ="frame-group">
 				<div class="email-wrapper">
-					<div class="email">Email</div>
+					<div class="email">Email or Username</div>
 				</div>
 				<div class = "input-text-wrapper">
 					<div class ="input-text">
@@ -33,10 +33,6 @@
 			</div>
         <div class="buttonlogin" id="buttonloginContainer">
           <div class="textButton">Login now</div>
-        </div>
-		<div class="buttongoogle" id="buttongoogleContainer">
-			<img class="icongoogle-original" alt="" src="/img/GoogleLogo.svg">
-          <div class="textButton">Continue with Google</div>
         </div>
         <div class="dont-have-an-account-parent">
           <div class="dont-have-an">Don't have an account ?</div>
@@ -88,7 +84,7 @@ export default defineComponent({
   	flex: 1;
   	position: relative;
   	line-height: 100%;
-  	text-transform: capitalize;
+  	
 }
 .email-wrapper {
   	align-self: stretch;

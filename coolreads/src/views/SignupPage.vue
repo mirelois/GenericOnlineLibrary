@@ -36,14 +36,25 @@
           </div>
           <div class="frameGroup">
             <div class="emailWrapper">
+              <div class="email">Username</div>
+            </div>
+            <div class="input">
+              <div class="inputText1">
+                <div class="context">Enter your username</div>
+                <div class="inputTextChild"></div>
+              </div>
+            </div>
+          </div>
+          <div class="frameGroup">
+            <div class="emailWrapper">
               <div class="email">Password</div>
             </div>
             <div class="input">
               <div class="inputText1">
                 <div class="context">Enter your password</div>
                 <div class="iconeye-wrapper">
-							    <img class="iconeye" alt="" src="/img/iconeye.svg">
-						    </div>
+                  <img class="iconeye" alt="" src="/img/iconeye.svg">
+                </div>
               </div>
             </div>
           </div>
@@ -51,10 +62,6 @@
         <div class="buttonParent">
           <div class="button">
             <div class="textButton">Create account</div>
-          </div>
-          <div class="button1">
-            <img class="icongoogle-original" alt="" src="/img/GoogleLogo.svg">
-            <div class="textButton">Continue with Google</div>
           </div>
           <div class="alreadyHaveAnAccountParent">
             <div class="alreadyHaveAn">Already have an account?</div>
@@ -65,6 +72,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { defineComponent } from 'vue'
 import router from "../router/index"
@@ -188,6 +196,8 @@ flex-shrink: 0;
   text-align: center;
   font-weight: 600;
   margin-bottom: 21.6px;
+  margin-top: 0;
+  padding-top: 0;
 }
 .textButton {
   position: relative;
@@ -196,11 +206,21 @@ flex-shrink: 0;
   font-weight: 600;
 }
 .titleWrapper {
+  align-self: stretch;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+.alreadyHaveAnAccountParent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 7.2px;
+  font-size: 12.6px;
+  color: #98a2b3;
 }
 .email {
   flex: 1;
@@ -345,15 +365,7 @@ flex-shrink: 0;
   color: #1570ef;
   cursor: pointer;
 }
-.alreadyHaveAnAccountParent {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 7.2px;
-  font-size: 12.6px;
-  color: #98a2b3;
-}
+
 .buttonParent {
   align-self: stretch;
   display: flex;
