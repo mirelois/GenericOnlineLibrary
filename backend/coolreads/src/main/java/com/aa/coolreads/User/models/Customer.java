@@ -2,16 +2,16 @@ package com.aa.coolreads.User.models;
 
 import com.aa.coolreads.Book.models.Genre;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("customer")
-public class Customer {
+public class Customer implements UserDetails {
     @Id
     private String username;
 
@@ -177,5 +177,10 @@ public class Customer {
 
     public void setBookshelves(Set<Bookshelf> bookshelves) {
         this.bookshelves = bookshelves;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
     }
 }
