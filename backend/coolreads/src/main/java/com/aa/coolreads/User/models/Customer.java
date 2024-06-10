@@ -45,9 +45,36 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Bookshelf> bookshelves;
 
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Notification> notifications;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Post> posts;
+
     public Customer(){
         this.favoriteGenres = new HashSet<>();
         this.bookshelves = new HashSet<>();
+        this.notifications = new HashSet<>();
+        this.posts = new HashSet<>();
+    }
+
+    public Customer(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves, Set<Notification> notifications, Set<Post> posts) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.name = name;
+        this.gender = gender;
+        this.pronouns = pronouns;
+        this.birthDate = birthDate;
+        this.country = country;
+        this.description = description;
+        this.interests = interests;
+        this.profileImageUrl = profileImageUrl;
+        this.profileBannerUrl = profileBannerUrl;
+        this.favoriteGenres = favoriteGenres;
+        this.bookshelves = bookshelves;
+        this.notifications = notifications;
+        this.posts = posts;
     }
 
     public Customer(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves) {
@@ -65,6 +92,22 @@ public class Customer {
         this.profileBannerUrl = profileBannerUrl;
         this.favoriteGenres = favoriteGenres;
         this.bookshelves = bookshelves;
+    }
+
+    public Set<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Set<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
     }
 
     public String getUsername() {
