@@ -8,10 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Set;
+
 public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Long> {
 
     @Query(value = "SELECT pb FROM PersonalBook pb WHERE pb.bookshelf = :bookshelf")
-    Page<PersonalBook> findBooks(Bookshelf bookshelf, PageRequest pageable);
+    Set<PersonalBook> findBooks(Bookshelf bookshelf);
 
     @Modifying
     @Query("DELETE FROM PersonalBook pb WHERE pb.bookshelf = :bookshelf AND pb.book.isbn = :isbn")

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
+import java.util.Set;
 
 public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
 
@@ -15,5 +16,5 @@ public interface BookshelfRepository extends JpaRepository<Bookshelf, Long> {
     Optional<Bookshelf> findBookshelfByNameAndCustomer(String name, Customer customer);
 
     @Query(value = "SELECT b FROM Bookshelf b WHERE b.customer = :customer")
-    Page<Bookshelf> findBookshelvesByCustomer(Customer customer, PageRequest pageRequest);
+    Set<Bookshelf> findBookshelvesByCustomer(Customer customer);
 }

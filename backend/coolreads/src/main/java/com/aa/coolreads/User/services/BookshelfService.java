@@ -50,9 +50,7 @@ public class BookshelfService {
 
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
-        PageRequest pageRequest = PageRequest.of(0, Integer.MAX_VALUE); // deixar assim enquanto o joão não quiser paginação XD
-
-        return this.bookshelfRepository.findBookshelvesByCustomer(customer, pageRequest).get().map(bookshelf -> this.bookshelfMapper.toSimpleBookShelfDTO(bookshelf, this.personalBooksRepository.getBooksSize(bookshelf))).collect(Collectors.toSet());
+        return this.bookshelfRepository.findBookshelvesByCustomer(customer).stream().map(bookshelf -> this.bookshelfMapper.toSimpleBookShelfDTO(bookshelf, this.personalBooksRepository.getBooksSize(bookshelf))).collect(Collectors.toSet());
     }
 
     @Transactional
@@ -83,13 +81,12 @@ public class BookshelfService {
     }
 
     @Transactional
-    public Set<PersonalBookDTO> getBooks(String name, String username) throws CustomerNotFoundException, BookshelfNotFoundException {//, Integer page, Integer size
+    public Set<PersonalBookDTO> getBooks(String name, String username) throws CustomerNotFoundException, BookshelfNotFoundException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
         Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(name, customer).orElseThrow(() -> new BookshelfNotFoundException(name));
 
-        PageRequest pageRequest = PageRequest.of(0, Integer.MAX_VALUE);
-        return this.personalBooksRepository.findBooks(bookshelf,pageRequest).get().map(this.bookshelfMapper::toPersonalBookDTO).collect(Collectors.toSet());//, pageRequest
+        return this.personalBooksRepository.findBooks(bookshelf).stream().map(this.bookshelfMapper::toPersonalBookDTO).collect(Collectors.toSet());
     }
 
     @Transactional
