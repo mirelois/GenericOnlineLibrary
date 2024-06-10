@@ -2,11 +2,13 @@ package com.aa.coolreads.User.services;
 
 import com.aa.coolreads.User.dto.CustomerDTO;
 import com.aa.coolreads.User.dto.NewCustomerDTO;
+import com.aa.coolreads.User.dto.RegisterDTO;
 import com.aa.coolreads.User.exception.CustomerAlreadyExistsException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.mappers.CustomerMapper;
 import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.repositories.CustomerRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,8 @@ public class CustomerService {
         this.customerMapper = customerMapper;
     }
 
+    @Transactional
+    @Deprecated
     public void insertCustomer(NewCustomerDTO newCustomerDTO) throws CustomerAlreadyExistsException {
         String username = newCustomerDTO.getUsername();
         if(this.customerRepository.findById(username).isPresent())
@@ -30,6 +34,7 @@ public class CustomerService {
         this.customerRepository.save(this.customerMapper.toCustomer(newCustomerDTO));
     }
 
+    @Transactional
     public CustomerDTO getCustomer(String username) throws CustomerNotFoundException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 

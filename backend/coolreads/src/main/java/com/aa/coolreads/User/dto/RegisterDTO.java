@@ -1,11 +1,19 @@
 package com.aa.coolreads.User.dto;
 
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 public class RegisterDTO {
 
+    @NotBlank(message = "Username is required")
     private String username;
 
+    @NotBlank(message = "Password is required")
     private String password;
 
+    @NotBlank(message = "Email is required")
+    @Pattern(regexp = "^(.+)@(\\S+)$", flags = {Pattern.Flag.CASE_INSENSITIVE}, message = "The email is invalid")
     private String email;
 
     public RegisterDTO(){}
