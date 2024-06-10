@@ -5,7 +5,6 @@ import com.aa.coolreads.User.exception.CustomerAlreadyExistsException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.services.AuthenticationService;
 import com.aa.coolreads.User.services.CustomerService;
-import com.aa.coolreads.User.services.JwtService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,6 +50,11 @@ public class CustomerController {
         } catch(CustomerNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<CustomerDTO> getCurrentUser(){
+        return ResponseEntity.ok(this.customerService.getMyCustomer());
     }
 
     @PostMapping
