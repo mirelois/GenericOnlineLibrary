@@ -33,7 +33,7 @@
             <a href="/bookmenu"><div class="books-section">
                 <img class="book-light" src="/img/Book_light.svg"/>Books
             </div></a>
-            <a href="#notifications"><div class="notifications">
+            <a href="/notifications"><div class="notifications">
                 <img class="bell-light" src="/img/Bell_light.svg"/>Notifications
             </div></a>
             <a href="/bookshelves/all">
