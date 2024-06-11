@@ -6,8 +6,6 @@ public class PostCreationDTO {
 
     private String content;
 
-    private Long id;
-
     public PostCreationDTO() {}
 
     public PostCreationDTO(String title, String content) {

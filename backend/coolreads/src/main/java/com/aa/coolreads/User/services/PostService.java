@@ -32,11 +32,11 @@ public class PostService {
     }
 
     @Transactional
-    public void insertPost(PostCreationDTO postDTO, String username) throws CustomerNotFoundException {
+    public void insertPost(PostCreationDTO postCreationDTO, String username) throws CustomerNotFoundException {
 
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
-        this.postRepository.save(this.postMapper.toPost(postDTO, customer));
+        this.postRepository.save(this.postMapper.toPost(postCreationDTO, customer));
     }
 
     @Transactional
