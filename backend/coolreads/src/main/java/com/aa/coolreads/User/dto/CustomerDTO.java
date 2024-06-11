@@ -1,5 +1,7 @@
 package com.aa.coolreads.User.dto;
 
+import com.aa.coolreads.User.models.Gender;
+
 import java.util.Date;
 import java.util.Set;
 
@@ -11,7 +13,7 @@ public class CustomerDTO extends NewCustomerDTO{
 
     public CustomerDTO(){}
 
-    public CustomerDTO(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<String> favoriteGenres, Set<BookShelfDTO> bookshelves) {
+    public CustomerDTO(String username, String password, String email, String name, Gender gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<String> favoriteGenres, Set<BookShelfDTO> bookshelves) {
         super(username, password, email, name, gender, pronouns, birthDate, country, description, interests, profileImageUrl, profileBannerUrl);
         this.favoriteGenres = favoriteGenres;
         this.bookshelves = bookshelves;

@@ -1,6 +1,7 @@
 package com.aa.coolreads.User.builder;
 
 import com.aa.coolreads.User.dto.NewCustomerDTO;
+import com.aa.coolreads.User.models.Gender;
 
 import java.util.Date;
 
@@ -39,7 +40,7 @@ public class NewCustomerDTOBuilder {
         return this;
     }
 
-    public NewCustomerDTOBuilder setGender(String gender){
+    public NewCustomerDTOBuilder setGender(Gender gender){
         this.customer.setGender(gender);
         return this;
     }

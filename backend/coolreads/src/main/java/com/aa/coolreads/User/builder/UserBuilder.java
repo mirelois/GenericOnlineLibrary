@@ -2,6 +2,7 @@ package com.aa.coolreads.User.builder;
 
 import com.aa.coolreads.Book.models.Genre;
 import com.aa.coolreads.User.models.Bookshelf;
+import com.aa.coolreads.User.models.Gender;
 
 import java.util.Date;
 import java.util.Set;
@@ -19,7 +20,7 @@ public interface UserBuilder {
 
     UserBuilder setName(String name);
 
-    UserBuilder setGender(String gender);
+    UserBuilder setGender(Gender gender);
 
     UserBuilder setPronouns(String pronouns);
 

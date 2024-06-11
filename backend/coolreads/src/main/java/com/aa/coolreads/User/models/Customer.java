@@ -21,7 +21,8 @@ public class Customer implements UserDetails {
 
     private String name;
 
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     private String pronouns;
 
@@ -58,7 +59,7 @@ public class Customer implements UserDetails {
         this.posts = new HashSet<>();
     }
 
-    public Customer(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves, Set<Notification> notifications, Set<Post> posts) {
+    public Customer(String username, String password, String email, String name, Gender gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves, Set<Notification> notifications, Set<Post> posts) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -77,7 +78,7 @@ public class Customer implements UserDetails {
         this.posts = posts;
     }
 
-    public Customer(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves) {
+    public Customer(String username, String password, String email, String name, Gender gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -142,11 +143,11 @@ public class Customer implements UserDetails {
         this.name = name;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 

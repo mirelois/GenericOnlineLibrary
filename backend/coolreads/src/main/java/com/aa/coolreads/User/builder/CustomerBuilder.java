@@ -3,6 +3,7 @@ package com.aa.coolreads.User.builder;
 import com.aa.coolreads.Book.models.Genre;
 import com.aa.coolreads.User.models.Bookshelf;
 import com.aa.coolreads.User.models.Customer;
+import com.aa.coolreads.User.models.Gender;
 
 import java.util.Date;
 import java.util.Set;
@@ -42,7 +43,7 @@ public class CustomerBuilder implements UserBuilder {
         return this;
     }
 
-    public CustomerBuilder setGender(String gender){
+    public CustomerBuilder setGender(Gender gender){
         this.customer.setGender(gender);
         return this;
     }

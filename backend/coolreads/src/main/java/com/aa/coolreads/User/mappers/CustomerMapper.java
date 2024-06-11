@@ -4,7 +4,6 @@ import com.aa.coolreads.User.builder.CustomerBuilder;
 import com.aa.coolreads.User.builder.UserBuilder;
 import com.aa.coolreads.User.dto.*;
 import com.aa.coolreads.User.models.Customer;
-import com.aa.coolreads.User.models.Privacy;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;

@@ -1,5 +1,7 @@
 package com.aa.coolreads.User.dto;
 
+import com.aa.coolreads.User.models.Gender;
+
 import java.util.Date;
 
 public class NewCustomerDTO {
@@ -11,7 +13,7 @@ public class NewCustomerDTO {
 
     private String name;
 
-    private String gender;
+    private Gender gender;
 
     private String pronouns;
 
@@ -29,7 +31,7 @@ public class NewCustomerDTO {
 
     public NewCustomerDTO(){}
 
-    public NewCustomerDTO(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl) {
+    public NewCustomerDTO(String username, String password, String email, String name, Gender gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -76,11 +78,11 @@ public class NewCustomerDTO {
         this.name = name;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 

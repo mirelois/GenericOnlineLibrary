@@ -21,4 +21,9 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
 
     @Query(value = "SELECT COUNT(*) FROM PersonalBook pb WHERE pb.bookshelf = :bookshelf")
     Integer getBooksSize(Bookshelf bookshelf);
+
+    @Query(value = "SELECT COUNT(*) FROM PersonalBook pb WHERE pb.bookshelf.name = :bookshelf AND pb.book.isbn = :isbn")
+    Integer getBooksSizeByBookShelfName(String bookshelf, String isbn);
+
+    @Query("SELECT ")
 }
