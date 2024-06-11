@@ -2,10 +2,7 @@ package com.aa.coolreads.User.mappers;
 
 import com.aa.coolreads.User.builder.CustomerBuilder;
 import com.aa.coolreads.User.builder.UserBuilder;
-import com.aa.coolreads.User.dto.BookShelfDTO;
-import com.aa.coolreads.User.dto.CustomerDTO;
-import com.aa.coolreads.User.dto.NewCustomerDTO;
-import com.aa.coolreads.User.dto.PersonalBookDTO;
+import com.aa.coolreads.User.dto.*;
 import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.models.Privacy;
 import org.springframework.stereotype.Component;
@@ -58,6 +55,13 @@ public class CustomerMapper {
         customerDTO.setBookshelves(customer.getBookshelves().stream().map(e -> new BookShelfDTO(e.getName(), e.getPrivacy().name(), e.getPersonalBooks().stream().map(b -> new PersonalBookDTO(b.getPagesRead(), b.getInsertDate(), b.getBook().getIsbn(),b.getBook().getImageUrl(),b.getBook().getTitle())).collect(Collectors.toSet()))).collect(Collectors.toSet()));
 
         return customerDTO;
+    }
+
+
+    public Customer toCustomer(RegisterDTO registerDTO){
+        return (Customer) this.userBuilder.setUsername(registerDTO.getUsername())
+                .setPassword(registerDTO.getPassword())
+                .setEmail(registerDTO.getEmail()).build();
     }
 
 
