@@ -80,11 +80,20 @@ export default {
 			username:''
 		}
 	},
-	created(){
-		const token = localStorage.getItem('user');
-		let username = JSON.parse(token).info.sub; //este é o username do utilizador que se acabou de autenticar
-		this.setUsername(username);
-	},
+	created() {
+    const token = localStorage.getItem('user');
+    if (!token) {
+      console.warn('User token not found in localStorage');
+      return;
+    }
+
+    try {
+      const decodedToken = JSON.parse(token);
+      this.setUsername(decodedToken.info.sub);
+    } catch (error) {
+      console.error('Error parsing user token:', error);
+    }
+  },
 	methods:{
 		setUsername(username){
 			this.username=username;

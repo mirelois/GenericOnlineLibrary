@@ -172,8 +172,17 @@ export default {
     },
     created(){
         const token = localStorage.getItem('user');
-		let username = JSON.parse(token).info.sub;
-		this.setUsername(username);
+        if (!token) {
+            console.warn('User token not found in localStorage');
+            return;
+        }
+
+        try {
+            const decodedToken = JSON.parse(token);
+            this.setUsername(decodedToken.info.sub);
+        } catch (error) {
+            console.error('Error parsing user token:', error);
+        }
 
         this.getBooks();
         this.nrpages = Math.ceil(this.filtered.length / this.maxPerPage);
