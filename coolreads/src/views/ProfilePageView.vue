@@ -69,8 +69,27 @@ import FooterComponent from '../components/FooterComponent.vue';
 	<div class="posFoot"><FooterComponent></FooterComponent></div>
 		
 	
-<NavComponent></NavComponent>
+<NavComponent :username="username"></NavComponent>
 </template>
+<script>
+export default {
+	data(){
+		return{
+			username:''
+		}
+	},
+	created(){
+		const token = localStorage.getItem('user');
+		let username = JSON.parse(token).info.sub; //este é o username do utilizador que se acabou de autenticar
+		this.setUsername(username);
+	},
+	methods:{
+		setUsername(username){
+			this.username=username;
+		}
+	}
+}
+</script>
 
 <style scoped>
 

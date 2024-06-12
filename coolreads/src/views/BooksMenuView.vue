@@ -53,22 +53,35 @@ import NavComponent from '../components/NavComponent.vue';
             <b class="manga">Manga</b>
             </div>
         </div>
-        <NavComponent></NavComponent>
+        <NavComponent :username="username"></NavComponent>
     </main> 
 </template>
 
 <script>
-import { defineComponent } from 'vue'
 import router from '../router/index'
 
-export default defineComponent({
-  name: 'BooksMenuView',
-  methods: {
-    navigateToCategory(category) {
-      router.push({ name: 'bookCategoria', params: { category } });
+export default {
+    data(){
+        return{
+            username:''
+        }
+    },
+    methods: {
+        navigateToCategory(category) {
+        router.push({ name: 'bookCategoria', params: { category } });
+        }
+    ,
+    setUsername(username){
+		this.username=username;
     }
+  },
+  created(){
+        const token = localStorage.getItem('user');
+		let username = JSON.parse(token).info.sub;
+		this.setUsername(username);
   }
-})
+}
+
 </script>
 
 

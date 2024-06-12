@@ -5,7 +5,8 @@
        		<div class="profile-section" @click="openProfile" id="profileSectionContainer"  v-bind:style="{ 'background-color': computedColor }">
                 <img class="vuesaxoutlineframe-icon" alt="" src="/img/frame.svg">
                 <img class="chevron-icon" alt="" src="/img/Chevron.svg">
-                <div class="c">Carmen</div>
+                <div v-if="username!==''"class="c">{{username}}</div>
+                <div v-if="username===''"class="c">Profile</div>
             </div>
             <div v-if="isProfileOpen==true" tabindex="0" class="dropdown-profile">
                 <div class="viewprofileoption" id="viewProfileOptionContainer">
@@ -42,22 +43,22 @@
                     <div class="c">Bookshelf</div>
                 </div> 
             </a>
-            <div class="registration-login">
-                <a href="/signup" class="registration-button">Registo</a>
-                <a href="/login" class="login-button">Login</a>
-            </div>
+            <button @click="handle_logout()" class="registration-login">Logout</button>
         </div>
     </main>
 </template>
 <script>
 import axios from 'axios';
+import router from "../router/index";
 export default {
+    props:{username:''},
     data(){
         return {
             isProfileOpen:false,
             backgroundColor: "#000000",
             inputtxt:'',
-            results:[]
+            results:[],
+            message:'',
         }
     },
     computed: {
@@ -89,6 +90,19 @@ export default {
                 console.log(erro);
             })
             
+        },
+        handle_logout(){
+            this.$store.dispatch('auth/logout').then(
+            () => {
+                router.push({ path: '/login' })
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+            }
+          );
         }
     },
     computed:{
@@ -425,6 +439,12 @@ a:hover { text-decoration: underline; }
     position: absolute;
     top: 10px;
     right: 20px; 
+    padding: 10px 20px;
+    background-color: #da9f46d9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor:pointer;
 }
 
 .registration-button,

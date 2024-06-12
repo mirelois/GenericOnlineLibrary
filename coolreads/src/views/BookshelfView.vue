@@ -70,7 +70,7 @@ import FooterComponent from '../components/FooterComponent.vue';
             </div>
         </div>
     </div>
-    <NavComponent></NavComponent>
+    <NavComponent :username="username"></NavComponent>
 </template>
 <script>
 import axios from "axios";
@@ -93,8 +93,8 @@ export default {
             filtered: [],
             selectedOption: 'Select Sorting Operation',
             bookshelfname:'',
-            username:'techguru',
             showConfirmDel:false,
+            username:'',
             confirm_msg:'Are you sure you want to remove the book?',
             removeBook:''
         }
@@ -165,9 +165,16 @@ export default {
         showConfirmDeletion(book){
             this.removeBook = book;
             this.showConfirmDel=true;
-        }
+        },
+        setUsername(username){
+			this.username=username;
+		}
     },
     created(){
+        const token = localStorage.getItem('user');
+		let username = JSON.parse(token).info.sub;
+		this.setUsername(username);
+
         this.getBooks();
         this.nrpages = Math.ceil(this.filtered.length / this.maxPerPage);
         this.initializeActivate();

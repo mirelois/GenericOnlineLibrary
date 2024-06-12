@@ -10,11 +10,9 @@
 					<div class="email">Email or Username</div>
 				</div>
 				<div class = "input-text-wrapper">
-					<div class ="input-text">
-						<div class="context">example@example.com</div>
+						<input v-model="username" class="input-text" placeholder="example@example.com"/>
 						<div class="input-text-child">
 						</div> 
-					</div>
 				</div>
 			</div>
 			<div class="frame-group">
@@ -23,17 +21,13 @@
 					<div class="forgot">Forgot?</div>
 				</div>
 				<div class ="input">
-					<div class ="input-text1">
-						<div class="context">Enter your password</div>
+						<input v-model="password" class="input-text1" placeholder="Enter your password"/>
 						<div class="iconeye-wrapper">
 							<img class="iconeye" alt="" src="/img/iconeye.svg">
 						</div>
-					</div>
 				</div>
 			</div>
-        <div class="buttonlogin" id="buttonloginContainer">
-          <div class="textButton">Login now</div>
-        </div>
+        <button @click="handleLogin" class="buttonlogin" id="buttonloginContainer">Login now</button>
         <div class="dont-have-an-account-parent">
           <div class="dont-have-an">Don't have an account ?</div>
           <div class="sign-up"  @click="onSignUpTextClick">Sign up</div>
@@ -44,16 +38,50 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
-import router from "../router/index"
-export default defineComponent({
-  name: "LoginPage",
+import router from "../router/index";
+import User from "@/models/user";
+export default{
   methods: {
     onSignUpTextClick() {
       router.push({ path: '/signup' })
     }
+  },
+  data(){
+	return {
+		username:'',
+		password:'',
+		message:''
+	}
+  },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    }
+  },
+  created() {
+    if (this.loggedIn) {
+      this.$router.push('/profile');
+    }
+  },
+  methods: {
+    handleLogin() {
+    	if (this.username!="" && this.password!="") {
+          this.$store.dispatch('auth/login', new User(this.username,'',this.password)).then(
+            (u) => {
+				console.log("Login successful, user:", u);
+            	this.$router.push('/profile');
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+            }
+          );
+        }
+    }
   }
-})
+};
 
 </script>
 

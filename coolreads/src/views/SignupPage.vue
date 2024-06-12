@@ -28,10 +28,7 @@
               <div class="email">Email</div>
             </div>
             <div class="inputTextWrapper">
-              <div class="inputText">
-                <div class="context">example@example.com</div>
-                <div class="inputTextChild"></div>
-              </div>
+              <input v-model="email" class="inputText"  placeholder="example@example.com"/>
             </div>
           </div>
           <div class="frameGroup">
@@ -39,10 +36,7 @@
               <div class="email">Username</div>
             </div>
             <div class="input">
-              <div class="inputText1">
-                <div class="context">Enter your username</div>
-                <div class="inputTextChild"></div>
-              </div>
+              <input v-model="username" class="inputText1" placeholder="Enter your username"/>
             </div>
           </div>
           <div class="frameGroup">
@@ -50,19 +44,15 @@
               <div class="email">Password</div>
             </div>
             <div class="input">
-              <div class="inputText1">
-                <div class="context">Enter your password</div>
+              <input v-model="password" class="inputText1" placeholder="Enter your password"/>
                 <div class="iconeye-wrapper">
                   <img class="iconeye" alt="" src="/img/iconeye.svg">
-                </div>
               </div>
             </div>
           </div>
         </div>
         <div class="buttonParent">
-          <div class="button">
-            <div class="textButton">Create account</div>
-          </div>
+            <button class="createbutton" @click="createAccount">Create account</button>
           <div class="alreadyHaveAnAccountParent">
             <div class="alreadyHaveAn">Already have an account?</div>
             <div class="logIn" @click="onLogInTextClick">Log in</div>
@@ -74,16 +64,48 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
-import router from "../router/index"
-export default defineComponent({
-  name: "SignupPage",
+import router from "../router/index";
+import User from "@/models/user";
+export default {
   methods: {
     onLogInTextClick() {
       router.push({ path: '/login' })
+    },
+    createAccount() {
+      this.message = '';
+      this.$store.dispatch('auth/register', new User(this.username,this.email,this.password)).then(
+            data => {
+              this.message = data.message;
+              this.successful = true;
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+              this.successful = false;
+            }
+          );
+    }
+  },
+  data(){
+    return{
+        email:'',
+        username:'',
+        password:'',
+        message:''
+    }
+  },computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    }
+  },
+  created() {
+    if (this.loggedIn) {
+      this.$router.push('/profile');
     }
   }
-})
+};
 </script>
 
 <style scoped>
@@ -317,7 +339,7 @@ flex-shrink: 0;
   gap: 21.6px;
   color: #344054;
 }
-.button {
+.createbutton {
   align-self: center;
   border-radius: 7.2px;
   background-color: #2f3134;
@@ -326,9 +348,11 @@ flex-shrink: 0;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  color:white;
   width: 270px;
   padding: 14.4px;
   box-sizing: border-box;
+  cursor:pointer;
 }
 .icongoogleOriginal {
   width: 18px;
@@ -381,7 +405,7 @@ flex-shrink: 0;
   left: 765px;
   background-color: #fff;
   width: 917px;
-  height: 1080px;
+  height: 1280px;
   display: flex;
   flex-direction: column;
   align-items: center;
