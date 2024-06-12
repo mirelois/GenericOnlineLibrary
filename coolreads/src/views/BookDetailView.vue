@@ -35,9 +35,9 @@ import Rating from 'primevue/rating';
     		<div class="nr-rates">{{ nrratings }} ratings</div>
     		<div class="nr-reviews">{{ nrreviews }} reviews</div>
 			<div>
-				<StateComponent @choosen_state="showConfirm=true" :stateValue ="stateSelected" @bookStateSelected="getBookState"></StateComponent>
+				<StateComponent v-if="username!==''" @choosen_state="showConfirm=true" :stateValue ="stateSelected" @bookStateSelected="getBookState"></StateComponent>
 			</div>
-			<AddToBookshelfComponent @click="showAddtoBookshelf=true"></AddToBookshelfComponent>			
+			<AddToBookshelfComponent v-if="username!==''" @click="showAddtoBookshelf=true"></AddToBookshelfComponent>			
 			<div v-if="showAddtoBookshelf==true">
 				<BookshelfSelectorComponent :bookISBN="isbn" :username="username" @closebookshelvesoptions="showAddtoBookshelf=false"></BookshelfSelectorComponent>
 			</div>
@@ -118,8 +118,10 @@ export default {
 		AddToBookshelfComponent
     },created(){
 		const token = localStorage.getItem('user');
-		let username = JSON.parse(token).info.sub;
-		this.setUsername(username);
+		if(!token && this.$store.state.auth.status.loggedIn==true){
+			let username = JSON.parse(token).info.sub;
+			this.setUsername(username);
+		}
 
 		this.isbn = this.$route.params.bookisbn;
 		this.getBook(this.isbn);

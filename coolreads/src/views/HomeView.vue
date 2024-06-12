@@ -6,7 +6,7 @@ import FooterComponent from '../components/FooterComponent.vue';
 <template>
   <main>
     <NavComponent :username="username"></NavComponent>
-    <ShelfSideBarComponent :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
+    <ShelfSideBarComponent v-if="username!==''" :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
   </main>
 </template>
 <script>
@@ -19,8 +19,7 @@ export default {
   },
 	created() {
     const token = localStorage.getItem('user');
-    if (!token) {
-      console.warn('User token not found in localStorage');
+    if (!token || this.$store.state.auth.status.loggedIn===false) {
       return;
     }
 

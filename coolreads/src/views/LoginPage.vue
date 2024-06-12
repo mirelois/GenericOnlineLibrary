@@ -21,36 +21,35 @@
 					<div class="forgot">Forgot?</div>
 				</div>
 				<div class ="input">
-						<input v-model="password" class="input-text1" placeholder="Enter your password"/>
+						<input v-model="password" class="input-text1" :type="type" placeholder="Enter your password"/>
 						<div class="iconeye-wrapper">
-							<img class="iconeye" alt="" src="/img/iconeye.svg">
+							<img class="iconeye" @click="changeInputType" alt="" src="/img/iconeye.svg">
 						</div>
 				</div>
 			</div>
         <button @click="handleLogin" class="buttonlogin" id="buttonloginContainer">Login now</button>
         <div class="dont-have-an-account-parent">
           <div class="dont-have-an">Don't have an account ?</div>
-          <div class="sign-up"  @click="onSignUpTextClick">Sign up</div>
+          <a class="sign-up" href="/signup">Sign up</a>
         </div>
       </div>
     </div>
+	<ToastComponent v-if="error_msg!==''" :msg="error_msg" @close_toast="closemsg"></ToastComponent>
   </div>
 </template>
 
 <script>
 import router from "../router/index";
 import User from "@/models/user";
+import ToastComponent from "@/components/ToastComponent.vue";
 export default{
-  methods: {
-    onSignUpTextClick() {
-      router.push({ path: '/signup' })
-    }
-  },
   data(){
 	return {
 		username:'',
 		password:'',
-		message:''
+		message:'',
+		error_msg:'',
+		type:'password'
 	}
   },
   computed: {
@@ -65,22 +64,31 @@ export default{
   },
   methods: {
     handleLogin() {
-    	if (this.username!="" && this.password!="") {
-          this.$store.dispatch('auth/login', new User(this.username,'',this.password)).then(
+		if(this.username==='' || this.password===''){
+			this.error_msg = "Existem campos vazios. Introduza o username e password.";
+			return;
+		}
+        this.$store.dispatch('auth/login', new User(this.username,'',this.password)).then(
             (u) => {
 				console.log("Login successful, user:", u);
             	this.$router.push('/profile');
             },
             error => {
-              this.message =
-                (error.response && error.response.data && error.response.data.message) ||
-                error.message ||
-                error.toString();
+              this.error_msg = "Username ou password inválidos. Tente novamente."
             }
           );
-        }
-    }
-  }
+        },
+		closemsg(){
+			this.error_msg='';
+		},
+		changeInputType(){
+			if(this.type==='password') this.type='text';
+			else this.type='password'
+		}
+  },
+	components:{
+		ToastComponent	
+	}
 };
 
 </script>
@@ -170,23 +178,19 @@ export default{
   	width: 24px;
   	position: relative;
   	height: 24px;
+	top: 40px;
+	cursor:pointer;
 }
 .iconeye-wrapper {
-  	display: flex;
-  	flex-direction: row;
-  	align-items: center;
-  	justify-content: flex-end;
+  position: absolute;
+  margin-top: -32px;
+  margin-left: 450px;
 }
 .input-text1 {
-  	align-self: stretch;
-  	border-radius: 8px;
-  	border: 1px solid #d0d5dd;
-  	display: flex;
-  	flex-direction: row;
-  	align-items: center;
-  	justify-content: flex-start;
-  	padding: 12px 16px;
-  	gap: 5px;
+  border-radius: 8px;
+  border: 1px solid #d0d5dd;
+  padding: 12px 16px;
+  width: 490px;
 }
 .input {
   	align-self: stretch;

@@ -82,8 +82,8 @@ export default {
 	},
 	created() {
     const token = localStorage.getItem('user');
-    if (!token) {
-      console.warn('User token not found in localStorage');
+    if (!token || this.$store.state.auth.status.loggedIn===false) {
+      router.push({name:'home'})
       return;
     }
 

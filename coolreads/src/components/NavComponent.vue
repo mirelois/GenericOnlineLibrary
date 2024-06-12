@@ -2,13 +2,13 @@
     <main>
         <div class="navegador">
             <div class="logo"><div class="text-wrapper">C</div></div>
-            <div class="profile-section" @click="openProfile" id="profileSectionContainer"  v-bind:style="{ 'background-color': computedColor }">
+            <div  v-if="username!==''" class="profile-section" @click="openProfile" id="profileSectionContainer"  v-bind:style="{ 'background-color': computedColor }">
                 <img class="vuesaxoutlineframe-icon" alt="" src="/img/frame.svg">
                 <img class="chevron-icon" alt="" src="/img/Chevron.svg">
                 <div v-if="username!==''"class="c">{{username}}</div>
                 <div v-if="username===''"class="c">Profile</div>
             </div>
-            <div v-if="isProfileOpen==true" tabindex="0" class="dropdown-profile">
+            <div v-if="isProfileOpen===true && username!=''" tabindex="0" class="dropdown-profile">
                 <div class="viewprofileoption" id="viewProfileOptionContainer">
                     <a href="/profile">View Profile<div class="view-profile"><a></a></div></a>
                 </div>
@@ -16,7 +16,7 @@
                 <div class="view-profile"><a>Sign Out</a></div>
                 </div>
             </div>  
-            <a href="#settings"><div class="settings-section">
+            <a href="#settings"><div v-if="username!==''" class="settings-section">
                 <img class="settings" src="/img/settings.svg"/>Settings    
             </div></a>
             <a href="/"><div class="home-section">
@@ -34,7 +34,7 @@
             <a href="/bookmenu"><div class="books-section">
                 <img class="book-light" src="/img/Book_light.svg"/>Books
             </div></a>
-            <div class="notifications-section" @click="openNotifications" id="notificationsSectionContainer">
+            <div v-if="username!==''" class="notifications-section" @click="openNotifications" id="notificationsSectionContainer">
                 <img class="bell-light" alt="" src="/img/Bell_light.svg">
                 <div class="notifications-text">Notifications</div>
             </div>
@@ -57,12 +57,16 @@
                 </div>
             </div>
             <a href="/bookshelves/all">
-                <div class="bookshelf-section">
+                <div v-if="username!==''" class="bookshelf-section">
                     <img class="icon" alt="" src="/img/bookshelf.svg">
                     <div class="c">Bookshelf</div>
                 </div> 
             </a>
-            <button @click="handle_logout()" class="registration-login">Logout</button>
+            <button v-if="username!==''" @click="handle_logout()" class="authbtn">Logout</button>
+            <div>
+                <div v-if="username===''"><button @click="handle_login()" class="authbtn">Login</button></div>
+                <div v-if="username===''"><button @click="handle_signup()" class="authbtn">Sign Up</button></div>
+            </div>
         </div>
     </main>
 </template>
@@ -93,7 +97,6 @@ export default {
             else this.backgroundColor = "#da9f46d9"
             
             this.isProfileOpen = !this.isProfileOpen
-            console.log("here:"+isProfileOpen)
         },
         openNotifications() {
             this.isNotificationsOpen = !this.isNotificationsOpen
@@ -117,7 +120,7 @@ export default {
         handle_logout(){
             this.$store.dispatch('auth/logout').then(
             () => {
-                router.push({ path: '/login' })
+                router.push({ path: '/' })
             },
             error => {
               this.message =
@@ -126,7 +129,14 @@ export default {
                 error.toString();
             }
           );
+        },
+        handle_login(){
+            router.push({path:'/login'})
+        },
+        handle_signup(){
+            router.push({path:'/signup'})
         }
+
     },
     computed:{
         textInserted(){
@@ -456,20 +466,20 @@ a:hover { text-decoration: underline; }
     width: 33px;
     height: 33px;
 }
-.registration-login {
-    display: flex;
-    gap: 10px;
-    position: absolute;
-    top: 10px;
-    right: 20px; 
+.authbtn {
+    position: relative;
+    bottom: 20px;
+    right: -2000px; 
     padding: 10px 20px;
     background-color: #da9f46d9;
     color: white;
     border: none;
     border-radius: 5px;
     cursor:pointer;
+    width: auto;
+    float:left;
+    margin:12px;
 }
-
 .registration-button,
 .login-button {
     padding: 10px 20px;

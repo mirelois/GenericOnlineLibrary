@@ -75,6 +75,7 @@ import FooterComponent from '../components/FooterComponent.vue';
 <script>
 import axios from "axios";
 import ConfirmComponent from '@/components/ConfirmComponent.vue';
+import router from '@/router';
 export default {
     components: {
         NavComponent,
@@ -172,8 +173,8 @@ export default {
     },
     created(){
         const token = localStorage.getItem('user');
-        if (!token) {
-            console.warn('User token not found in localStorage');
+        if (!token || this.$store.state.auth.status.loggedIn===false) {
+            router.push({path:'/login'})
             return;
         }
 
