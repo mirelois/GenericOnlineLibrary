@@ -9,6 +9,7 @@ import LoginPage from '@/views/LoginPage.vue'
 import BookCategoryView from '../views/BookCategoryView.vue' 
 import NotificationsView from '@/views/NotificationsView.vue'
 import EditProfileView from '@/views/EditProfileView.vue'
+import SettingsView from '@/views/SettingsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,6 +53,11 @@ const router = createRouter({
       path: '/notifications',
       name: 'notifications',
       component: NotificationsView
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: SettingsView
     },
     {
       path: '/books/?categoria=:category',
