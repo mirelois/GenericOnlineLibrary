@@ -3,8 +3,9 @@ package com.aa.coolreads.User.mappers;
 import com.aa.coolreads.User.builder.CustomerBuilder;
 import com.aa.coolreads.User.builder.UserBuilder;
 import com.aa.coolreads.User.dto.*;
+import com.aa.coolreads.User.models.Bookshelf;
 import com.aa.coolreads.User.models.Customer;
-import com.aa.coolreads.User.models.Privacy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -15,27 +16,20 @@ public class CustomerMapper {
 
     private final UserBuilder userBuilder;
 
-    public CustomerMapper() {
-        this.userBuilder = new CustomerBuilder();
+    private final UserBuilder userDTOBuilder;
+
+    private final BookshelfMapper bookshelfMapper;
+
+    @Autowired
+    public CustomerMapper(UserBuilder userBuilder, UserBuilder userDTOBuilder, BookshelfMapper bookshelfMapper) {
+        this.userBuilder = userBuilder;
+        this.userDTOBuilder = userDTOBuilder;
+        this.bookshelfMapper = bookshelfMapper;
     }
 
-    public Customer toCustomer(NewCustomerDTO newCustomerDTO) {
-        return (Customer) this.userBuilder.setUsername(newCustomerDTO.getUsername())
-                .setPassword(newCustomerDTO.getPassword())
-                .setEmail(newCustomerDTO.getEmail())
-                .setName(newCustomerDTO.getName())
-                .setGender(newCustomerDTO.getGender())
-                .setPronouns(newCustomerDTO.getPronouns())
-                .setBirthDate(newCustomerDTO.getBirthDate())
-                .setCountry(newCustomerDTO.getCountry())
-                .setDescription(newCustomerDTO.getDescription())
-                .setInterests(newCustomerDTO.getInterests())
-                .setProfileImageUrl(newCustomerDTO.getProfileImageUrl())
-                .setProfileBannerUrl(newCustomerDTO.getProfileBannerUrl()).build();
-    }
+    public SimpleCustomerDTO toSimpleCustomerDTO(Customer customer) {
 
-    public NewCustomerDTO toNewCustomerDTO(Customer customer) {
-        return (NewCustomerDTO) this.userBuilder.setUsername(customer.getUsername())
+        return (SimpleCustomerDTO) this.userDTOBuilder.setUsername(customer.getUsername())
                 .setPassword(customer.getPassword())
                 .setEmail(customer.getEmail())
                 .setName(customer.getName())
@@ -49,20 +43,18 @@ public class CustomerMapper {
                 .setProfileBannerUrl(customer.getProfileBannerUrl()).build();
     }
 
-    public CustomerDTO toCustomerDTO(Customer customer){
-        CustomerDTO customerDTO = (CustomerDTO) toNewCustomerDTO(customer);
+    public SimpleCustomerDTO toSimpleCustomerDTO(Customer customer, Bookshelf bookshelf){
+        SimpleCustomerDTO simpleCustomerDTO = this.toSimpleCustomerDTO(customer);
 
-        customerDTO.setBookshelves(customer.getBookshelves().stream().map(e -> new BookShelfDTO(e.getName(), e.getPrivacy().name(), e.getPersonalBooks().stream().map(b -> new PersonalBookDTO(b.getPagesRead(), b.getInsertDate(), b.getBook().getIsbn(),b.getBook().getImageUrl(),b.getBook().getTitle())).collect(Collectors.toSet()))).collect(Collectors.toSet()));
+        simpleCustomerDTO.setHighlightedBookshelf(this.bookshelfMapper.toBookShelfDTO(bookshelf));
 
-        return customerDTO;
+        return simpleCustomerDTO;
     }
-
 
     public Customer toCustomer(RegisterDTO registerDTO){
         return (Customer) this.userBuilder.setUsername(registerDTO.getUsername())
                 .setPassword(registerDTO.getPassword())
                 .setEmail(registerDTO.getEmail()).build();
     }
-
 
 }

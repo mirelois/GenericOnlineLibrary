@@ -3,7 +3,7 @@ package com.aa.coolreads.User.dto;
 import java.util.Date;
 import java.util.Set;
 
-public class CustomerDTO extends NewCustomerDTO{
+public class CustomerDTO extends SimpleCustomerDTO {
 
     private Set<String> favoriteGenres;
 

@@ -2,7 +2,7 @@ package com.aa.coolreads.User.dto;
 
 import java.util.Date;
 
-public class NewCustomerDTO {
+public class SimpleCustomerDTO {
     private String username;
 
     private String password;
@@ -27,9 +27,11 @@ public class NewCustomerDTO {
 
     private String profileBannerUrl;
 
-    public NewCustomerDTO(){}
+    private BookShelfDTO highlightedBookshelf;
 
-    public NewCustomerDTO(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl) {
+    public SimpleCustomerDTO(){}
+
+    public SimpleCustomerDTO(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -42,6 +44,22 @@ public class NewCustomerDTO {
         this.interests = interests;
         this.profileImageUrl = profileImageUrl;
         this.profileBannerUrl = profileBannerUrl;
+    }
+
+    public SimpleCustomerDTO(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, BookShelfDTO highlightedBookshelf) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.name = name;
+        this.gender = gender;
+        this.pronouns = pronouns;
+        this.birthDate = birthDate;
+        this.country = country;
+        this.description = description;
+        this.interests = interests;
+        this.profileImageUrl = profileImageUrl;
+        this.profileBannerUrl = profileBannerUrl;
+        this.highlightedBookshelf = highlightedBookshelf;
     }
 
     public String getUsername() {
@@ -138,5 +156,13 @@ public class NewCustomerDTO {
 
     public void setProfileBannerUrl(String profileBannerUrl) {
         this.profileBannerUrl = profileBannerUrl;
+    }
+
+    public BookShelfDTO getHighlightedBookshelf() {
+        return highlightedBookshelf;
+    }
+
+    public void setHighlightedBookshelf(BookShelfDTO highlightedBookshelf) {
+        this.highlightedBookshelf = highlightedBookshelf;
     }
 }

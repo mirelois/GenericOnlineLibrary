@@ -39,6 +39,8 @@ public class Customer implements UserDetails {
 
     private String profileBannerUrl;
 
+    private String highlightedBookshelfName;
+
     @ManyToMany
     private Set<Genre> favoriteGenres;
 
@@ -77,7 +79,7 @@ public class Customer implements UserDetails {
         this.posts = posts;
     }
 
-    public Customer(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves) {
+    public Customer(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves, String hightLightedBookshelfName) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -92,6 +94,7 @@ public class Customer implements UserDetails {
         this.profileBannerUrl = profileBannerUrl;
         this.favoriteGenres = favoriteGenres;
         this.bookshelves = bookshelves;
+        this.highlightedBookshelfName = hightLightedBookshelfName;
     }
 
     public Set<Notification> getNotifications() {
@@ -222,8 +225,17 @@ public class Customer implements UserDetails {
         this.bookshelves = bookshelves;
     }
 
+    public String getHighlightedBookshelfName() {
+        return highlightedBookshelfName;
+    }
+
+    public void setHighlightedBookshelfName(String highlightedBookshelfName) {
+        this.highlightedBookshelfName = highlightedBookshelfName;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
+
 }
