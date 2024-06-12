@@ -43,9 +43,11 @@ public class CustomerService {
     }
 
     @Transactional
-    public CustomerDTO getMyCustomer() {
+    public CustomerDTO getMyCustomer() throws CustomerNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return this.customerMapper.toCustomerDTO((Customer) authentication.getPrincipal());
+        String username = (String) authentication.getPrincipal();
+
+        return this.getCustomer(username);
     }
 }

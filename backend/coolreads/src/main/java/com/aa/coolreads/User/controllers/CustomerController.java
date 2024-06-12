@@ -54,7 +54,11 @@ public class CustomerController {
 
     @GetMapping("/me")
     public ResponseEntity<CustomerDTO> getCurrentUser(){
-        return ResponseEntity.ok(this.customerService.getMyCustomer());
+        try {
+            return ResponseEntity.ok().body(this.customerService.getMyCustomer());
+        } catch (CustomerNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @PostMapping
