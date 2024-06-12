@@ -2,7 +2,7 @@
     <main>
         <div class="navegador">
             <div class="logo"><div class="text-wrapper">C</div></div>
-       		<div class="profile-section" @click="openProfile" id="profileSectionContainer"  v-bind:style="{ 'background-color': computedColor }">
+            <div class="profile-section" @click="openProfile" id="profileSectionContainer"  v-bind:style="{ 'background-color': computedColor }">
                 <img class="vuesaxoutlineframe-icon" alt="" src="/img/frame.svg">
                 <img class="chevron-icon" alt="" src="/img/Chevron.svg">
                 <div v-if="username!==''"class="c">{{username}}</div>
@@ -10,7 +10,7 @@
             </div>
             <div v-if="isProfileOpen==true" tabindex="0" class="dropdown-profile">
                 <div class="viewprofileoption" id="viewProfileOptionContainer">
-                    <a href="/profile"><<div class="view-profile"><a>View Profile</a></div></a>
+                    <a href="/profile">View Profile<div class="view-profile"><a></a></div></a>
                 </div>
                 <div class="signoutoption" id="signoutOptionContainer">
                 <div class="view-profile"><a>Sign Out</a></div>
@@ -34,11 +34,30 @@
             <a href="/bookmenu"><div class="books-section">
                 <img class="book-light" src="/img/Book_light.svg"/>Books
             </div></a>
-            <a href="/notifications"><div class="notifications">
-                <img class="bell-light" src="/img/Bell_light.svg"/>Notifications
-            </div></a>
+            <div class="notifications-section" @click="openNotifications" id="notificationsSectionContainer">
+                <img class="bell-light" alt="" src="/img/Bell_light.svg">
+                <div class="notifications-text">Notifications</div>
+            </div>
+            <div v-if="isNotificationsOpen==true" tabindex="0" class="dropdown-notifications">
+                <div class="notification1">
+                    <b class="marlena">
+                        <span>Marlena</span>
+                        <span class="span">  </span>
+                    </b>
+                    <div class="liked-your-review">Liked your review of Soul by Olivia Wilson.</div>
+                    <div class="min">15min</div>
+                </div>
+                <div class="notification2">
+                    <b class="johnny">Johnny</b>
+                    <div class="liked-your-review1">Liked your review of Good Services by Lou Downe.</div>
+                    <div class="min">1h</div>
+                </div>
+                <div class="notification11" id="notification1Container1">
+                    <div class="view-all"><a href="/notifications">View All</a></div>
+                </div>
+            </div>
             <a href="/bookshelves/all">
-            	<div class="bookshelf-section">
+                <div class="bookshelf-section">
                     <img class="icon" alt="" src="/img/bookshelf.svg">
                     <div class="c">Bookshelf</div>
                 </div> 
@@ -47,6 +66,7 @@
         </div>
     </main>
 </template>
+
 <script>
 import axios from 'axios';
 import router from "../router/index";
@@ -55,6 +75,7 @@ export default {
     data(){
         return {
             isProfileOpen:false,
+            isNotificationsOpen:false,
             backgroundColor: "#000000",
             inputtxt:'',
             results:[],
@@ -74,8 +95,10 @@ export default {
             this.isProfileOpen = !this.isProfileOpen
             console.log("here:"+isProfileOpen)
         },
+        openNotifications() {
+            this.isNotificationsOpen = !this.isNotificationsOpen
+        },
         getResults(){
-            // fazer get dos books com um titulo que inclui o inputxtGET http://localhost:8080/book/name?title={{$random.alphanumeric(8)}}
             axios.get('http://localhost:8080/book/name?title='+this.inputtxt).then((books)=>{
                 this.results = books.data;
                 let index = 0;
@@ -461,5 +484,199 @@ a:hover { text-decoration: underline; }
 .registration-button:hover,
 .login-button:hover {
     background-color: #c3882f;
+}
+
+.span {
+font-size: 12px;
+white-space: pre-wrap;
+}
+.marlena {
+width: 88px;
+position: relative;
+text-decoration: underline;
+display: inline-block;
+height: 44px;
+flex-shrink: 0;
+}
+.liked-your-review {
+width: 298px;
+position: relative;
+font-size: 12px;
+display: inline-block;
+height: 29px;
+flex-shrink: 0;
+}
+.min {
+position: relative;
+font-size: 15px;
+color: #8d502e;
+}
+.notification1 {
+position: absolute;
+top: 0px;
+left: 0px;
+background-color: #dba046;
+border: 1px solid #fff;
+box-sizing: border-box;
+width: 464px;
+height: 83px;
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: center;
+gap: 5px;
+}
+.johnny {
+width: 92px;
+position: relative;
+text-decoration: underline;
+display: inline-block;
+height: 53px;
+flex-shrink: 0;
+}
+.liked-your-review1 {
+width: 299px;
+position: relative;
+font-size: 20px;
+display: inline-block;
+height: 46px;
+flex-shrink: 0;
+margin-bottom: 5px;
+}
+.notification2 {
+position: absolute;
+top: 83px;
+left: 0px;
+background-color: #dba046;
+border: 1px solid #fff;
+box-sizing: border-box;
+width: 464px;
+height: 71px;
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: center;
+}
+.view-all {
+width: 95px;
+position: relative;
+text-decoration: underline;
+display: inline-block;
+height: 15px;
+flex-shrink: 0;
+}
+.notification11 {
+position: absolute;
+top: 154px;
+left: 0px;
+background-color: #ac7c34;
+border: 1px solid #fff;
+box-sizing: border-box;
+width: 464px;
+height: 43px;
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+font-size: 18px;
+}
+.notifications-dropdown {
+width: 100%;
+position: relative;
+height: 204px;
+text-align: left;
+font-size: 22px;
+color: #fff;
+font-family: Inika;
+}
+.notifications-section {
+    display: flex;
+    width: 235px;
+    height: 115px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: absolute;
+    top: 0;
+    left: 1375px;
+    font-size: 22px;
+}
+
+.notifications-section:hover {
+    background-color: #da9f46d9; 
+}
+
+.bell-light {
+    position: relative;
+    width: 33px;
+    height: 33px;
+}
+
+.dropdown-notifications {
+    width: 100%;
+    position: absolute;
+    height: 209px;
+    text-align: left;
+    font-size: 22px;
+    color: #fff;
+    font-family: Inika;
+    top: 115px;
+    left: 1375px;
+}
+
+.notification1, .notification2, .notification11 {
+    background-color: #dba046;
+    border: 1px solid #fff;
+    box-sizing: border-box;
+    width: 464px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification1 {
+    height: 83px;
+    top: 0;
+}
+
+.notification2 {
+    height: 71px;
+    top: 83px;
+}
+
+.notification11 {
+    height: 45px;
+    top: 154px;
+    background-color: #ac7c34;
+    cursor: pointer;
+    font-size: 18px;
+    justify-content: center;
+}
+
+.marlena, .johnny {
+    width: 92px;
+    text-decoration: underline;
+    display: inline-block;
+    height: 44px;
+    flex-shrink: 0;
+}
+
+.liked-your-review, .liked-your-review1 {
+    width: 298px;
+    font-size: 20px;
+    display: inline-block;
+    height: 39px;
+    flex-shrink: 0;
+}
+
+.min {
+    font-size: 15px;
+    color: #8d502e;
+}
+
+.notifications-text{
+    color:white;
 }
 </style>
