@@ -55,7 +55,8 @@ public class CustomerController {
     @GetMapping("/me")
     public ResponseEntity<CustomerDTO> getCurrentUser(){
         try {
-            return ResponseEntity.ok().body(this.customerService.getMyCustomer());
+            CustomerDTO customerDTO = this.customerService.getMyCustomer();
+            return ResponseEntity.ok().body(customerDTO);
         } catch (CustomerNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
