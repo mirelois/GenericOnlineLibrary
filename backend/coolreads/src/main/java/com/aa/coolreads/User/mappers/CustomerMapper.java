@@ -1,6 +1,7 @@
 package com.aa.coolreads.User.mappers;
 
 import com.aa.coolreads.User.builder.CustomerBuilder;
+import com.aa.coolreads.User.builder.SimpleDTOBuilder;
 import com.aa.coolreads.User.builder.UserBuilder;
 import com.aa.coolreads.User.dto.*;
 import com.aa.coolreads.User.models.Bookshelf;
@@ -21,9 +22,9 @@ public class CustomerMapper {
     private final BookshelfMapper bookshelfMapper;
 
     @Autowired
-    public CustomerMapper(UserBuilder userBuilder, UserBuilder userDTOBuilder, BookshelfMapper bookshelfMapper) {
-        this.userBuilder = userBuilder;
-        this.userDTOBuilder = userDTOBuilder;
+    public CustomerMapper(CustomerBuilder customerBuilder, SimpleDTOBuilder simpleDTOBuilder, BookshelfMapper bookshelfMapper) {
+        this.userBuilder = customerBuilder;
+        this.userDTOBuilder = simpleDTOBuilder;
         this.bookshelfMapper = bookshelfMapper;
     }
 

@@ -1,13 +1,16 @@
 package com.aa.coolreads.User.builder;
 
+import com.aa.coolreads.Book.models.Genre;
 import com.aa.coolreads.User.dto.BookShelfDTO;
 import com.aa.coolreads.User.dto.SimpleCustomerDTO;
+import com.aa.coolreads.User.models.Bookshelf;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Set;
 
 @Component
-public class SimpleDTOBuilder {
+public class SimpleDTOBuilder implements UserBuilder{
     private SimpleCustomerDTO customer;
 
     public SimpleDTOBuilder() {
@@ -84,6 +87,14 @@ public class SimpleDTOBuilder {
 
     public SimpleDTOBuilder setHighlightedBookshelf(BookShelfDTO bookShelfDTO){
         this.customer.setHighlightedBookshelf(bookShelfDTO);
+        return this;
+    }
+
+    public SimpleDTOBuilder setFavoriteGenres(Set<Genre> favoriteGenres){
+        return this;
+    }
+
+    public SimpleDTOBuilder setBookshelves(Set<Bookshelf> bookshelves){
         return this;
     }
 }
