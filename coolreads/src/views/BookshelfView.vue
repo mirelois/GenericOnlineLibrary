@@ -182,7 +182,7 @@ export default {
     computed: {
         displayBooksPerPage(){
             if (this.search_input !== '') {
-                this.filtered = this.bookshelf.filter(b => b.title.toLowerCase().includes(this.search_input))
+                this.filtered = this.bookshelf.filter(b => b.title.toLowerCase().includes(this.search_input.toLowerCase()))
             }else{
                 this.filtered = this.bookshelf
             }

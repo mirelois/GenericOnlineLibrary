@@ -73,6 +73,7 @@ import FooterComponent from '../components/FooterComponent.vue';
 <NavComponent :username="username"></NavComponent>
 </template>
 <script>
+import router from '../router/index'
 export default {
 	data(){
 		return{
@@ -87,23 +88,13 @@ export default {
 	methods:{
 		setUsername(username){
 			this.username=username;
+		},
+		navigateToEditProfile() {
+			router.push({ name: 'editprofile'});
 		}
+
 	}
 }
-</script>
-
-<script>
-import { defineComponent } from 'vue'
-import router from '../router/index'
-
-export default defineComponent({
-  name: 'ProfilePageView',
-  methods: {
-    navigateToEditProfile() {
-      router.push({ name: 'editprofile'});
-    }
-  }
-})
 </script>
 
 <style scoped>
