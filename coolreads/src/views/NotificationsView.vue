@@ -1,26 +1,72 @@
-<script setup>
-import NavComponent from '../components/NavComponent.vue';
-import FooterComponent from '../components/FooterComponent.vue';
-</script>
-
 <template>
+  <div>
     <div class="notificationspage-child"></div>
     <b class="all-notifications">All Notifications</b>
     <div class="notification2all">
-      <div class="notification">
+      <div v-for="notification in notifications" :key="notification.id" class="notification">
         <img class="clock-icon" alt="" src="/img/clock.svg">
-        <b class="time">15 min</b>
-        <b class="message">Marlena liked your review of Soul by Alice Wilson.</b>
-      </div>
-      <div class="notification">
-        <img class="clock-icon" alt="" src="/img/clock.svg">
-        <b class="time">1 h</b>
-        <b class="message">Johnny liked your review of Good Services by Lou Downe.</b>
+        <b class="time">{{ notification.time }}</b>
+        <b class="message">{{ notification.message }}</b>
+        <button @click="handleDelete(notification.id)">Delete</button>
       </div>
     </div>
     <NavComponent></NavComponent>
-    
+  </div>
 </template>
+
+<script>
+import { mapState } from 'vuex';
+import NavComponent from '../components/NavComponent.vue';
+import FooterComponent from '../components/FooterComponent.vue';
+
+export default {
+  components: {
+    NavComponent,
+    FooterComponent
+  },
+  data() {
+    return {
+      username: '',
+    };
+  },
+  computed: {
+    ...mapState({
+      notifications: state => state.notifications.notifications,
+    }),
+  },
+  created() {
+    const token = localStorage.getItem('user');
+    if (!token) {
+      console.warn('User token not found in localStorage');
+      return;
+    }
+
+    try {
+      const decodedToken = JSON.parse(token);
+      this.username = decodedToken.info.sub;
+      this.fetchNotifications();
+    } catch (error) {
+      console.error('Error parsing user token:', error);
+    }
+  },
+  methods: {
+    fetchNotifications() {
+      this.$store.dispatch('notifications/fetchNotifications', {
+        username: this.username,
+        pageNumber: 0,
+        pageSize: 10,
+      });
+    },
+    handleDelete(notificationId) {
+      this.$store.dispatch('notifications/deleteNotification', notificationId).then(() => {
+        console.log('Notification deleted successfully');
+      }).catch(error => {
+        console.error('Error deleting notification:', error);
+      });
+    },
+  },
+};
+</script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,700&display=swap');

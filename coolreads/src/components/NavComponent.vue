@@ -16,7 +16,7 @@
                 <div class="view-profile"><a>Sign Out</a></div>
                 </div>
             </div>  
-            <a href="#settings"><div v-if="username!==''" class="settings-section">
+            <a href="/settings"><div div v-if="username!==''" class="settings-section">
                 <img class="settings" src="/img/settings.svg"/>Settings    
             </div></a>
             <a href="/"><div class="home-section">
