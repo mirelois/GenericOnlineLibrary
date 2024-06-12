@@ -10,6 +10,14 @@ docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO Genre (genre_t
 ('romance')
 ON CONFLICT (genre_type) DO NOTHING;";
 
+docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO AgeRange (ageClass) VALUES
+('child'),
+('teen'),
+('young_adult'),
+('adult'),
+('elder')
+ON CONFLICT (ageClass) DO NOTHING;";
+
 docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO publisher (name, email, logo_url, site_url) VALUES
 ('TechBooks Publishing', 'contact@techbooks.com', 'https://miro.medium.com/v2/resize:fit:1000/1*HruntcbNU6LZeHIqfmwI8A.png', 'https://www.techbooks.com'),
 ('Health and Wellness Press', 'info@healthwellnesspress.com', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMFzyRWWqLqoteWaUTp_vkMWqdrxf89heUfQ&s', 'https://www.healthwellnesspress.com'),
@@ -23,16 +31,16 @@ docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO publisher (nam
 ('Mindful Living Publications', 'hello@mindfullivingpub.com', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGEFHuZ1C0Ok8pDTiSFkQ5HoE-iM9EhM4rXQ&s', 'https://www.mindfullivingpub.com');";
 
 docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO customer (role, username, birth_date, country, description, email, gender, interests, name, password, profile_banner_url, profile_image_url, pronouns) VALUES
-('customer', 'techguru', '1985-04-12', 'USA', 'Tech enthusiast and blogger', 'techguru@example.com', 'Male', 'Technology, Gadgets, Coding', 'John Doe', 'securepassword123', 'https://example.com/banners/techguru.jpg', 'https://randomuser.me/api/portraits/men/1.jpg', 'he/him'),
-('customer', 'wellnessqueen', '1990-07-19', 'Canada', 'Wellness coach and nutritionist', 'wellnessqueen@example.com', 'Female', 'Health, Nutrition, Yoga', 'Emily Clark', 'yogapassword456', 'https://example.com/banners/wellnessqueen.jpg', 'https://randomuser.me/api/portraits/women/2.jpg', 'she/her'),
-('customer', 'historybuff', '1978-03-25', 'UK', 'History professor and author', 'historybuff@example.com', 'Male', 'History, Archaeology, Museums', 'Michael Smith', 'historypass789', 'https://example.com/banners/historybuff.jpg', 'https://randomuser.me/api/portraits/men/3.jpg', 'he/him'),
-('customer', 'fictionfan', '1992-11-08', 'Australia', 'Avid reader and fiction writer', 'fictionfan@example.com', 'Non-binary', 'Literature, Writing, Reading', 'Alex Johnson', 'fictionpassword321', 'https://example.com/banners/fictionfan.jpg', 'https://randomuser.me/api/portraits/women/4.jpg', 'they/them'),
-('author', 'randallmunroe', '1988-06-15', 'Germany', 'Environmental activist and blogger', 'greenearth@example.com', 'Female', 'Environment, Sustainability, Nature', 'Sophia Müller', 'greenpassword654', 'https://example.com/banners/greenearth.jpg', 'https://randomuser.me/api/portraits/men/5.jpg', 'she/her'),
-('customer', 'edtechgeek', '1994-02-20', 'India', 'Educational technology specialist', 'edtechgeek@example.com', 'Male', 'Education, Technology, Innovation', 'Raj Patel', 'edtechpassword987', 'https://example.com/banners/edtechgeek.jpg', 'https://randomuser.me/api/portraits/women/6.jpg', 'he/him'),
-('customer', 'scienceseeker', '1980-10-05', 'France', 'Science journalist and researcher', 'scienceseeker@example.com', 'Female', 'Science, Research, Space', 'Isabelle Laurent', 'sciencepassword123', 'https://example.com/banners/scienceseeker.jpg', 'https://randomuser.me/api/portraits/men/7.jpg', 'she/her'),
-('author', 'jkrowling', '1987-09-12', 'Italy', 'Artist and art historian', 'artisanartist@example.com', 'Male', 'Art, History, Painting', 'Luca Rossi', 'artpassword456', 'https://example.com/banners/artisanartist.jpg', 'https://randomuser.me/api/portraits/women/8.jpg', 'he/him'),
-('customer', 'culinarymaster', '1991-01-29', 'Spain', 'Professional chef and food critic', 'culinarymaster@example.com', 'Non-binary', 'Cooking, Food, Travel', 'Maria Garcia', 'culinarypassword789', 'https://example.com/banners/culinarymaster.jpg', 'https://randomuser.me/api/portraits/men/9.jpg', 'they/them'),
-('customer', 'mindfulmentor', '1983-05-17', 'Netherlands', 'Mindfulness coach and author', 'mindfulmentor@example.com', 'Female', 'Mindfulness, Meditation, Self-help', 'Anna Jansen', 'mindfulpassword321', 'https://example.com/banners/mindfulmentor.jpg', 'https://randomuser.me/api/portraits/women/10.jpg','she/her');";
+('customer', 'techguru', '1985-04-12', 'USA', 'Tech enthusiast and blogger', 'techguru@example.com', 'male', 'Technology, Gadgets, Coding', 'John Doe', 'securepassword123', 'https://example.com/banners/techguru.jpg', 'https://randomuser.me/api/portraits/men/1.jpg', 'he/him'),
+('customer', 'wellnessqueen', '1990-07-19', 'Canada', 'Wellness coach and nutritionist', 'wellnessqueen@example.com', 'female', 'Health, Nutrition, Yoga', 'Emily Clark', 'yogapassword456', 'https://example.com/banners/wellnessqueen.jpg', 'https://randomuser.me/api/portraits/women/2.jpg', 'she/her'),
+('customer', 'historybuff', '1978-03-25', 'UK', 'History professor and author', 'historybuff@example.com', 'male', 'History, Archaeology, Museums', 'Michael Smith', 'historypass789', 'https://example.com/banners/historybuff.jpg', 'https://randomuser.me/api/portraits/men/3.jpg', 'he/him'),
+('customer', 'fictionfan', '1992-11-08', 'Australia', 'Avid reader and fiction writer', 'fictionfan@example.com', 'non_binary', 'Literature, Writing, Reading', 'Alex Johnson', 'fictionpassword321', 'https://example.com/banners/fictionfan.jpg', 'https://randomuser.me/api/portraits/women/4.jpg', 'they/them'),
+('author', 'randallmunroe', '1988-06-15', 'Germany', 'Environmental activist and blogger', 'greenearth@example.com', 'female', 'Environment, Sustainability, Nature', 'Sophia Müller', 'greenpassword654', 'https://example.com/banners/greenearth.jpg', 'https://randomuser.me/api/portraits/men/5.jpg', 'she/her'),
+('customer', 'edtechgeek', '1994-02-20', 'India', 'Educational technology specialist', 'edtechgeek@example.com', 'male', 'Education, Technology, Innovation', 'Raj Patel', 'edtechpassword987', 'https://example.com/banners/edtechgeek.jpg', 'https://randomuser.me/api/portraits/women/6.jpg', 'he/him'),
+('customer', 'scienceseeker', '1980-10-05', 'France', 'Science journalist and researcher', 'scienceseeker@example.com', 'female', 'Science, Research, Space', 'Isabelle Laurent', 'sciencepassword123', 'https://example.com/banners/scienceseeker.jpg', 'https://randomuser.me/api/portraits/men/7.jpg', 'she/her'),
+('author', 'jkrowling', '1987-09-12', 'Italy', 'Artist and art historian', 'artisanartist@example.com', 'male', 'Art, History, Painting', 'Luca Rossi', 'artpassword456', 'https://example.com/banners/artisanartist.jpg', 'https://randomuser.me/api/portraits/women/8.jpg', 'he/him'),
+('customer', 'culinarymaster', '1991-01-29', 'Spain', 'Professional chef and food critic', 'culinarymaster@example.com', 'non_binary', 'Cooking, Food, Travel', 'Maria Garcia', 'culinarypassword789', 'https://example.com/banners/culinarymaster.jpg', 'https://randomuser.me/api/portraits/men/9.jpg', 'they/them'),
+('customer', 'mindfulmentor', '1983-05-17', 'Netherlands', 'Mindfulness coach and author', 'mindfulmentor@example.com', 'female', 'Mindfulness, Meditation, Self-help', 'Anna Jansen', 'mindfulpassword321', 'https://example.com/banners/mindfulmentor.jpg', 'https://randomuser.me/api/portraits/women/10.jpg','she/her');";
 
 docker exec -it postgres psql -U postgres -d cool -c "ALTER TABLE book ALTER COLUMN description TYPE TEXT;";
 

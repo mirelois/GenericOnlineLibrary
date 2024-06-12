@@ -12,9 +12,11 @@ public class StatisticsNumberDTO {
 
 
     public StatisticsNumberDTO(Integer currentlyReading, Integer alreadyRead, Integer didNotFinish, Integer wantToRead) {
+
         this.currentlyReading = currentlyReading;
         this.alreadyRead = alreadyRead;
         this.didNotFinish = didNotFinish;
         this.wantToRead = wantToRead;
     }
+
 }

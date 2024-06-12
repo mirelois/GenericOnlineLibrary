@@ -1,14 +1,14 @@
-package com.aa.coolreads.User.services;
+package com.aa.coolreads.Book.services;
 
 import com.aa.coolreads.Book.dto.StatisticsNumberDTO;
 import com.aa.coolreads.Book.dto.StatisticsPieChartDTO;
+import com.aa.coolreads.Book.mappers.StatisticsMapper;
+import com.aa.coolreads.Book.models.Slice;
 import com.aa.coolreads.Book.repositories.BookRepository;
 import com.aa.coolreads.User.models.DefaultBookshelf;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import com.aa.coolreads.User.repositories.PersonalBooksRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,18 +16,15 @@ import java.util.List;
 @Service
 public class StatisticService {
 
-    private final BookRepository bookRepository;
-
-    private final CustomerRepository customerRepository;
-
     private final PersonalBooksRepository personalBooksRepository;
 
-    @Autowired
-    public StatisticService(BookRepository bookRepository, CustomerRepository customerRepository, PersonalBooksRepository personalBooksRepository) {
-        this.bookRepository = bookRepository;
-        this.customerRepository = customerRepository;
+    private final StatisticsMapper statisticsMapper;
+
+    public StatisticService(PersonalBooksRepository personalBooksRepository, StatisticsMapper statisticsMapper) {
         this.personalBooksRepository = personalBooksRepository;
+        this.statisticsMapper = statisticsMapper;
     }
+
 
     @Transactional
     public StatisticsNumberDTO getStatisticsNumbers(String isbn) {
@@ -41,9 +38,11 @@ public class StatisticService {
     }
 
     @Transactional
-    public StatisticsPieChartDTO getStatisticsPieChart(String category, DefaultBookshelf defaultBookshelf, String isbn) {
+    public StatisticsPieChartDTO getStatisticsCountryPieChart(String category, DefaultBookshelf bookshelf, String isbn) {
 
-        List<Slice> slices = this.personalBooksRepository.get
+        List<Slice> slices = this.personalBooksRepository.getCountrySlicesByBookshelfName(bookshelf.name(), isbn);
+
+        return statisticsMapper.toStatisticsPieChartDTO(slices);
 
     }
 }

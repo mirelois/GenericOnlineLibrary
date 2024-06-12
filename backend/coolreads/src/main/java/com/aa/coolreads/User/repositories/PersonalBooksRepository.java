@@ -1,13 +1,13 @@
 package com.aa.coolreads.User.repositories;
 
+import com.aa.coolreads.Book.models.Slice;
 import com.aa.coolreads.User.models.Bookshelf;
 import com.aa.coolreads.User.models.PersonalBook;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Set;
 
 public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Long> {
@@ -25,5 +25,8 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
     @Query(value = "SELECT COUNT(*) FROM PersonalBook pb WHERE pb.bookshelf.name = :bookshelf AND pb.book.isbn = :isbn")
     Integer getBooksSizeByBookShelfName(String bookshelf, String isbn);
 
-    @Query("SELECT ")
+    @Query(value = "SELECT pb.bookshelf.customer.country, COUNT(*) FROM PersonalBook pb WHERE pb.bookshelf.name = :bookshelf GROUP BY pb.bookshelf.customer.country")
+    List<Slice> getCountrySlicesByBookshelfName(String bookshelf, String country);
+
+
 }
