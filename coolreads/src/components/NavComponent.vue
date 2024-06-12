@@ -62,10 +62,10 @@
                     <div class="c">Bookshelf</div>
                 </div> 
             </a>
-            <button v-if="username!==''" @click="handle_logout()" class="authbtn">Logout</button>
+            <button v-if="username!==''" @click="handle_logout()" class="authbtn1">Logout</button>
             <div>
-                <div v-if="username===''"><button @click="handle_login()" class="authbtn">Login</button></div>
-                <div v-if="username===''"><button @click="handle_signup()" class="authbtn">Sign Up</button></div>
+                <div v-if="username===''"><button @click="handle_login()" class="authbtn1">Login</button></div>
+                <div v-if="username===''"><button @click="handle_signup()" class="authbtn2">Sign Up</button></div>
             </div>
         </div>
     </main>
@@ -120,7 +120,7 @@ export default {
         handle_logout(){
             this.$store.dispatch('auth/logout').then(
             () => {
-                router.push({ path: '/' })
+                router.go()
             },
             error => {
               this.message =
@@ -466,20 +466,36 @@ a:hover { text-decoration: underline; }
     width: 33px;
     height: 33px;
 }
-.authbtn {
-    position: relative;
+
+.authbtn1 {
+    position: absolute;
     bottom: 20px;
-    right: -2000px; 
     padding: 10px 20px;
     background-color: #da9f46d9;
     color: white;
     border: none;
     border-radius: 5px;
-    cursor:pointer;
+    cursor: pointer;
     width: auto;
-    float:left;
-    margin:12px;
+    float: left;
+    margin-bottom: 22px;
+    margin-left: 1900px;
 }
+.authbtn2 {
+    position: absolute;
+    bottom: 20px;
+    padding: 10px 20px;
+    background-color: #da9f46d9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: auto;
+    float: left;
+    margin-bottom: 22px;
+    margin-left: 2000px;
+}
+
 .registration-button,
 .login-button {
     padding: 10px 20px;

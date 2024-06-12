@@ -7,24 +7,24 @@ import FooterComponent from '../components/FooterComponent.vue';
   <div class="frame">
     <div class="parent"></div>
   </div>
-  <img class="profilepic" alt="" src="/img/PerfilPic.png">
+  <img class="profilepic" alt="" :src="profileImageUrl">
   <div class="name">
-    <div class="carmen-garca-lpez">Carmen García López</div>
-    <div class="theythem">(They/Them)</div>
+    <div class="carmen-garca-lpez">{{ name }}</div>
+    <div v-if="pronouns!=='' && pronouns!=='-'" class="theythem">({{pronouns}})</div>
   </div>
   <div class="details">
     <div class="details-title">Details</div>
     <div class="detail-row">
       <b class="label">Age</b>
-      <div class="value">19</div>
+      <div class="value">{{birthDate}}</div>
     </div>
     <div class="detail-row">
       <b class="label">Country</b>
-      <div class="value">Spain</div>
+      <div class="value">{{country}}</div>
     </div>
     <div class="detail-row">
       <b class="label">Gender</b>
-      <div class="value">Non-binary</div>
+      <div class="value">{{gender}}</div>
     </div>
 	<div class="edit-profile-wrapper" @click="navigateToEditProfile()" >
       <div class="edit-profile">Edit Profile</div>
@@ -37,10 +37,7 @@ import FooterComponent from '../components/FooterComponent.vue';
     <div class="container1">
       <div class="theres-nothing-i-container">
         <span class="theres-nothing-i-container1">
-          <p class="theres-nothing-i">There’s nothing I enjoy more than curling up with a good book, letting myself get lost in the pages of heartfelt </p>
-          <p class="theres-nothing-i">stories and timeless love. My shelves are filled with tales of passion, heartache, and joy, each book a doorway  </p>
-          <p class="theres-nothing-i">to another world. Visiting quaint bookstores and attending book clubs where I can share my latest  </p>
-          <p class="discoveries-with-fellow">literary discoveries with fellow book lovers brings me immense joy.</p>
+          <p class="theres-nothing-i">{{description}} </p>
         </span>
       </div>
     </div>
@@ -50,22 +47,16 @@ import FooterComponent from '../components/FooterComponent.vue';
       <div class="container1">
         <div class="im-passionate-about-container">
           <span class="theres-nothing-i-container1">
-            <p class="theres-nothing-i">I’m passionate about romance novels, finding joy in the heartfelt tales and timeless love stories that fill my </p>
-            <p class="theres-nothing-i">bookshelves. I also love exploring quaint bookstores and sharing my latest literary finds with fellow </p>
-            <p class="theres-nothing-i">enthusiasts at book clubs.</p>
+            <p class="theres-nothing-i">{{interests}}</p>
           </span>
         </div>
       </div>
     </div>
   </div>
   <div class="highlighted-bookshelf-my-top-parent">
-    <div class="highlighted-bookshelf-my">Highlighted Bookshelf: My Top 5!!!</div>
-    <div class="book-row">
-      <img class="book-icon" alt="" src="/img/aventura.png">
-      <img class="book-icon" alt="" src="/img/misterio.png">
-      <img class="book-icon" alt="" src="/img/biografia.png">
-      <img class="book-icon" alt="" src="/img/ficcao.png">
-      <img class="book-icon" alt="" src="/img/fantasia.png">
+    <div class="highlighted-bookshelf-my">Highlighted Bookshelf: My Top 5</div>
+    <div v-for="book in highlightedBookshelf" v-if="!book" class="book-row">
+      <img class="book-icon" alt="" :src="book.cover">
     </div>
 	<div class="posFoot"><FooterComponent></FooterComponent></div>
   </div>
@@ -74,10 +65,21 @@ import FooterComponent from '../components/FooterComponent.vue';
 </template>
 <script>
 import router from '../router/index'
+import axios from "axios";
+import authHeader from '@/services/auth.header';
 export default {
 	data(){
 		return{
-			username:''
+			username:'',
+      name:'',
+      birthDate: '',
+      country: '',
+      description: '',
+      gender: '',
+      highlightedBookshelf: '',
+      interests: '',
+      profileImageUrl: '',
+      pronouns: ''
 		}
 	},
 	created() {
@@ -90,6 +92,7 @@ export default {
     try {
       const decodedToken = JSON.parse(token);
       this.setUsername(decodedToken.info.sub);
+      this.getMyInfo();
     } catch (error) {
       console.error('Error parsing user token:', error);
     }
@@ -100,7 +103,26 @@ export default {
 		},
 		navigateToEditProfile() {
 			router.push({ name: 'editprofile'});
-		}
+		},
+    getMyInfo(){
+      let header = authHeader();
+      let config = {headers:header}
+      axios.get("http://localhost:8080/customer/me",config).then(me=>{
+        console.log(me.data);
+        this.birthDate = me.data.birthDate ? (new Date().getYear()-new Date(me.data.birthDate).getYear()) : '-';
+        this.country = me.data.country ? me.data.country : '-';
+        this.name = me.data.name ? me.data.name : this.username;
+        this.description = me.data.description ? me.data.description : '-';
+        this.gender = me.data.gender ? me.data.gender : '-';
+        this.highlightedBookshelf = me.data.highlightedBookshelf ? me.data.highlightedBookshelf : '-';
+        this.profileImageUrl = me.data.profileImageUrl ? me.data.profileImageUrl : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+        this.interests = me.data.interests ? me.data.interests : '-';
+        this.pronouns = me.data.pronouns ? me.data.pronouns : '-';
+      }).catch(error=>{
+        console.log(error);
+      })
+    }
+
 
 	}
 }
