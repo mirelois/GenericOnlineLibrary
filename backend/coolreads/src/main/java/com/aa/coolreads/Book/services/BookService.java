@@ -13,6 +13,8 @@ import com.aa.coolreads.User.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.apache.commons.validator.routines.ISBNValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -103,6 +105,7 @@ public class BookService {
         return genres;
     }
 
+    @Cacheable(value = "book", key = "#isbn")
     @Transactional
     public FullBookDTO getBookByISBN(String isbn) throws BookNotFoundException {
         Book book = findBookByIsbn(isbn);
@@ -112,6 +115,7 @@ public class BookService {
         return this.bookMapper.toFullBookDTO(book, averageRating);
     }
 
+    @Cacheable(value = "booksByTitle", key = "#title")
     @Transactional
     public Set<BookDTO> findBooksByTitle(String title) throws BookNotFoundException {
         PageRequest pageable = PageRequest.of(0, 5);
@@ -130,6 +134,7 @@ public class BookService {
 
     }
 
+    @CacheEvict(value = "book", key = "#bookDTO.isbn")
     @Transactional
     public void insertBook(BookDTO bookDTO) throws BookAlreadyExistsException, PublisherNotFoundException, GenresNotFoundException, AuthorNotFoundException, InvalidISBNExeption {
 
