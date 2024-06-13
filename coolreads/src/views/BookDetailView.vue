@@ -35,9 +35,9 @@ import Rating from 'primevue/rating';
     		<div class="nr-rates">{{ nrratings }} ratings</div>
     		<div class="nr-reviews">{{ nrreviews }} reviews</div>
 			<div>
-				<StateComponent @choosen_state="showConfirm=true" :stateValue ="stateSelected" @bookStateSelected="getBookState"></StateComponent>
+				<StateComponent v-if="username!==''" @choosen_state="showConfirm=true" :stateValue ="stateSelected" @bookStateSelected="getBookState"></StateComponent>
 			</div>
-			<AddToBookshelfComponent @click="showAddtoBookshelf=true"></AddToBookshelfComponent>			
+			<AddToBookshelfComponent v-if="username!==''" @click="showAddtoBookshelf=true"></AddToBookshelfComponent>			
 			<div v-if="showAddtoBookshelf==true">
 				<BookshelfSelectorComponent :bookISBN="isbn" :username="username" @closebookshelvesoptions="showAddtoBookshelf=false"></BookshelfSelectorComponent>
 			</div>
@@ -69,7 +69,7 @@ import Rating from 'primevue/rating';
 	</div>
 
 
-	<NavComponent></NavComponent>
+	<NavComponent :username="username"></NavComponent>
 	<FooterComponent></FooterComponent>
 </template>
 <script>
@@ -98,8 +98,8 @@ export default {
 			reviews:[],
 			nrreviews:0,
 			nrratings:0,
-			username:'techguru',
-			profileImg: 'https://randomuser.me/api/portraits/men/1.jpg',
+			username:'',
+			profileImg: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
 			isbn:'',
 			nrpageReview:0,
 			showLoading:false,
@@ -117,6 +117,12 @@ export default {
 		ConfirmComponent,
 		AddToBookshelfComponent
     },created(){
+		const token = localStorage.getItem('user');
+		if(!token && this.$store.state.auth.status.loggedIn==true){
+			let username = JSON.parse(token).info.sub;
+			this.setUsername(username);
+		}
+
 		this.isbn = this.$route.params.bookisbn;
 		this.getBook(this.isbn);
 		this.getReviews(this.isbn);
@@ -187,6 +193,9 @@ export default {
 		book_management(resp){
 			if(resp=='no') this.showConfirm=false;
 			console.log(resp)
+		},
+		setUsername(username){
+			this.username=username;
 		}
 	}
 

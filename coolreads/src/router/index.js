@@ -8,6 +8,8 @@ import ProfilePageView from '@/views/ProfilePageView.vue'
 import LoginPage from '@/views/LoginPage.vue'
 import BookCategoryView from '../views/BookCategoryView.vue' 
 import NotificationsView from '@/views/NotificationsView.vue'
+import EditProfileView from '@/views/EditProfileView.vue'
+import SettingsView from '@/views/SettingsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,17 +35,14 @@ const router = createRouter({
       component: BookDetailView
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    },
-    {
       path: '/profile',
       name: 'profile',
       component: ProfilePageView
+    },
+    {
+      path: '/editprofile',
+      name: 'editprofile',
+      component: EditProfileView
     },
     {
       path: '/login',
@@ -53,12 +52,17 @@ const router = createRouter({
     {
       path: '/notifications',
       name: 'notifications',
-      component: NotificationsView 
+      component: NotificationsView
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: SettingsView
     },
     {
       path: '/books/?categoria=:category',
       name: 'bookCategoria',
-      component: BookCategoryView,
+      component: BookCategoryView
     },
     {
       path: '/signup',

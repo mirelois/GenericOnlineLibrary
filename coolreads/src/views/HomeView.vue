@@ -5,18 +5,36 @@ import FooterComponent from '../components/FooterComponent.vue';
 </script>
 <template>
   <main>
-    <NavComponent></NavComponent>
-    <ShelfSideBarComponent :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
+    <NavComponent :username="username"></NavComponent>
+    <ShelfSideBarComponent v-if="username!==''" :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
   </main>
 </template>
 <script>
 export default {
   data(){
     return{
-      username:'techguru',
-			profileImg: 'https://randomuser.me/api/portraits/men/1.jpg'
+      username:'',
+			profileImg: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
     }
-  }
+  },
+	created() {
+    const token = localStorage.getItem('user');
+    if (!token || this.$store.state.auth.status.loggedIn===false) {
+      return;
+    }
+
+    try {
+      const decodedToken = JSON.parse(token);
+      this.setUsername(decodedToken.info.sub);
+    } catch (error) {
+      console.error('Error parsing user token:', error);
+    }
+  },
+	methods:{
+		setUsername(username){
+			this.username=username;
+		}
+	}
 }
 
 
