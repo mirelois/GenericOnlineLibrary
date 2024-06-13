@@ -29,8 +29,8 @@
 			</div>
         <button @click="handleLogin" class="buttonlogin" id="buttonloginContainer">Login now</button>
         <div class="dont-have-an-account-parent">
-          <div class="dont-have-an">Don't have an account ?</div>
-          <a class="sign-up" href="/signup">Sign up</a>
+          <div class="dont-have-an">Don't have an account?</div>
+          <div class="sign-up"><a class= "sign-upcolor" href="/signup"> Sign up</a></div>
         </div>
       </div>
     </div>
@@ -139,24 +139,18 @@ export default{
   	height: 24px;
 }
 .input-text {
-  	align-self: stretch;
-  	flex: 1;
   	border-radius: 8px;
   	border: 3px solid #d1e9ff;
   	display: flex;
   	flex-direction: row;
-  	align-items: center;
-  	justify-content: flex-start;
+	width: 515px;
   	padding: 12px 16px;
   	gap: 5px;
 }
 .input-text-wrapper {
-  	align-self: stretch;
+	width: 515px;
   	height: 48px;
-  	display: flex;
   	flex-direction: row;
-  	align-items: flex-start;
-  	justify-content: flex-start;
   	font-size: 14px;
 }
 .frame-group {
@@ -184,13 +178,13 @@ export default{
 .iconeye-wrapper {
   position: absolute;
   margin-top: -32px;
-  margin-left: 450px;
+  margin-left: 470px;
 }
 .input-text1 {
   border-radius: 8px;
   border: 1px solid #d0d5dd;
   padding: 12px 16px;
-  width: 490px;
+  width: 515px;
 }
 .input {
   	align-self: stretch;
@@ -265,12 +259,15 @@ export default{
   	color: #1570ef;
   	cursor: pointer;
 }
+.sign-upcolor {
+  	color: #1570ef;
+}
 .dont-have-an-account-parent {
   display: flex;
   flex-direction: row;
   position: absolute;
   gap: 8px;
-  bottom: 25px; 
+  bottom: 30px; 
   left: 50%; 
   transform: translateX(-50%);
   color: #98a2b3;
