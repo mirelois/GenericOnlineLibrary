@@ -2,23 +2,24 @@ package com.aa.coolreads.Book.mappers;
 
 import com.aa.coolreads.Book.dto.SliceDTO;
 import com.aa.coolreads.Book.dto.StatisticsPieChartDTO;
-import com.aa.coolreads.Book.models.Slice;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Component
 public class StatisticsMapper {
 
-    public SliceDTO toSliceDTO(Slice slice) {
-        return new SliceDTO(slice.getCategoryName(), slice.getAmount());
-    }
+    public StatisticsPieChartDTO toStatisticsPieChartDTO(Map<String, Integer> amountMap) {
 
-    public StatisticsPieChartDTO toStatisticsPieChartDTO(List<? extends Slice> slices) {
-        return new StatisticsPieChartDTO(slices.stream().map(this::toSliceDTO).collect(Collectors.toList()));
-    }
+        List<SliceDTO> sliceDTOList = new ArrayList<>();
 
+        for (Map.Entry<String, Integer> entry : amountMap.entrySet()) {
+            sliceDTOList.add(new SliceDTO(entry.getKey(), entry.getValue()));
+        }
+
+        return new StatisticsPieChartDTO(sliceDTOList);
+    }
 
 }

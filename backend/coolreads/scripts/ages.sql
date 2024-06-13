@@ -14,8 +14,8 @@ with ages as (
 
 with ages as (
     select
-        extract('YEAR' from AGE(CURRENT_DATE, pb.customer.birth_date)) as age
-            from PersonalBook pb where pb.bookshelf.name = :bookshelf and pb.book.isbn = :isbn
+        extract('YEAR' from AGE(CURRENT_DATE, customer.birth_date)) as age
+            from personal_book where bookshelf_id.name = 'bookshelf1' and book.isbn = '1'
     )
     select ageClass, amount from ageRange
     inner join (

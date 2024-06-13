@@ -1,18 +1,18 @@
 package com.aa.coolreads.Book.services;
 
+import com.aa.coolreads.Book.dto.SliceDTO;
 import com.aa.coolreads.Book.dto.StatisticsNumberDTO;
 import com.aa.coolreads.Book.dto.StatisticsPieChartDTO;
 import com.aa.coolreads.Book.mappers.StatisticsMapper;
-import com.aa.coolreads.Book.models.CountrySlice;
-import com.aa.coolreads.Book.models.Slice;
-import com.aa.coolreads.Book.repositories.BookRepository;
 import com.aa.coolreads.User.models.DefaultBookshelf;
-import com.aa.coolreads.User.repositories.CustomerRepository;
 import com.aa.coolreads.User.repositories.PersonalBooksRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StatisticService {
@@ -39,11 +39,61 @@ public class StatisticService {
     }
 
     @Transactional
-    public StatisticsPieChartDTO getStatisticsCountryPieChart(String category, DefaultBookshelf bookshelf, String isbn) {
+    public StatisticsPieChartDTO getStatisticsCountryPieChart(DefaultBookshelf bookshelf, String isbn) {
 
-        List<CountrySlice> slices = this.personalBooksRepository.getCountrySlicesByBookshelfName(bookshelf.name(), isbn);
+        List<SliceDTO> slices = this.personalBooksRepository.getCountrySlicesByBookshelfName(bookshelf.name(), isbn);
 
-        return statisticsMapper.toStatisticsPieChartDTO(slices);
+        return new StatisticsPieChartDTO(slices);
+    }
+
+    private String processAge(Integer age) {
+        if (age >= 0 && age < 13) {
+            return "child";
+        }else if (age >= 13 && age < 18) {
+            return "teen";
+        }else if (age >= 18 && age < 30) {
+            return "young_adult";
+        }else if (age >= 30 && age < 60) {
+            return "adult";
+        }else if (age >= 60) {
+            return "elder";
+        }else{
+            throw new IllegalArgumentException("Invalid age");
+        }
+    }
+
+    private StatisticsPieChartDTO processAges(List<Integer> ages) {
+
+        Map<String, Integer> amountMap = new HashMap<>();
+        String ageClass;
+
+        for (Integer age : ages) {
+            ageClass = processAge(age);
+            if (amountMap.containsKey(ageClass)) {
+                amountMap.put(ageClass, amountMap.get(ageClass) + 1);
+            }else{
+                amountMap.put(ageClass, 1);
+            }
+        }
+
+        return statisticsMapper.toStatisticsPieChartDTO(amountMap);
+
+    }
+
+    @Transactional
+    public StatisticsPieChartDTO getStatisticsAgePieChart(DefaultBookshelf bookshelf, String isbn) {
+
+        List<Integer> ages = this.personalBooksRepository.getAgesByBookshelfName(bookshelf.name(), isbn);
+
+        return processAges(ages);
+    }
+
+    @Transactional
+    public StatisticsPieChartDTO getStatisticsGenderPieChart(DefaultBookshelf bookshelf, String isbn) {
+
+        List<SliceDTO> slices = this.personalBooksRepository.getGenderSlicesByBookshelfName(bookshelf.name(), isbn);
+
+        return new StatisticsPieChartDTO(slices);
     }
 
 }

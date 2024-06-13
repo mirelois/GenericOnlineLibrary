@@ -1,9 +1,5 @@
 package com.aa.coolreads.Book.dto;
 
-import com.aa.coolreads.Book.models.Slice;
-import com.aa.coolreads.User.models.DefaultBookshelf;
-import com.aa.coolreads.User.models.Gender;
-
 import java.util.List;
 
 public class StatisticsPieChartDTO {
