@@ -25,7 +25,7 @@ export default {
 
     try {
       const decodedToken = JSON.parse(token);
-      if(decodedToken.info.exp<Date.now()) {
+      if(decodedToken.info.exp<Date.now()/1000) {
         handle_logout();
       }
       this.setUsername(decodedToken.info.sub);
