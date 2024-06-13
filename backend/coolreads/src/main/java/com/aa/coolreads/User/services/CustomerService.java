@@ -1,6 +1,5 @@
 package com.aa.coolreads.User.services;
 
-import com.aa.coolreads.User.dto.CustomerDTO;
 import com.aa.coolreads.User.dto.SimpleCustomerDTO;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.mappers.CustomerMapper;
@@ -43,8 +42,18 @@ public class CustomerService {
     }
 
     @Transactional
-    public SimpleCustomerDTO getMyCustomer() throws CustomerNotFoundException {
+    public SimpleCustomerDTO getMyCustomerProfile() throws CustomerNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return this.getCustomer(authentication.getName());
+    }
+
+    @Transactional
+    public void updateMyCustomerProfile(SimpleCustomerDTO simpleCustomerDTO) throws CustomerNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+
+        this.customerMapper.toCustomerWithoutNull(customer, simpleCustomerDTO);
+
+        this.customerRepository.save(customer);
     }
 }

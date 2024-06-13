@@ -3,11 +3,6 @@ package com.aa.coolreads.User.dto;
 import java.util.Date;
 
 public class SimpleCustomerDTO {
-    private String username;
-
-    private String password;
-
-    private String email;
 
     private String name;
 
@@ -31,10 +26,7 @@ public class SimpleCustomerDTO {
 
     public SimpleCustomerDTO(){}
 
-    public SimpleCustomerDTO(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
+    public SimpleCustomerDTO(String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl) {
         this.name = name;
         this.gender = gender;
         this.pronouns = pronouns;
@@ -46,10 +38,7 @@ public class SimpleCustomerDTO {
         this.profileBannerUrl = profileBannerUrl;
     }
 
-    public SimpleCustomerDTO(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, BookShelfDTO highlightedBookshelf) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
+    public SimpleCustomerDTO(String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, BookShelfDTO highlightedBookshelf) {
         this.name = name;
         this.gender = gender;
         this.pronouns = pronouns;
@@ -60,30 +49,6 @@ public class SimpleCustomerDTO {
         this.profileImageUrl = profileImageUrl;
         this.profileBannerUrl = profileBannerUrl;
         this.highlightedBookshelf = highlightedBookshelf;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getName() {

@@ -9,6 +9,7 @@ import com.aa.coolreads.User.models.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -56,6 +57,21 @@ public class CustomerMapper {
         return (Customer) this.userBuilder.setUsername(registerDTO.getUsername())
                 .setPassword(registerDTO.getPassword())
                 .setEmail(registerDTO.getEmail()).build();
+    }
+
+    public void toCustomerWithoutNull(Customer customer, SimpleCustomerDTO simpleCustomerDTO) {
+        Optional.ofNullable(simpleCustomerDTO.getBirthDate()).ifPresent(customer::setBirthDate);
+        Optional.ofNullable(simpleCustomerDTO.getCountry()).ifPresent(customer::setCountry);
+        Optional.ofNullable(simpleCustomerDTO.getDescription()).ifPresent(customer::setDescription);
+        Optional.ofNullable(simpleCustomerDTO.getInterests()).ifPresent(customer::setInterests);
+        Optional.ofNullable(simpleCustomerDTO.getGender()).ifPresent(customer::setGender);
+        Optional.ofNullable(simpleCustomerDTO.getPronouns()).ifPresent(customer::setPronouns);
+        Optional.ofNullable(simpleCustomerDTO.getName()).ifPresent(customer::setName);
+        Optional.ofNullable(simpleCustomerDTO.getProfileBannerUrl()).ifPresent(customer::setProfileBannerUrl);
+        Optional.ofNullable(simpleCustomerDTO.getProfileImageUrl()).ifPresent(customer::setProfileImageUrl);
+        Optional.ofNullable(simpleCustomerDTO.getHighlightedBookshelf())
+                .map(BookShelfCreationDTO::getName)
+                .ifPresent(customer::setHighlightedBookshelfName);
     }
 
 }

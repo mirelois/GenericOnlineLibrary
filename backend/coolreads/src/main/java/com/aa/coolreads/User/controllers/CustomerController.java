@@ -53,10 +53,20 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<SimpleCustomerDTO> getCurrentUser(){
+    public ResponseEntity<SimpleCustomerDTO> getCurrentCustomerProfile(){
         try {
-            return ResponseEntity.ok().body(this.customerService.getMyCustomer());
+            return ResponseEntity.ok().body(this.customerService.getMyCustomerProfile());
         } catch (CustomerNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<Void> updateCurrentCustomerProfile(@RequestBody SimpleCustomerDTO simpleCustomerDTO){
+        try{
+            this.customerService.updateMyCustomerProfile(simpleCustomerDTO);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -69,4 +79,6 @@ public class CustomerController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+
 }

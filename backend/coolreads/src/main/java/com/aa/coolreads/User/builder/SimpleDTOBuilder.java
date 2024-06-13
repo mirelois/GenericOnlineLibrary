@@ -26,17 +26,14 @@ public class SimpleDTOBuilder implements UserBuilder{
     }
 
     public SimpleDTOBuilder setUsername(String username){
-        this.customer.setUsername(username);
         return this;
     }
 
     public SimpleDTOBuilder setPassword(String password){
-        this.customer.setPassword(password);
         return this;
     }
 
     public SimpleDTOBuilder setEmail(String email){
-        this.customer.setEmail(email);
         return this;
     }
 

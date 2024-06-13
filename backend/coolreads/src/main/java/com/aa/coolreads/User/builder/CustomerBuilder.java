@@ -21,7 +21,9 @@ public class CustomerBuilder implements UserBuilder {
     }
 
     public Customer build(){
-        return this.customer;
+        Customer customerBuilt = this.customer;
+        this.reset();
+        return customerBuilt;
     }
 
     public CustomerBuilder setUsername(String username){
