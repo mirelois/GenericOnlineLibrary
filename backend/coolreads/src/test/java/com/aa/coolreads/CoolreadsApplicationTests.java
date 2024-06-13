@@ -5,32 +5,23 @@ import com.aa.coolreads.Book.dto.FullBookDTO;
 import com.aa.coolreads.Book.dto.SimpleReviewDTO;
 import com.aa.coolreads.Book.exception.*;
 import com.aa.coolreads.Book.services.BookService;
-import com.aa.coolreads.User.dto.NotificationCreationDTO;
-import com.aa.coolreads.User.dto.NotificationDTO;
-import com.aa.coolreads.User.dto.PostCreationDTO;
-import com.aa.coolreads.User.dto.PostDTO;
 import com.aa.coolreads.User.exception.AuthorNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
-import com.aa.coolreads.User.models.Notification;
-import com.aa.coolreads.User.models.NotificationType;
-import com.aa.coolreads.User.models.Post;
-import com.aa.coolreads.User.services.NotificationService;
-import com.aa.coolreads.User.services.PostService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
 
 @SpringBootTest
 class CoolreadsApplicationTests {
 
     @Autowired
     private BookService bookService;
-    @Autowired
-    private NotificationService notificationService;
 
-    @Test
+	@Test
 	void contextLoads() {
 	}
 
@@ -141,90 +132,5 @@ class CoolreadsApplicationTests {
             throw new RuntimeException(e);
         }
     }
-
-    //---------Post Tests---------
-
-    @Autowired
-    private PostService postService;
-
-    @Test
-    void testPostOperations(){
-
-        PostCreationDTO postDTO = new PostCreationDTO("This is a post", "This is the content of the post");
-
-        try {
-            postService.insertPost(postDTO, "techguru");
-        } catch (CustomerNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        Set<PostDTO> posts =  postService.getPostsByUsername("techguru", 0, 10);
-
-        assert posts.size() == 1;
-
-        for (PostDTO post : posts) {
-            postService.deletePost(post.getId());
-        }
-
-
-    }
-
-    @Test
-    void testPostOperationsExeption(){
-
-        PostCreationDTO postDTO = new PostCreationDTO("This is a post", "This is the content of the post");
-
-        try {
-            postService.insertPost(postDTO, "techguru_that_dont_exist");
-            assert false;
-        } catch (CustomerNotFoundException e) {
-            //throw new RuntimeException(e);
-        }
-
-        Set<PostDTO> posts =  postService.getPostsByUsername("techguru", 0, 10);
-
-        assert posts.isEmpty();
-
-    }
-
-    @Test
-    void testNotificationOperations(){
-
-        NotificationCreationDTO notificationCreationDTO = new NotificationCreationDTO(NotificationType.FRIEND_REQUEST_NOTIFICATION);
-
-        try {
-            notificationService.insertNotification(notificationCreationDTO, "techguru");
-        } catch (CustomerNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        Set<NotificationDTO> notifications = notificationService.getNotificationsByUserName("techguru", 0, 10);
-
-        assert notifications.size() == 1;
-
-        for (NotificationDTO notificationDTO : notifications) {
-            notificationService.deleteNotification(notificationDTO.getId());
-        }
-
-    }
-
-    @Test
-    void testNotificationOperationsExeption(){
-
-        NotificationCreationDTO notificationCreationDTO = new NotificationCreationDTO(NotificationType.FRIEND_REQUEST_NOTIFICATION);
-
-        try {
-            notificationService.insertNotification(notificationCreationDTO, "techguru_that_dont_exist");
-            assert false;
-        } catch (CustomerNotFoundException e) {
-            //throw new RuntimeException(e);
-        }
-
-        Set<NotificationDTO> notifications = notificationService.getNotificationsByUserName("techguru", 0, 10);
-
-        assert notifications.isEmpty();
-
-    }
-
 }
 

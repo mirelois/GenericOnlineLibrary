@@ -70,12 +70,11 @@ import FooterComponent from '../components/FooterComponent.vue';
             </div>
         </div>
     </div>
-    <NavComponent :username="username"></NavComponent>
+    <NavComponent></NavComponent>
 </template>
 <script>
 import axios from "axios";
 import ConfirmComponent from '@/components/ConfirmComponent.vue';
-import router from '@/router';
 export default {
     components: {
         NavComponent,
@@ -94,8 +93,8 @@ export default {
             filtered: [],
             selectedOption: 'Select Sorting Operation',
             bookshelfname:'',
+            username:'techguru',
             showConfirmDel:false,
-            username:'',
             confirm_msg:'Are you sure you want to remove the book?',
             removeBook:''
         }
@@ -166,25 +165,9 @@ export default {
         showConfirmDeletion(book){
             this.removeBook = book;
             this.showConfirmDel=true;
-        },
-        setUsername(username){
-			this.username=username;
-		}
+        }
     },
     created(){
-        const token = localStorage.getItem('user');
-        if (!token || this.$store.state.auth.status.loggedIn===false) {
-            router.push({path:'/login'})
-            return;
-        }
-
-        try {
-            const decodedToken = JSON.parse(token);
-            this.setUsername(decodedToken.info.sub);
-        } catch (error) {
-            console.error('Error parsing user token:', error);
-        }
-
         this.getBooks();
         this.nrpages = Math.ceil(this.filtered.length / this.maxPerPage);
         this.initializeActivate();
@@ -192,7 +175,7 @@ export default {
     computed: {
         displayBooksPerPage(){
             if (this.search_input !== '') {
-                this.filtered = this.bookshelf.filter(b => b.title.toLowerCase().includes(this.search_input.toLowerCase()))
+                this.filtered = this.bookshelf.filter(b => b.title.toLowerCase().includes(this.search_input))
             }else{
                 this.filtered = this.bookshelf
             }
