@@ -28,7 +28,10 @@
               <div class="email">Email</div>
             </div>
             <div class="inputTextWrapper">
-              <input v-model="email" class="inputText"  placeholder="example@example.com"/>
+              <div class="inputText">
+                <div class="context">example@example.com</div>
+                <div class="inputTextChild"></div>
+              </div>
             </div>
           </div>
           <div class="frameGroup">
@@ -36,7 +39,10 @@
               <div class="email">Username</div>
             </div>
             <div class="input">
-              <input v-model="username" class="inputText1" placeholder="Enter your username"/>
+              <div class="inputText1">
+                <div class="context">Enter your username</div>
+                <div class="inputTextChild"></div>
+              </div>
             </div>
           </div>
           <div class="frameGroup">
@@ -44,76 +50,40 @@
               <div class="email">Password</div>
             </div>
             <div class="input">
-              <input v-model="password" class="inputText1" :type="type" placeholder="Enter your password"/>
+              <div class="inputText1">
+                <div class="context">Enter your password</div>
                 <div class="iconeye-wrapper">
-                  <img class="iconeye" alt="" @click="changeType" src="/img/iconeye.svg">
+                  <img class="iconeye" alt="" src="/img/iconeye.svg">
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div class="buttonParent">
-            <button class="createbutton" @click="createAccount">Create account</button>
+          <div class="button">
+            <div class="textButton">Create account</div>
+          </div>
           <div class="alreadyHaveAnAccountParent">
             <div class="alreadyHaveAn">Already have an account?</div>
-            <a class="logIn" href="/login">Log in</a>
+            <div class="logIn" @click="onLogInTextClick">Log in</div>
           </div>
         </div>
       </div>
     </div>
-    <ToastComponent v-if="error_msg!==''" :msg="error_msg" @close_toast="closemsg"></ToastComponent>
   </div>
 </template>
 
 <script>
-import router from "../router/index";
-import User from "@/models/user";
-import ToastComponent from "@/components/ToastComponent.vue";
-export default {
+import { defineComponent } from 'vue'
+import router from "../router/index"
+export default defineComponent({
+  name: "SignupPage",
   methods: {
-    createAccount() {
-      if(this.username==='' || this.password==='' || this.email===''){
-        this.error_msg = "Existem campos vazios. Introduza o username e password.";
-        return;
-		  }
-      this.$store.dispatch('auth/register', new User(this.username,this.email,this.password)).then(
-            data => {
-            	router.push('/login');
-            },
-            error => {
-              this.error_msg = "Username ou password inválidos. Tente novamente."
-            }
-          );
-    },
-    closemsg(){
-			this.error_msg='';
-		},
-    changeType(){
-      if(this.type==='password') this.type='text';
-      else this.type='password';
+    onLogInTextClick() {
+      router.push({ path: '/login' })
     }
-  },
-  data(){
-    return{
-        email:'',
-        username:'',
-        password:'',
-        error_msg:'',
-        type:'password'
-    }
-  },computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    }
-  },
-  created() {
-    if (this.loggedIn) {
-      this.$router.push('/profile');
-    }
-  },
-  components:{
-    ToastComponent
   }
-};
+})
 </script>
 
 <style scoped>
@@ -308,10 +278,8 @@ flex-shrink: 0;
   width: 18.6px;
   position: relative;
   height: 18.6px;
-  left: -30px;
-  cursor:pointer;
+  top: 3px;
 }
-
 .iconeyeWrapper {
   display: flex;
   flex-direction: row;
@@ -319,10 +287,17 @@ flex-shrink: 0;
   justify-content: flex-end;
 }
 .inputText1 {
+  align-self: center;
+  flex: none;
   border-radius: 7.2px;
   border: 0.9px solid #d0d5dd;
-  padding: 7.2px 10.8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 7.2px 10.8px; 
   width: 270px;
+  gap: 4.5px;
 }
 .input {
   align-self: center;
@@ -342,7 +317,7 @@ flex-shrink: 0;
   gap: 21.6px;
   color: #344054;
 }
-.createbutton {
+.button {
   align-self: center;
   border-radius: 7.2px;
   background-color: #2f3134;
@@ -351,11 +326,9 @@ flex-shrink: 0;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  color:white;
   width: 270px;
   padding: 14.4px;
   box-sizing: border-box;
-  cursor:pointer;
 }
 .icongoogleOriginal {
   width: 18px;
@@ -408,7 +381,7 @@ flex-shrink: 0;
   left: 765px;
   background-color: #fff;
   width: 917px;
-  height: 1280px;
+  height: 1080px;
   display: flex;
   flex-direction: column;
   align-items: center;

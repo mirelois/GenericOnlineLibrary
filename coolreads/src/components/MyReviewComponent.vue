@@ -15,7 +15,6 @@
 	</main>
 </template>
 <script>
-import router from '@/router';
 import Rating from 'primevue/rating';
 import axios from "axios";
 export default{
@@ -32,7 +31,6 @@ export default{
 	},
 	methods:{
 		publishReview(){
-			if(this.username==='') router.push({path:'/signup'})
 			const headers = {
         		'Content-Type': 'application/json',
 		    };
