@@ -1,5 +1,6 @@
 package com.aa.coolreads.User.repositories;
 
+import com.aa.coolreads.Book.models.Book;
 import com.aa.coolreads.User.models.Bookshelf;
 import com.aa.coolreads.User.models.PersonalBook;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -20,6 +22,9 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
     @Modifying
     @Query("DELETE FROM PersonalBook pb WHERE pb.bookshelf = :bookshelf AND pb.book.isbn = :isbn")
     void deletePersonalBookByIsbnAndBookshelf(String isbn, Bookshelf bookshelf);
+
+    @Query("SELECT pb FROM PersonalBook pb WHERE pb.bookshelf = :bookshelf AND pb.book = :book")
+    Optional<PersonalBook> getPersonalBookByBookAndBookshelf(Book book, Bookshelf bookshelf);
 
     @Query(value = "SELECT COUNT(*) FROM PersonalBook pb WHERE pb.bookshelf = :bookshelf")
     Integer getBooksSize(Bookshelf bookshelf);

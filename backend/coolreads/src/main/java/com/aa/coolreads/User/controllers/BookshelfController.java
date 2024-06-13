@@ -4,8 +4,7 @@ import com.aa.coolreads.Book.exception.BookNotFoundException;
 import com.aa.coolreads.User.dto.BookShelfCreationDTO;
 import com.aa.coolreads.User.dto.PersonalBookDTO;
 import com.aa.coolreads.User.dto.SimpleBookShelfDTO;
-import com.aa.coolreads.User.exception.BookshelfNotFoundException;
-import com.aa.coolreads.User.exception.CustomerNotFoundException;
+import com.aa.coolreads.User.exception.*;
 import com.aa.coolreads.User.services.BookshelfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,12 +35,36 @@ public class BookshelfController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> insertBookshelf(@PathVariable String username, @RequestBody BookShelfCreationDTO bookshelf){
+    public ResponseEntity<String> insertBookshelf(@PathVariable String username, @RequestBody BookShelfCreationDTO bookshelf){
         try {
             this.bookshelfService.insertBookshelf(bookshelf, username);
             return ResponseEntity.ok().build();
         } catch (CustomerNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (BookshelfAlreadyExists e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<String> updateBookshelf(@PathVariable String username, @RequestBody BookShelfCreationDTO bookshelf){
+        try {
+            this.bookshelfService.updateBookshelf(bookshelf, username);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException | BookshelfNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteBookshelf(@PathVariable String username, @RequestParam String bookshelfName){
+        try{
+            this.bookshelfService.deleteBookshelf(username, bookshelfName);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (InvalidBookshelfDeletionException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -55,12 +78,14 @@ public class BookshelfController {
     }
 
     @PostMapping("/{name}")
-    public ResponseEntity<Void> insertBook(@PathVariable String name, @PathVariable String username, @RequestBody PersonalBookDTO book){
+    public ResponseEntity<String> insertBook(@PathVariable String name, @PathVariable String username, @RequestBody PersonalBookDTO book){
         try{
             this.bookshelfService.insertBook(name, username, book);
             return ResponseEntity.ok().build();
         } catch (BookshelfNotFoundException | BookNotFoundException | CustomerNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (PersonalBookAlreadyExists e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 

@@ -1,6 +1,7 @@
 package com.aa.coolreads.User.services;
 
 import com.aa.coolreads.User.dto.SimpleCustomerDTO;
+import com.aa.coolreads.User.exception.BookshelfNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.mappers.CustomerMapper;
 import com.aa.coolreads.User.models.Bookshelf;
@@ -48,9 +49,14 @@ public class CustomerService {
     }
 
     @Transactional
-    public void updateMyCustomerProfile(SimpleCustomerDTO simpleCustomerDTO) throws CustomerNotFoundException {
+    public void updateMyCustomerProfile(SimpleCustomerDTO simpleCustomerDTO) throws CustomerNotFoundException, IllegalArgumentException, BookshelfNotFoundException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+
+        if(simpleCustomerDTO.getHighlightedBookshelf()!=null || simpleCustomerDTO.getHighlightedBookshelf().getName()!=null){
+            this.bookshelfRepository.findBookshelfByNameAndCustomer(simpleCustomerDTO.getHighlightedBookshelf().getName(), customer)
+                    .orElseThrow(() -> new BookshelfNotFoundException(simpleCustomerDTO.getHighlightedBookshelf().getName()));
+        }
 
         this.customerMapper.updateProfileDetails(customer.getProfileDetails(), simpleCustomerDTO);
 

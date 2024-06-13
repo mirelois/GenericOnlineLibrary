@@ -4,6 +4,7 @@ import com.aa.coolreads.Book.models.Genre;
 import com.aa.coolreads.User.models.Bookshelf;
 import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.models.CustomerProfileDetails;
+import com.aa.coolreads.User.models.Gender;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -52,7 +53,7 @@ public class CustomerBuilder implements UserBuilder {
     }
 
     public CustomerBuilder setGender(String gender){
-        this.profileDetails.setGender(gender);
+        this.profileDetails.setGender(Gender.valueOf(gender));
         return this;
     }
 

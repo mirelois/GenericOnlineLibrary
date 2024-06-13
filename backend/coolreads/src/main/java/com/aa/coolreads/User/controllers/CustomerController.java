@@ -1,6 +1,7 @@
 package com.aa.coolreads.User.controllers;
 
 import com.aa.coolreads.User.dto.*;
+import com.aa.coolreads.User.exception.BookshelfNotFoundException;
 import com.aa.coolreads.User.exception.CustomerAlreadyExistsException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.services.AuthenticationService;
@@ -62,12 +63,14 @@ public class CustomerController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<Void> updateCurrentCustomerProfile(@RequestBody SimpleCustomerDTO simpleCustomerDTO){
+    public ResponseEntity<String> updateCurrentCustomerProfile(@RequestBody SimpleCustomerDTO simpleCustomerDTO){
         try{
             this.customerService.updateMyCustomerProfile(simpleCustomerDTO);
             return ResponseEntity.ok().build();
-        } catch (CustomerNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (CustomerNotFoundException | BookshelfNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Genre");
         }
     }
 

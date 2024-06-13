@@ -2,6 +2,8 @@ package com.aa.coolreads.User.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 import java.util.Date;
 
@@ -9,7 +11,8 @@ import java.util.Date;
 public class CustomerProfileDetails {
     private String name;
 
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     private String pronouns;
 
@@ -31,7 +34,7 @@ public class CustomerProfileDetails {
 
     public CustomerProfileDetails(){}
 
-    public CustomerProfileDetails(String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, String highlightedBookshelfName) {
+    public CustomerProfileDetails(String name, Gender gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, String highlightedBookshelfName) {
         this.name = name;
         this.gender = gender;
         this.pronouns = pronouns;
@@ -52,11 +55,11 @@ public class CustomerProfileDetails {
         this.name = name;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 

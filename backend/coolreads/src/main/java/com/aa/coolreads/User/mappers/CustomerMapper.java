@@ -7,6 +7,7 @@ import com.aa.coolreads.User.dto.*;
 import com.aa.coolreads.User.models.Bookshelf;
 import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.models.CustomerProfileDetails;
+import com.aa.coolreads.User.models.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +37,7 @@ public class CustomerMapper {
                 .setPassword(customer.getPassword())
                 .setEmail(customer.getEmail())
                 .setName(profileDetails.getName())
-                .setGender(profileDetails.getGender())
+                .setGender(profileDetails.getGender().name())
                 .setPronouns(profileDetails.getPronouns())
                 .setBirthDate(profileDetails.getBirthDate())
                 .setCountry(profileDetails.getCountry())
@@ -60,12 +61,12 @@ public class CustomerMapper {
                 .setEmail(registerDTO.getEmail()).build();
     }
 
-    public void updateProfileDetails(CustomerProfileDetails profileDetails, SimpleCustomerDTO simpleCustomerDTO) {
+    public void updateProfileDetails(CustomerProfileDetails profileDetails, SimpleCustomerDTO simpleCustomerDTO) throws IllegalArgumentException {
         Optional.ofNullable(simpleCustomerDTO.getBirthDate()).ifPresent(profileDetails::setBirthDate);
         Optional.ofNullable(simpleCustomerDTO.getCountry()).ifPresent(profileDetails::setCountry);
         Optional.ofNullable(simpleCustomerDTO.getDescription()).ifPresent(profileDetails::setDescription);
         Optional.ofNullable(simpleCustomerDTO.getInterests()).ifPresent(profileDetails::setInterests);
-        Optional.ofNullable(simpleCustomerDTO.getGender()).ifPresent(profileDetails::setGender);
+        Optional.ofNullable(simpleCustomerDTO.getGender()).ifPresent(gender -> profileDetails.setGender(Gender.valueOf(simpleCustomerDTO.getGender())));
         Optional.ofNullable(simpleCustomerDTO.getPronouns()).ifPresent(profileDetails::setPronouns);
         Optional.ofNullable(simpleCustomerDTO.getName()).ifPresent(profileDetails::setName);
         Optional.ofNullable(simpleCustomerDTO.getProfileBannerUrl()).ifPresent(profileDetails::setProfileBannerUrl);
