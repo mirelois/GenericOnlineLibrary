@@ -10,9 +10,11 @@
 					<div class="email">Email or Username</div>
 				</div>
 				<div class = "input-text-wrapper">
-						<input v-model="username" class="input-text" placeholder="example@example.com"/>
+					<div class ="input-text">
+						<div class="context">example@example.com</div>
 						<div class="input-text-child">
 						</div> 
+					</div>
 				</div>
 			</div>
 			<div class="frame-group">
@@ -21,75 +23,37 @@
 					<div class="forgot">Forgot?</div>
 				</div>
 				<div class ="input">
-						<input v-model="password" class="input-text1" :type="type" placeholder="Enter your password"/>
+					<div class ="input-text1">
+						<div class="context">Enter your password</div>
 						<div class="iconeye-wrapper">
-							<img class="iconeye" @click="changeInputType" alt="" src="/img/iconeye.svg">
+							<img class="iconeye" alt="" src="/img/iconeye.svg">
 						</div>
+					</div>
 				</div>
 			</div>
-        <button @click="handleLogin" class="buttonlogin" id="buttonloginContainer">Login now</button>
+        <div class="buttonlogin" id="buttonloginContainer">
+          <div class="textButton">Login now</div>
+        </div>
         <div class="dont-have-an-account-parent">
-          <div class="dont-have-an">Don't have an account?</div>
-          <div class="sign-up"><a class= "sign-upcolor" href="/signup"> Sign up</a></div>
+          <div class="dont-have-an">Don't have an account ?</div>
+          <div class="sign-up"  @click="onSignUpTextClick">Sign up</div>
         </div>
       </div>
     </div>
-	<ToastComponent v-if="error_msg!==''" :msg="error_msg" @close_toast="closemsg"></ToastComponent>
   </div>
 </template>
 
 <script>
-import router from "../router/index";
-import User from "@/models/user";
-import ToastComponent from "@/components/ToastComponent.vue";
-export default{
-  data(){
-	return {
-		username:'',
-		password:'',
-		message:'',
-		error_msg:'',
-		type:'password'
-	}
-  },
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    }
-  },
-  created() {
-    if (this.loggedIn) {
-      this.$router.push('/profile');
-    }
-  },
+import { defineComponent } from 'vue'
+import router from "../router/index"
+export default defineComponent({
+  name: "LoginPage",
   methods: {
-    handleLogin() {
-		if(this.username==='' || this.password===''){
-			this.error_msg = "Existem campos vazios. Introduza o username e password.";
-			return;
-		}
-        this.$store.dispatch('auth/login', new User(this.username,'',this.password)).then(
-            (u) => {
-				console.log("Login successful, user:", u);
-            	this.$router.push('/profile');
-            },
-            error => {
-              this.error_msg = "Username ou password inválidos. Tente novamente."
-            }
-          );
-        },
-		closemsg(){
-			this.error_msg='';
-		},
-		changeInputType(){
-			if(this.type==='password') this.type='text';
-			else this.type='password'
-		}
-  },
-	components:{
-		ToastComponent	
-	}
-};
+    onSignUpTextClick() {
+      router.push({ path: '/signup' })
+    }
+  }
+})
 
 </script>
 
@@ -139,18 +103,24 @@ export default{
   	height: 24px;
 }
 .input-text {
+  	align-self: stretch;
+  	flex: 1;
   	border-radius: 8px;
   	border: 3px solid #d1e9ff;
   	display: flex;
   	flex-direction: row;
-	width: 515px;
+  	align-items: center;
+  	justify-content: flex-start;
   	padding: 12px 16px;
   	gap: 5px;
 }
 .input-text-wrapper {
-	width: 515px;
+  	align-self: stretch;
   	height: 48px;
+  	display: flex;
   	flex-direction: row;
+  	align-items: flex-start;
+  	justify-content: flex-start;
   	font-size: 14px;
 }
 .frame-group {
@@ -172,19 +142,23 @@ export default{
   	width: 24px;
   	position: relative;
   	height: 24px;
-	top: 40px;
-	cursor:pointer;
 }
 .iconeye-wrapper {
-  position: absolute;
-  margin-top: -32px;
-  margin-left: 470px;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: center;
+  	justify-content: flex-end;
 }
 .input-text1 {
-  border-radius: 8px;
-  border: 1px solid #d0d5dd;
-  padding: 12px 16px;
-  width: 515px;
+  	align-self: stretch;
+  	border-radius: 8px;
+  	border: 1px solid #d0d5dd;
+  	display: flex;
+  	flex-direction: row;
+  	align-items: center;
+  	justify-content: flex-start;
+  	padding: 12px 16px;
+  	gap: 5px;
 }
 .input {
   	align-self: stretch;
@@ -259,15 +233,12 @@ export default{
   	color: #1570ef;
   	cursor: pointer;
 }
-.sign-upcolor {
-  	color: #1570ef;
-}
 .dont-have-an-account-parent {
   display: flex;
   flex-direction: row;
   position: absolute;
   gap: 8px;
-  bottom: 30px; 
+  bottom: 25px; 
   left: 50%; 
   transform: translateX(-50%);
   color: #98a2b3;

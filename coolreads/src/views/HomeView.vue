@@ -5,53 +5,18 @@ import FooterComponent from '../components/FooterComponent.vue';
 </script>
 <template>
   <main>
-    <NavComponent :username="username"></NavComponent>
-    <ShelfSideBarComponent v-if="username!==''" :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
+    <NavComponent></NavComponent>
+    <ShelfSideBarComponent :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
   </main>
 </template>
 <script>
 export default {
   data(){
     return{
-      username:'',
-			profileImg: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+      username:'techguru',
+			profileImg: 'https://randomuser.me/api/portraits/men/1.jpg'
     }
-  },
-	created() {
-    const token = localStorage.getItem('user');
-    if (!token || this.$store.state.auth.status.loggedIn===false) {
-      return;
-    }
-
-    try {
-      const decodedToken = JSON.parse(token);
-      if(decodedToken.info.exp<Date.now()) {
-        handle_logout();
-      }
-      this.setUsername(decodedToken.info.sub);
-    } catch (error) {
-      console.error('Error parsing user token:', error);
-    }
-  },
-	methods:{
-		setUsername(username){
-			this.username=username;
-		},
-    handle_logout(){
-            this.$store.dispatch('auth/logout').then(
-            () => {
-                router.go()
-            },
-            error => {
-              this.message =
-                (error.response && error.response.data && error.response.data.message) ||
-                error.message ||
-                error.toString();
-            }
-      );
-    } 
-
-	}
+  }
 }
 
 

@@ -35,9 +35,9 @@ import Rating from 'primevue/rating';
     		<div class="nr-rates">{{ nrratings }} ratings</div>
     		<div class="nr-reviews">{{ nrreviews }} reviews</div>
 			<div>
-				<StateComponent v-if="username!==''" @choosen_state="showConfirm=true" :stateValue ="stateSelected" @bookStateSelected="getBookState"></StateComponent>
+				<StateComponent @choosen_state="showConfirm=true" :stateValue ="stateSelected" @bookStateSelected="getBookState"></StateComponent>
 			</div>
-			<AddToBookshelfComponent v-if="username!==''" @click="showAddtoBookshelf=true"></AddToBookshelfComponent>			
+			<AddToBookshelfComponent @click="showAddtoBookshelf=true"></AddToBookshelfComponent>			
 			<div v-if="showAddtoBookshelf==true">
 				<BookshelfSelectorComponent :bookISBN="isbn" :username="username" @closebookshelvesoptions="showAddtoBookshelf=false"></BookshelfSelectorComponent>
 			</div>
@@ -69,7 +69,7 @@ import Rating from 'primevue/rating';
 	</div>
 
 
-	<NavComponent :username="username"></NavComponent>
+	<NavComponent></NavComponent>
 	<FooterComponent></FooterComponent>
 </template>
 <script>
@@ -98,8 +98,8 @@ export default {
 			reviews:[],
 			nrreviews:0,
 			nrratings:0,
-			username:'',
-			profileImg: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+			username:'techguru',
+			profileImg: 'https://randomuser.me/api/portraits/men/1.jpg',
 			isbn:'',
 			nrpageReview:0,
 			showLoading:false,
@@ -117,19 +117,6 @@ export default {
 		ConfirmComponent,
 		AddToBookshelfComponent
     },created(){
-		const token = localStorage.getItem('user');
-		if (!token || this.$store.state.auth.status.loggedIn===false) {
-			return;
-		}
-		try {
-			const decodedToken = JSON.parse(token);
-			if(decodedToken.info.exp<Date.now()/1000) {
-				this.handle_logout();
-			}
-			this.setUsername(decodedToken.info.sub);
-		} catch (error) {
-			console.error('Error parsing user token:', error);
-		}
 		this.isbn = this.$route.params.bookisbn;
 		this.getBook(this.isbn);
 		this.getReviews(this.isbn);
@@ -200,23 +187,7 @@ export default {
 		book_management(resp){
 			if(resp=='no') this.showConfirm=false;
 			console.log(resp)
-		},
-		setUsername(username){
-			this.username=username;
-		},
-		handle_logout(){
-            this.$store.dispatch('auth/logout').then(
-            () => {
-                router.go()
-            },
-            error => {
-              this.message =
-                (error.response && error.response.data && error.response.data.message) ||
-                error.message ||
-                error.toString();
-            }
-      		);
-    	} 
+		}
 	}
 
 }

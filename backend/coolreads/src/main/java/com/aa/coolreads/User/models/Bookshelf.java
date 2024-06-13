@@ -1,7 +1,7 @@
 package com.aa.coolreads.User.models;
 
+import com.aa.coolreads.Book.models.Book;
 import jakarta.persistence.*;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 import java.util.HashSet;
