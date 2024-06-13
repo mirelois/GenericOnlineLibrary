@@ -32,7 +32,7 @@ public class MailService {
         sendEmail(this.coolReadsMail, to, notificationType, "You have a new " + notificationType);
     }
 
-    public void sendAccountCreationMail(String to, String number, String password){
+    public void sendAccountCreationMail(String to){
         String subject = "CoolReads Account Creation";
         String body = """
                 Welcome aboard to CoolReads!
