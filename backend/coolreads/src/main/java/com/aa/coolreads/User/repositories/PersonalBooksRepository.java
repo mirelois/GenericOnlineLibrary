@@ -1,5 +1,7 @@
 package com.aa.coolreads.User.repositories;
 
+import com.aa.coolreads.Book.models.AgeSlice;
+import com.aa.coolreads.Book.models.CountrySlice;
 import com.aa.coolreads.Book.models.Slice;
 import com.aa.coolreads.User.models.Bookshelf;
 import com.aa.coolreads.User.models.PersonalBook;
@@ -26,7 +28,19 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
     Integer getBooksSizeByBookShelfName(String bookshelf, String isbn);
 
     @Query(value = "SELECT pb.bookshelf.customer.country, COUNT(*) FROM PersonalBook pb WHERE pb.bookshelf.name = :bookshelf GROUP BY pb.bookshelf.customer.country")
-    List<Slice> getCountrySlicesByBookshelfName(String bookshelf, String country);
+    List<CountrySlice> getCountrySlicesByBookshelfName(String bookshelf, String isbn);
 
+    @Query(value = "with ages as (\n" +
+            "    select\n" +
+            "        extract('YEAR' from AGE(CURRENT_DATE, pb.customer.birth_date)) as age\n" +
+            "            from PersonalBook pb where pb.bookshelf.name = :bookshelf and pb.book.isbn = :isbn)\n" +
+            "    select ageClass, amount from ageRange\n" +
+            "    inner join (\n" +
+            "    select\n" +
+            "        width_bucket(age, array[0,13,18,31,61]) as bucket, count(*) as amount\n" +
+            "        from ages\n" +
+            "        group by bucket\n" +
+            "    ) on ageRange.id=bucket;\n")
+    List<AgeSlice> getAgeSliceByBookshelfName(String bookshelf, String isbn);
 
 }

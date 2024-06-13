@@ -3,6 +3,7 @@ package com.aa.coolreads.Book.services;
 import com.aa.coolreads.Book.dto.StatisticsNumberDTO;
 import com.aa.coolreads.Book.dto.StatisticsPieChartDTO;
 import com.aa.coolreads.Book.mappers.StatisticsMapper;
+import com.aa.coolreads.Book.models.CountrySlice;
 import com.aa.coolreads.Book.models.Slice;
 import com.aa.coolreads.Book.repositories.BookRepository;
 import com.aa.coolreads.User.models.DefaultBookshelf;
@@ -40,9 +41,9 @@ public class StatisticService {
     @Transactional
     public StatisticsPieChartDTO getStatisticsCountryPieChart(String category, DefaultBookshelf bookshelf, String isbn) {
 
-        List<Slice> slices = this.personalBooksRepository.getCountrySlicesByBookshelfName(bookshelf.name(), isbn);
+        List<CountrySlice> slices = this.personalBooksRepository.getCountrySlicesByBookshelfName(bookshelf.name(), isbn);
 
         return statisticsMapper.toStatisticsPieChartDTO(slices);
-
     }
+
 }

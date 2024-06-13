@@ -9,4 +9,6 @@ public class AgeSlice {
 
     private Integer amount;
 
+    private AgeRange ageRange;
+
 }

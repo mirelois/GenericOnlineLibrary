@@ -16,7 +16,7 @@ public class StatisticsMapper {
         return new SliceDTO(slice.getCategoryName(), slice.getAmount());
     }
 
-    public StatisticsPieChartDTO toStatisticsPieChartDTO(List<Slice> slices) {
+    public StatisticsPieChartDTO toStatisticsPieChartDTO(List<? extends Slice> slices) {
         return new StatisticsPieChartDTO(slices.stream().map(this::toSliceDTO).collect(Collectors.toList()));
     }
 

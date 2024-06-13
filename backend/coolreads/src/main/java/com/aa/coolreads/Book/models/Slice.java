@@ -2,8 +2,8 @@ package com.aa.coolreads.Book.models;
 
 public interface Slice {
 
-    public Integer getAmount();
+    Integer getAmount();
 
-    public String getCategoryName();
+    String getCategoryName();
 
 }
