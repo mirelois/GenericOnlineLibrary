@@ -19,27 +19,11 @@ public class Customer implements UserDetails {
 
     private String email;
 
-    private String name;
+    @Embedded
+    private CustomerProfileDetails profileDetails;
 
-    private String gender;
-
-    private String pronouns;
-
-    private Date birthDate;
-
-    private String country;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @Column(columnDefinition = "TEXT")
-    private String interests;
-
-    private String profileImageUrl;
-
-    private String profileBannerUrl;
-
-    private String highlightedBookshelfName;
+    @ManyToMany
+    private Set<Customer> friends;
 
     @ManyToMany
     private Set<Genre> favoriteGenres;
@@ -58,43 +42,8 @@ public class Customer implements UserDetails {
         this.bookshelves = new HashSet<>();
         this.notifications = new HashSet<>();
         this.posts = new HashSet<>();
-    }
-
-    public Customer(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves, Set<Notification> notifications, Set<Post> posts) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.name = name;
-        this.gender = gender;
-        this.pronouns = pronouns;
-        this.birthDate = birthDate;
-        this.country = country;
-        this.description = description;
-        this.interests = interests;
-        this.profileImageUrl = profileImageUrl;
-        this.profileBannerUrl = profileBannerUrl;
-        this.favoriteGenres = favoriteGenres;
-        this.bookshelves = bookshelves;
-        this.notifications = notifications;
-        this.posts = posts;
-    }
-
-    public Customer(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves, String hightLightedBookshelfName) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.name = name;
-        this.gender = gender;
-        this.pronouns = pronouns;
-        this.birthDate = birthDate;
-        this.country = country;
-        this.description = description;
-        this.interests = interests;
-        this.profileImageUrl = profileImageUrl;
-        this.profileBannerUrl = profileBannerUrl;
-        this.favoriteGenres = favoriteGenres;
-        this.bookshelves = bookshelves;
-        this.highlightedBookshelfName = hightLightedBookshelfName;
+        this.friends = new HashSet<>();
+        this.profileDetails = new CustomerProfileDetails();
     }
 
     public Set<Notification> getNotifications() {
@@ -137,78 +86,6 @@ public class Customer implements UserDetails {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getPronouns() {
-        return pronouns;
-    }
-
-    public void setPronouns(String pronouns) {
-        this.pronouns = pronouns;
-    }
-
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getInterests() {
-        return interests;
-    }
-
-    public void setInterests(String interests) {
-        this.interests = interests;
-    }
-
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
-    }
-
-    public String getProfileBannerUrl() {
-        return profileBannerUrl;
-    }
-
-    public void setProfileBannerUrl(String profileBannerUrl) {
-        this.profileBannerUrl = profileBannerUrl;
-    }
-
     public Set<Genre> getFavoriteGenres() {
         return favoriteGenres;
     }
@@ -225,17 +102,24 @@ public class Customer implements UserDetails {
         this.bookshelves = bookshelves;
     }
 
-    public String getHighlightedBookshelfName() {
-        return highlightedBookshelfName;
-    }
-
-    public void setHighlightedBookshelfName(String highlightedBookshelfName) {
-        this.highlightedBookshelfName = highlightedBookshelfName;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
 
+    public CustomerProfileDetails getProfileDetails() {
+        return profileDetails;
+    }
+
+    public void setProfileDetails(CustomerProfileDetails profileDetails) {
+        this.profileDetails = profileDetails;
+    }
+
+    public Set<Customer> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(Set<Customer> friends) {
+        this.friends = friends;
+    }
 }
