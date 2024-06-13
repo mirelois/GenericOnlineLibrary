@@ -20,8 +20,13 @@ public class Author extends Customer implements Serializable{
 
     public Author(){super();}
 
+<<<<<<< HEAD
     public Author(String username, String password, String email, String name, Gender gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves, Set<Book> booksCreated) {
         super(username, password, email, name, gender, pronouns, birthDate, country, description, interests, profileImageUrl, profileBannerUrl, favoriteGenres, bookshelves);
+=======
+    public Author(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves, String hightLightedBookshelfName, Set<Book> booksCreated) {
+        super(username, password, email, name, gender, pronouns, birthDate, country, description, interests, profileImageUrl, profileBannerUrl, favoriteGenres, bookshelves, hightLightedBookshelfName);
+>>>>>>> main
         this.booksCreated = booksCreated;
     }
 

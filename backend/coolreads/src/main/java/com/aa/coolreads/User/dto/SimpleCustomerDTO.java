@@ -4,12 +4,7 @@ import com.aa.coolreads.User.models.Gender;
 
 import java.util.Date;
 
-public class NewCustomerDTO {
-    private String username;
-
-    private String password;
-
-    private String email;
+public class SimpleCustomerDTO {
 
     private String name;
 
@@ -29,12 +24,18 @@ public class NewCustomerDTO {
 
     private String profileBannerUrl;
 
-    public NewCustomerDTO(){}
+    private BookShelfDTO highlightedBookshelf;
 
+<<<<<<< HEAD:backend/coolreads/src/main/java/com/aa/coolreads/User/dto/NewCustomerDTO.java
     public NewCustomerDTO(String username, String password, String email, String name, Gender gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl) {
         this.username = username;
         this.password = password;
         this.email = email;
+=======
+    public SimpleCustomerDTO(){}
+
+    public SimpleCustomerDTO(String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl) {
+>>>>>>> main:backend/coolreads/src/main/java/com/aa/coolreads/User/dto/SimpleCustomerDTO.java
         this.name = name;
         this.gender = gender;
         this.pronouns = pronouns;
@@ -46,28 +47,17 @@ public class NewCustomerDTO {
         this.profileBannerUrl = profileBannerUrl;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public SimpleCustomerDTO(String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, BookShelfDTO highlightedBookshelf) {
+        this.name = name;
+        this.gender = gender;
+        this.pronouns = pronouns;
+        this.birthDate = birthDate;
+        this.country = country;
+        this.description = description;
+        this.interests = interests;
+        this.profileImageUrl = profileImageUrl;
+        this.profileBannerUrl = profileBannerUrl;
+        this.highlightedBookshelf = highlightedBookshelf;
     }
 
     public String getName() {
@@ -140,5 +130,13 @@ public class NewCustomerDTO {
 
     public void setProfileBannerUrl(String profileBannerUrl) {
         this.profileBannerUrl = profileBannerUrl;
+    }
+
+    public BookShelfDTO getHighlightedBookshelf() {
+        return highlightedBookshelf;
+    }
+
+    public void setHighlightedBookshelf(BookShelfDTO highlightedBookshelf) {
+        this.highlightedBookshelf = highlightedBookshelf;
     }
 }

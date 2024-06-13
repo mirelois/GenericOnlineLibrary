@@ -53,26 +53,32 @@ public class CustomerController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<CustomerDTO> getCurrentUser(){
-        return ResponseEntity.ok(this.customerService.getMyCustomer());
-    }
-
-    @PostMapping
-    @Deprecated
-    public void insertCustomer(@RequestBody NewCustomerDTO newCustomerDTO) {
+    public ResponseEntity<SimpleCustomerDTO> getCurrentCustomerProfile(){
         try {
-            this.customerService.insertCustomer(newCustomerDTO);
-        } catch (CustomerAlreadyExistsException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.ok().body(this.customerService.getMyCustomerProfile());
+        } catch (CustomerNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
-    @GetMapping("/{username}")
-    public CustomerDTO getCustomer(@PathVariable String username) {
+    @PutMapping("/me")
+    public ResponseEntity<Void> updateCurrentCustomerProfile(@RequestBody SimpleCustomerDTO simpleCustomerDTO){
         try{
-            return this.customerService.getCustomer(username);
+            this.customerService.updateMyCustomerProfile(simpleCustomerDTO);
+            return ResponseEntity.ok().build();
         } catch (CustomerNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<SimpleCustomerDTO> getCustomer(@PathVariable String username) {
+        try{
+            return ResponseEntity.ok().body(this.customerService.getCustomer(username));
+        } catch (CustomerNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+
 }
