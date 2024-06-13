@@ -33,4 +33,6 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
 
     @Query(value = "select pb.bookshelf.customer.gender, count(*) from PersonalBook pb where pb.bookshelf.name = :bookshelf and pb.book.isbn = :isbn group by pb.bookshelf.customer.gender")
     List<SliceDTO> getGenderSlicesByBookshelfName(String bookshelf, String isbn);
+
+    //@Query(value = "SELECT count(*) from PersonalBook pb where pb.bookshelf.name = :bookshelf and pb.book.isbn = :isbn")
 }
