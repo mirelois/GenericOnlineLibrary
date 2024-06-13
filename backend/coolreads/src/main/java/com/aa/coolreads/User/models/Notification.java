@@ -18,6 +18,10 @@ public class Notification implements Serializable {
     @JoinColumn(name="customer_username", referencedColumnName = "username")
     private Customer customer;
 
+    @ManyToOne
+    @JoinColumn(name="customer_creator_username", referencedColumnName = "username")
+    private Customer customerCreator;
+
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
     private Date createdAt;
@@ -31,8 +35,9 @@ public class Notification implements Serializable {
 
     public Notification() {}
 
-    public Notification(Customer customer, NotificationType notificationType) {
+    public Notification(Customer customer, Customer customerCreator, NotificationType notificationType) {
         this.customer = customer;
+        this.customerCreator = customerCreator;
         this.notificationType = notificationType;
     }
 
@@ -74,5 +79,13 @@ public class Notification implements Serializable {
 
     public void setNotificationType(NotificationType notificationType) {
         this.notificationType = notificationType;
+    }
+
+    public Customer getCustomerCreator() {
+        return customerCreator;
+    }
+
+    public void setCustomerCreator(Customer customerCreator) {
+        this.customerCreator = customerCreator;
     }
 }

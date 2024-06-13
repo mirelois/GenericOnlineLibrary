@@ -17,6 +17,9 @@ import com.aa.coolreads.User.repositories.BookshelfRepository;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import com.aa.coolreads.User.repositories.PersonalBooksRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 

@@ -45,7 +45,7 @@ public class FullBookMapper {
     }
 
     public BookReviewDTO toBookReviewDTO(Review review, Integer commentsSize){
-        return new BookReviewDTO(review.getDescription(), review.getPostDate(), commentsSize, toLikesDTO(review.getReviewLikes()), review.getCustomer().getUsername(), review.getCustomer().getProfileImageUrl());
+        return new BookReviewDTO(review.getDescription(), review.getPostDate(), commentsSize, toLikesDTO(review.getReviewLikes()), review.getCustomer().getUsername(), review.getCustomer().getProfileDetails().getProfileImageUrl());
     }
 
     public FullBookDTO toFullBookDTO(Book book, double averageRating) {
