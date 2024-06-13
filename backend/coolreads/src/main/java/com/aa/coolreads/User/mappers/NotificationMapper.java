@@ -13,7 +13,7 @@ public class NotificationMapper {
         return new NotificationDTO(notification.getNotificationType(), notification.getId());
     }
 
-    public Notification toNotification(NotificationCreationDTO notificationCreationDTO, Customer customer) {
-        return new Notification(customer, notificationCreationDTO.getNotificationType());
+    public Notification toNotification(NotificationCreationDTO notificationCreationDTO, Customer customerCreator, Customer customer) {
+        return new Notification(customer, customerCreator, notificationCreationDTO.getNotificationType());
     }
 }

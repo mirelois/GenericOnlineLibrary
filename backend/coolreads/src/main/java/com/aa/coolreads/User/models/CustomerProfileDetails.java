@@ -1,14 +1,12 @@
-package com.aa.coolreads.User.dto;
+package com.aa.coolreads.User.models;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 import java.util.Date;
 
-public class NewCustomerDTO {
-    private String username;
-
-    private String password;
-
-    private String email;
-
+@Embeddable
+public class CustomerProfileDetails {
     private String name;
 
     private String gender;
@@ -19,20 +17,21 @@ public class NewCustomerDTO {
 
     private String country;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(columnDefinition = "TEXT")
     private String interests;
 
     private String profileImageUrl;
 
     private String profileBannerUrl;
 
-    public NewCustomerDTO(){}
+    private String highlightedBookshelfName;
 
-    public NewCustomerDTO(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
+    public CustomerProfileDetails(){}
+
+    public CustomerProfileDetails(String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, String highlightedBookshelfName) {
         this.name = name;
         this.gender = gender;
         this.pronouns = pronouns;
@@ -42,30 +41,7 @@ public class NewCustomerDTO {
         this.interests = interests;
         this.profileImageUrl = profileImageUrl;
         this.profileBannerUrl = profileBannerUrl;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+        this.highlightedBookshelfName = highlightedBookshelfName;
     }
 
     public String getName() {
@@ -138,5 +114,13 @@ public class NewCustomerDTO {
 
     public void setProfileBannerUrl(String profileBannerUrl) {
         this.profileBannerUrl = profileBannerUrl;
+    }
+
+    public String getHighlightedBookshelfName() {
+        return highlightedBookshelfName;
+    }
+
+    public void setHighlightedBookshelfName(String highlightedBookshelfName) {
+        this.highlightedBookshelfName = highlightedBookshelfName;
     }
 }
