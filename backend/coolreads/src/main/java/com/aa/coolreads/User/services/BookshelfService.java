@@ -48,7 +48,6 @@ public class BookshelfService {
         this.bookshelfMapper = bookshelfMapper;
     }
 
-    @Cacheable(value = "bookshelf", key = "#username")
     @Transactional
     public Set<SimpleBookShelfDTO> getBookshelf(String username) throws CustomerNotFoundException {
 
@@ -57,7 +56,6 @@ public class BookshelfService {
         return this.bookshelfRepository.findBookshelvesByCustomer(customer).stream().map(bookshelf -> this.bookshelfMapper.toSimpleBookShelfDTO(bookshelf, this.personalBooksRepository.getBooksSize(bookshelf))).collect(Collectors.toSet());
     }
 
-    @CachePut(value = "bookshelf", key = "#username")
     @Transactional
     public void insertBookshelf(BookShelfCreationDTO bookShelfCreationDTO, String username) throws IllegalArgumentException, CustomerNotFoundException {
         Privacy privacy = Privacy.valueOf(bookShelfCreationDTO.getPrivacy().toUpperCase());
@@ -67,7 +65,6 @@ public class BookshelfService {
         this.bookshelfRepository.save(this.bookshelfMapper.toBookshelf(bookShelfCreationDTO.getName(), privacy, customer));
     }
 
-    @CacheEvict(value = "bookshelf", key = "#username")
     @Transactional
     public void updateBookshelf(String name, BookShelfCreationDTO bookShelfCreationDTO, String username) throws IllegalArgumentException, CustomerNotFoundException, BookshelfNotFoundException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
@@ -86,7 +83,6 @@ public class BookshelfService {
         this.bookshelfRepository.save(bookshelf);
     }
 
-    @Cacheable(value = "books", key = "#username + '-' + #name")
     @Transactional
     public Set<PersonalBookDTO> getBooks(String name, String username) throws CustomerNotFoundException, BookshelfNotFoundException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
@@ -96,7 +92,6 @@ public class BookshelfService {
         return this.personalBooksRepository.findBooks(bookshelf).stream().map(this.bookshelfMapper::toPersonalBookDTO).collect(Collectors.toSet());
     }
 
-    @CachePut(value = "books", key = "#username + '-' + #name")
     @Transactional
     public void insertBook(String name, String username, PersonalBookDTO personalBookDTO) throws CustomerNotFoundException, BookshelfNotFoundException, BookNotFoundException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
@@ -110,7 +105,6 @@ public class BookshelfService {
         this.personalBooksRepository.save(personalBook);
     }
 
-    @CacheEvict(value = "books", key = "#username + '-' + #name")
     @Transactional
     public void deleteBook(String name, String username, String isbn) throws CustomerNotFoundException, BookshelfNotFoundException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
