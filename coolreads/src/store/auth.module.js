@@ -1,6 +1,4 @@
 import AuthService from '../services/auth.service';
-console.log("fdssss")
-console.log(localStorage.getItem('user'));
 
 const user = JSON.parse(localStorage.getItem('user'));
 const initialState = user

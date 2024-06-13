@@ -25,6 +25,9 @@ export default {
 
     try {
       const decodedToken = JSON.parse(token);
+      if(decodedToken.info.exp<Date.now()) {
+        handle_logout();
+      }
       this.setUsername(decodedToken.info.sub);
     } catch (error) {
       console.error('Error parsing user token:', error);
@@ -33,7 +36,21 @@ export default {
 	methods:{
 		setUsername(username){
 			this.username=username;
-		}
+		},
+    handle_logout(){
+            this.$store.dispatch('auth/logout').then(
+            () => {
+                router.go()
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+            }
+      );
+    } 
+
 	}
 }
 

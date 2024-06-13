@@ -118,11 +118,18 @@ export default {
 		AddToBookshelfComponent
     },created(){
 		const token = localStorage.getItem('user');
-		if(!token && this.$store.state.auth.status.loggedIn==true){
-			let username = JSON.parse(token).info.sub;
-			this.setUsername(username);
+		if (!token || this.$store.state.auth.status.loggedIn===false) {
+			return;
 		}
-
+		try {
+			const decodedToken = JSON.parse(token);
+			if(decodedToken.info.exp<Date.now()/1000) {
+				this.handle_logout();
+			}
+			this.setUsername(decodedToken.info.sub);
+		} catch (error) {
+			console.error('Error parsing user token:', error);
+		}
 		this.isbn = this.$route.params.bookisbn;
 		this.getBook(this.isbn);
 		this.getReviews(this.isbn);
@@ -196,7 +203,20 @@ export default {
 		},
 		setUsername(username){
 			this.username=username;
-		}
+		},
+		handle_logout(){
+            this.$store.dispatch('auth/logout').then(
+            () => {
+                router.go()
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+            }
+      		);
+    	} 
 	}
 
 }

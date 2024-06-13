@@ -180,6 +180,9 @@ export default {
 
         try {
             const decodedToken = JSON.parse(token);
+            if(decodedToken.info.exp<Date.now()/1000) {
+                router.push({path:'/login'})
+            }
             this.setUsername(decodedToken.info.sub);
         } catch (error) {
             console.error('Error parsing user token:', error);

@@ -1,34 +1,71 @@
 <script setup>
 import NavComponent from '../components/NavComponent.vue';
 import FooterComponent from '../components/FooterComponent.vue';
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 </script>
 
 <template>
   <div class="frame">
     <div class="parent"></div>
   </div>
-  <img class="profilepic" alt="" :src="profileImageUrl">
+  <input
+      id="image-upload"
+      type="file"
+      accept="image/png, image/jpeg"
+      class="image-upload"
+      style="display:none"
+      ref="myImageUpload"
+      required
+      @change="handleFileChange"
+    />
+  <img @click="upload_pic" class="profilepic" alt="" :src="profileImageUrl">
   <div class="name">
-    <div class="carmen-garca-lpez">{{ name }}</div>
-    <div v-if="pronouns!=='' && pronouns!=='-'" class="theythem">({{pronouns}})</div>
+    <div v-if="edit_activated==false" class="carmen-garca-lpez">{{ name }}</div>
+    <input v-if="edit_activated==true" class="carmen-garca-lpez-aux" :value="name" />
+    <div v-if="pronouns!=='' && pronouns!=='-' && edit_activated==false" class="theythem">({{pronouns}})</div>
+    <select v-model="selected_pronoun" v-if="edit_activated==true" class="theythem-aux" name="pronouns" id="pronouns">
+      <option value="she/her">She/Her</option>
+      <option value="he/him">He/Him</option>
+      <option value="they/them">They/Them</option>
+      <option value="ze/hir">Ze/Hir</option>
+      <option value="co/cos">Co/Cos</option>
+      <option value="nd_pronoun">-</option>
+    </select>
+
   </div>
   <div class="details">
     <div class="details-title">Details</div>
     <div class="detail-row">
       <b class="label">Age</b>
-      <div class="value">{{birthDate}}</div>
+      <div v-if="edit_activated==false" class="value">{{birthDate}}</div>
+      <Datepicker v-if="edit_activated==true" v-model="date" />
+
     </div>
     <div class="detail-row">
       <b class="label">Country</b>
-      <div class="value">{{country}}</div>
+      <div v-if="edit_activated==false" class="value">{{country}}</div>
+        <select v-model="selected_country" class="value-aux" v-if="edit_activated==true" name="country">
+          <option value="nd_country">-</option>
+          <option v-for="country in countries">
+          <span>{{ country.text }}</span>
+        </option>
+      </select>
     </div>
     <div class="detail-row">
       <b class="label">Gender</b>
-      <div class="value">{{gender}}</div>
+      <div v-if="edit_activated==false" class="value">{{gender}}</div>
+      <select v-model="selected_gender" v-if="edit_activated==true" class="value-aux" name="gender" id="gender">
+        <option value="Femaile">Female</option>
+        <option value="Male">Male</option>
+        <option value="Non-binary">Non-binary</option>
+        <option value="nd_gender">-</option>
+      </select>
+
+
     </div>
-	<div class="edit-profile-wrapper" @click="navigateToEditProfile()" >
-      <div class="edit-profile">Edit Profile</div>
-    </div>
+    <button class="edit-profile-wrapper" @click="edit_activated=true">Edit Profile</button>
+    <button v-if="edit_activated==true" class="edit-profile-wrapper-2" @click="handle_edit()">Save</button>
   </div>
   <div class="section">
     <div class="container">
@@ -37,7 +74,9 @@ import FooterComponent from '../components/FooterComponent.vue';
     <div class="container1">
       <div class="theres-nothing-i-container">
         <span class="theres-nothing-i-container1">
-          <p class="theres-nothing-i">{{description}} </p>
+          <p v-if="edit_activated==false" class="theres-nothing-i">{{description}} </p>
+          <input v-if="edit_activated==true" class="theres-nothing-i-aux" v-model="description"/>
+          
         </span>
       </div>
     </div>
@@ -47,7 +86,8 @@ import FooterComponent from '../components/FooterComponent.vue';
       <div class="container1">
         <div class="im-passionate-about-container">
           <span class="theres-nothing-i-container1">
-            <p class="theres-nothing-i">{{interests}}</p>
+            <p v-if="edit_activated==false" class="theres-nothing-i">{{interests}}</p>
+            <input v-if="edit_activated==true" class="theres-nothing-i-aux" v-model="interests"/>
           </span>
         </div>
       </div>
@@ -76,10 +116,19 @@ export default {
       country: '',
       description: '',
       gender: '',
+      selected_gender:'',
       highlightedBookshelf: '',
+      selected_country:'',
       interests: '',
+      date:'',
+      selected_pronoun:'',
       profileImageUrl: '',
-      pronouns: ''
+      pronouns: '',
+      edit_activated:false,
+      countries:[],
+      fileName: "",
+      preview: null,
+      formData: null
 		}
 	},
 	created() {
@@ -91,38 +140,101 @@ export default {
 
     try {
       const decodedToken = JSON.parse(token);
+      if(decodedToken.info.exp<Date.now()/1000) {
+        this.handle_logout();
+      }
       this.setUsername(decodedToken.info.sub);
       this.getMyInfo();
-    } catch (error) {
+    } catch (error) {ype="number"
       console.error('Error parsing user token:', error);
     }
+    this.getCountries();
   },
 	methods:{
 		setUsername(username){
 			this.username=username;
 		},
-		navigateToEditProfile() {
-			router.push({ name: 'editprofile'});
-		},
     getMyInfo(){
       let header = authHeader();
       let config = {headers:header}
       axios.get("http://localhost:8080/customer/me",config).then(me=>{
-        console.log(me.data);
         this.birthDate = me.data.birthDate ? (new Date().getYear()-new Date(me.data.birthDate).getYear()) : '-';
+        this.date = new Date(me.data.birthDate);
         this.country = me.data.country ? me.data.country : '-';
         this.name = me.data.name ? me.data.name : this.username;
-        this.description = me.data.description ? me.data.description : '-';
+        this.description = me.data.description ? me.data.description : '';
         this.gender = me.data.gender ? me.data.gender : '-';
         this.highlightedBookshelf = me.data.highlightedBookshelf ? me.data.highlightedBookshelf : '-';
         this.profileImageUrl = me.data.profileImageUrl ? me.data.profileImageUrl : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-        this.interests = me.data.interests ? me.data.interests : '-';
+        this.interests = me.data.interests ? me.data.interests : '';
         this.pronouns = me.data.pronouns ? me.data.pronouns : '-';
+        this.selected_country = me.data.country;
+        this.selected_gender = me.data.gender;
+        this.selected_pronoun = me.data.pronouns;
       }).catch(error=>{
         console.log(error);
       })
-    }
+    },
+    getCountries(){
+      axios.get('https://trial.mobiscroll.com/content/countries.json').then(resp=>{
+        console.log(resp.data)
+        for (let i = 0; i < resp.data.length; ++i) {
+          const country = resp.data[i];
+          this.countries.push({ text: country.text, value: country.value })
+        }
+        console.log("heyyyy");
+        console.log(this.countries);
+      }).catch(error=>{
+        console.log(error);
+      })
+    },
+    handle_edit(){
+      let header = authHeader();
+      let config = {headers:header};
+      axios.put("http://localhost:8080/customer/me",
+        {
+					name:this.name,
+					gender: this.selected_gender,
+					pronouns: this.selected_pronoun,
+					birthDate: this.date,
+					country: this.selected_country,
+					description: this.description,
+					interests: this.interests,
+          profileImageUrl:'',
+          profileBannerUrl:'',
+          highlightedBookshelf:null
+				},
+				config
+      ).then((resp)=>{
+        console.log(resp)
+        if(resp.status==200) {
+          this.edit_activated=false;
+        }
+      }
+      )
+      .catch(error=>{console.log(error)})
 
+    },
+    upload_pic(){
+      const elem = this.$refs.myImageUpload;
+      elem.click()
+    },
+    handleFileChange(event) {
+      console.log(event);
+    },
+    handle_logout(){
+            this.$store.dispatch('auth/logout').then(
+            () => {
+                router.go()
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+            }
+          );
+        } 
 
 	}
 }
@@ -158,6 +270,7 @@ export default {
   width: 271px;
   height: 271px;
   object-fit: cover;
+  cursor:pointer;
 }
 .about-me {
   position: relative;
@@ -177,6 +290,19 @@ export default {
 .theres-nothing-i {
   margin-block-start: 0;
   margin-block-end: 20px;
+}
+
+.theres-nothing-i-aux {
+  margin-block-start: 25px;
+  margin-block-end: 20px;
+  height:100px;
+  color: black;
+  border-width: 0px;
+  background-color: rgb(172, 172, 172);
+  border-radius: 5px;
+  width: 1400px;
+  font-size: 20px;
+  margin-left: -200px;
 }
 .discoveries-with-fellow {
   margin: 0;
@@ -251,12 +377,32 @@ export default {
   position: relative;
   line-height: 30px;
 }
+
+.carmen-garca-lpez-aux {
+  position: relative;
+  line-height: 30px;
+  background-color: rgb(172, 172, 172);
+  border-radius: 5px;
+}
+
 .theythem {
   position: relative;
   font-size: 32px;
   line-height: 17.5px;
   color: #fcfcfd;
+  border-width: 0px
 }
+
+.theythem-aux {
+  position: relative;
+  line-height: 30px;
+  color: black;
+  border-width: 0px;
+  background-color: rgb(172, 172, 172);
+  border-radius: 5px;
+  height:30px;
+}
+
 .name {
   position: absolute;
   width: calc(100% - 984px);
@@ -284,8 +430,7 @@ export default {
   color: rgba(255, 255, 255, 0.9);
   background-color: #31363f;
   width: 891px;
-  height: 277px;
-  overflow: hidden;
+  height: 275px;
   padding: 24px;
   box-sizing: border-box;
 }
@@ -301,8 +446,15 @@ export default {
   color: rgba(255, 255, 255, 0.9);
 }
 .value {
-  font-size: 20px;
-  color: #fff;
+  position: relative;
+  line-height: 30px;
+}
+.value-aux{
+  color: black;
+  border-width: 0px;
+  height:30px;
+  background-color: rgb(172, 172, 172);
+  border-radius: 5px;
 }
 .highlighted-bookshelf-my {
   position: absolute;
@@ -378,8 +530,27 @@ export default {
   color: #000;
   display: flex;
   align-items: center;
+  cursor:pointer;
   justify-content: center;
 }
+
+.edit-profile-wrapper-2 {
+  position: absolute;
+  bottom: 15px;
+  right: 280px;
+  border-radius: 36px;
+  background-color: #f0effa;
+  width: 201px;
+  height: 50px;
+  overflow: hidden;
+  font-size: 20px;
+  color: #000;
+  display: flex;
+  align-items: center;
+  cursor:pointer;
+  justify-content: center;
+}
+
 .edit-profile {
   font-size: inherit;
   color: inherit;
