@@ -25,10 +25,13 @@ public class NotificationService {
 
     private final NotificationMapper notificationMapper;
 
-    public NotificationService(NotificationRepository notificationRepository, CustomerRepository customerRepository, NotificationMapper notificationMapper) {
+    private final MailService mailService;
+
+    public NotificationService(NotificationRepository notificationRepository, CustomerRepository customerRepository, NotificationMapper notificationMapper, MailService mailService) {
         this.notificationRepository = notificationRepository;
         this.customerRepository = customerRepository;
         this.notificationMapper = notificationMapper;
+        this.mailService = mailService;
     }
 
     @Transactional
@@ -36,7 +39,10 @@ public class NotificationService {
 
         Customer customer = this.customerRepository.findById(userName).orElseThrow(() -> new CustomerNotFoundException(userName));
 
-        this.notificationRepository.save(this.notificationMapper.toNotification(notificationCreationDTO, customer));
+        for(Customer friend: customer.getFriends()){
+            this.notificationRepository.save(this.notificationMapper.toNotification(notificationCreationDTO, customer, friend));
+            this.mailService.sendNotificationMail(friend.getEmail(), notificationCreationDTO.getNotificationType().name());
+        }
     }
 
     @Transactional

@@ -33,7 +33,7 @@ public class CustomerService {
     @Transactional
     public SimpleCustomerDTO getCustomer(String username) throws CustomerNotFoundException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
-        Optional<Bookshelf> highlitedBookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(customer.getHighlightedBookshelfName(), customer);
+        Optional<Bookshelf> highlitedBookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(customer.getProfileDetails().getHighlightedBookshelfName(), customer);
         if(highlitedBookshelf.isPresent()){
             return this.customerMapper.toSimpleCustomerDTO(customer, highlitedBookshelf.get());
         } else{
@@ -52,7 +52,7 @@ public class CustomerService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
-        this.customerMapper.toCustomerWithoutNull(customer, simpleCustomerDTO);
+        this.customerMapper.updateProfileDetails(customer.getProfileDetails(), simpleCustomerDTO);
 
         this.customerRepository.save(customer);
     }

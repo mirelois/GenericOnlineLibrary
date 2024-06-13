@@ -305,10 +305,11 @@ flex-shrink: 0;
   gap: 10.8px;
 }
 .iconeye {
+  top: -25px;
   width: 18.6px;
   position: relative;
   height: 18.6px;
-  left: -30px;
+  left:240px;
   cursor:pointer;
 }
 
@@ -325,11 +326,7 @@ flex-shrink: 0;
   width: 270px;
 }
 .input {
-  align-self: center;
-  display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
   height: auto;
   font-size: 12.6px;
   color: #98a2b3;

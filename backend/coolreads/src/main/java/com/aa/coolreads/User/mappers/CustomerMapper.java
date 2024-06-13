@@ -6,6 +6,7 @@ import com.aa.coolreads.User.builder.UserBuilder;
 import com.aa.coolreads.User.dto.*;
 import com.aa.coolreads.User.models.Bookshelf;
 import com.aa.coolreads.User.models.Customer;
+import com.aa.coolreads.User.models.CustomerProfileDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,19 +31,19 @@ public class CustomerMapper {
     }
 
     public SimpleCustomerDTO toSimpleCustomerDTO(Customer customer) {
-
+        CustomerProfileDetails profileDetails = customer.getProfileDetails();
         return (SimpleCustomerDTO) this.userDTOBuilder.setUsername(customer.getUsername())
                 .setPassword(customer.getPassword())
                 .setEmail(customer.getEmail())
-                .setName(customer.getName())
-                .setGender(customer.getGender())
-                .setPronouns(customer.getPronouns())
-                .setBirthDate(customer.getBirthDate())
-                .setCountry(customer.getCountry())
-                .setDescription(customer.getDescription())
-                .setInterests(customer.getInterests())
-                .setProfileImageUrl(customer.getProfileImageUrl())
-                .setProfileBannerUrl(customer.getProfileBannerUrl()).build();
+                .setName(profileDetails.getName())
+                .setGender(profileDetails.getGender())
+                .setPronouns(profileDetails.getPronouns())
+                .setBirthDate(profileDetails.getBirthDate())
+                .setCountry(profileDetails.getCountry())
+                .setDescription(profileDetails.getDescription())
+                .setInterests(profileDetails.getInterests())
+                .setProfileImageUrl(profileDetails.getProfileImageUrl())
+                .setProfileBannerUrl(profileDetails.getProfileBannerUrl()).build();
     }
 
     public SimpleCustomerDTO toSimpleCustomerDTO(Customer customer, Bookshelf bookshelf){
@@ -59,19 +60,19 @@ public class CustomerMapper {
                 .setEmail(registerDTO.getEmail()).build();
     }
 
-    public void toCustomerWithoutNull(Customer customer, SimpleCustomerDTO simpleCustomerDTO) {
-        Optional.ofNullable(simpleCustomerDTO.getBirthDate()).ifPresent(customer::setBirthDate);
-        Optional.ofNullable(simpleCustomerDTO.getCountry()).ifPresent(customer::setCountry);
-        Optional.ofNullable(simpleCustomerDTO.getDescription()).ifPresent(customer::setDescription);
-        Optional.ofNullable(simpleCustomerDTO.getInterests()).ifPresent(customer::setInterests);
-        Optional.ofNullable(simpleCustomerDTO.getGender()).ifPresent(customer::setGender);
-        Optional.ofNullable(simpleCustomerDTO.getPronouns()).ifPresent(customer::setPronouns);
-        Optional.ofNullable(simpleCustomerDTO.getName()).ifPresent(customer::setName);
-        Optional.ofNullable(simpleCustomerDTO.getProfileBannerUrl()).ifPresent(customer::setProfileBannerUrl);
-        Optional.ofNullable(simpleCustomerDTO.getProfileImageUrl()).ifPresent(customer::setProfileImageUrl);
+    public void updateProfileDetails(CustomerProfileDetails profileDetails, SimpleCustomerDTO simpleCustomerDTO) {
+        Optional.ofNullable(simpleCustomerDTO.getBirthDate()).ifPresent(profileDetails::setBirthDate);
+        Optional.ofNullable(simpleCustomerDTO.getCountry()).ifPresent(profileDetails::setCountry);
+        Optional.ofNullable(simpleCustomerDTO.getDescription()).ifPresent(profileDetails::setDescription);
+        Optional.ofNullable(simpleCustomerDTO.getInterests()).ifPresent(profileDetails::setInterests);
+        Optional.ofNullable(simpleCustomerDTO.getGender()).ifPresent(profileDetails::setGender);
+        Optional.ofNullable(simpleCustomerDTO.getPronouns()).ifPresent(profileDetails::setPronouns);
+        Optional.ofNullable(simpleCustomerDTO.getName()).ifPresent(profileDetails::setName);
+        Optional.ofNullable(simpleCustomerDTO.getProfileBannerUrl()).ifPresent(profileDetails::setProfileBannerUrl);
+        Optional.ofNullable(simpleCustomerDTO.getProfileImageUrl()).ifPresent(profileDetails::setProfileImageUrl);
         Optional.ofNullable(simpleCustomerDTO.getHighlightedBookshelf())
                 .map(BookShelfCreationDTO::getName)
-                .ifPresent(customer::setHighlightedBookshelfName);
+                .ifPresent(profileDetails::setHighlightedBookshelfName);
     }
 
 }
