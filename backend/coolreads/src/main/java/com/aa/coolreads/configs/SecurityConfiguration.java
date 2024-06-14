@@ -34,7 +34,7 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/customer/register", "/customer/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/book/{isbn}", "/book/name", "/book/{isbn}/review"
+                        .requestMatchers(HttpMethod.GET, "/book/{isbn}", "/book/name", "/book/genre", "/book/{isbn}/review"
                         , "/book/{isbn}/review/{review_username}/comment", "/customer/{username}").permitAll()
                         .anyRequest().authenticated()
                 )
