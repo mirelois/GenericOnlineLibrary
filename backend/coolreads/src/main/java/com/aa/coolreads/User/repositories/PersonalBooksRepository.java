@@ -37,7 +37,22 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
     @Query(value = "SELECT pb.bookshelf.customer.country, COUNT(*) FROM PersonalBook pb WHERE pb.bookshelf.name = :bookshelf AND pb.book.isbn = :isbn GROUP BY pb.bookshelf.customer.country")
     List<SliceDTO> getCountrySlicesByBookshelfName(String bookshelf, String isbn);
 
-    @Query(value = "SELECT year(current_date) - year(pb.bookshelf.customer.birthDate) FROM PersonalBook pb WHERE pb.bookshelf.name = :bookshelf AND pb.book.isbn = :isbn")
+    @Query(nativeQuery = true, value = """
+    with ages as (
+    select customer.username, extract('YEAR' from AGE(CURRENT_DATE, customer.birth_date)) as age
+    from personal_book
+    inner join bookshelf on bookshelf.name = 'bookshelf1'
+    inner join customer on bookshelf.customer_username = customer.username
+    where book_isbn = '1')
+    select ageClass, amount
+    from ageRange
+    inner join (
+        select width_bucket(age, array[0,13,18,31,61]) as bucket, count(*) as amount
+        from ages
+        group by bucket
+    )
+    on ageRange.id=bucket
+    """)
     List<Integer> getAgesByBookshelfName(String bookshelf, String isbn);
 
     @Query(value = "select pb.bookshelf.customer.gender, count(*) from PersonalBook pb where pb.bookshelf.name = :bookshelf and pb.book.isbn = :isbn group by pb.bookshelf.customer.gender")
