@@ -45,6 +45,8 @@
 <script>
 import axios from "axios";
 import ToastComponent from "./ToastComponent.vue";
+import authHeader from '@/services/auth.header';
+
 export default{
 	props:{
 		username:"",
@@ -64,16 +66,16 @@ export default{
 			this.bookshelfname="";
 		},
 		createBookshelf(){
-			console.log(this.bookshelfname);
-			const headers = {
-        		'Content-Type': 'application/json',
-		    };
+			let header = authHeader();
+			if(header=={}) this.handle_logout();
+            let config = {headers:header}
+            header['Content-Type']='application/json';
 			axios.post("http://localhost:8080/customer/"+this.username+"/bookshelf",
 				{
 					name:this.bookshelfname,
 					privacy: "public"
 				},
-				{ headers: headers } 
+				config 
 				).then(resp =>{
 					if(resp.status==200){
 						this.msg="The bookshelf you inserted was created successfully.";
@@ -86,13 +88,30 @@ export default{
 				})
 		},
 		getBookshelves(){
-			axios.get("http://localhost:8080/customer/"+this.username+"/bookshelf").then(resp =>{
+			let header = authHeader();
+			if(header=={}) this.handle_logout();
+			let config = {headers:header}
+            header['Content-Type']='application/json';
+			axios.get("http://localhost:8080/customer/"+this.username+"/bookshelf",config).then(resp =>{
 				this.mybookshelves = resp.data;
 				console.log(this.mybookshelves);
 			}).catch(err=>{
 				console.log(err)
 			})
-		}
+		},
+		handle_logout(){
+            this.$store.dispatch('auth/logout').then(
+            () => {
+                router.go()
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+            }
+          );
+        } 
 	},created(){
 		this.getBookshelves();
 	},components:{

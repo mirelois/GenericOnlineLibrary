@@ -17,6 +17,7 @@
 import axios from "axios";
 import { ref } from 'vue';
 import ToastComponent from "./ToastComponent.vue";
+import authHeader from '@/services/auth.header';
 export default {
     props:{
         username:'',
@@ -35,7 +36,10 @@ export default {
     },
     methods:{
         getOptions(){
-            axios.get("http://localhost:8080/customer/"+this.username+"/bookshelf").then(resp =>{
+            let header = authHeader();
+            let config = {headers:header}
+            header['Content-Type']='application/json';
+            axios.get("http://localhost:8080/customer/"+this.username+"/bookshelf",config).then(resp =>{
 				this.options = resp.data;
 			}).catch(err=>{
 				console.log(err)
@@ -47,9 +51,9 @@ export default {
         insertBook(){
             console.log("selecionados:");
             console.log(this.checkedOptions);
-			      const headers = {
-        		  'Content-Type': 'application/json',
-		        };
+            let header = authHeader();
+            let config = {headers:header}
+            header['Content-Type']='application/json';
             const date = new Date();
 			      const isoDateString = date.toISOString();
             this.checkedOptions.forEach(bookshelf => {
@@ -59,7 +63,7 @@ export default {
                       insertDate:isoDateString,
                       bookISBN: this.bookISBN
 				            },
-                    { headers: headers } 
+                    config 
             				).then(resp =>{
                       if(resp.status==200){
                         this.msg="The book was inserted successfully.";
