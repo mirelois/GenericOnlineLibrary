@@ -26,7 +26,7 @@ public class BookshelfController {
         this.bookshelfService = bookshelfService;
     }
 
-    //@PreAuthorize("CustomerSecurity.isOwner(#username)")
+    @PreAuthorize("#username == principal.username")
     @GetMapping
     public ResponseEntity<Set<SimpleBookShelfDTO>> getBookshelves(@PathVariable String username) {
         try {
@@ -36,6 +36,7 @@ public class BookshelfController {
         }
     }
 
+    @PreAuthorize("#username == principal.username")
     @PostMapping
     public ResponseEntity<String> insertBookshelf(@PathVariable String username, @RequestBody BookShelfCreationDTO bookshelf){
         try {
@@ -48,6 +49,7 @@ public class BookshelfController {
         }
     }
 
+    @PreAuthorize("#username == principal.username")
     @PutMapping
     public ResponseEntity<String> updateBookshelf(@PathVariable String username, @RequestBody BookShelfCreationDTO bookshelf){
         try {
@@ -58,6 +60,7 @@ public class BookshelfController {
         }
     }
 
+    @PreAuthorize("#username == principal.username")
     @DeleteMapping
     public ResponseEntity<String> deleteBookshelf(@PathVariable String username, @RequestParam String bookshelfName){
         try{
@@ -70,6 +73,7 @@ public class BookshelfController {
         }
     }
 
+    @PreAuthorize("#username == principal.username")
     @GetMapping("/{name}")
     public ResponseEntity<Set<PersonalBookDTO>> getBooks(@PathVariable String username, @PathVariable String name){
         try{
@@ -79,6 +83,7 @@ public class BookshelfController {
         }
     }
 
+    @PreAuthorize("#username == principal.username")
     @PostMapping("/{name}")
     public ResponseEntity<String> insertBook(@PathVariable String name, @PathVariable String username, @RequestBody PersonalBookDTO book){
         try{
@@ -91,6 +96,7 @@ public class BookshelfController {
         }
     }
 
+    @PreAuthorize("#username == principal.username")
     @DeleteMapping("/{name}")
     public ResponseEntity<Void> deleteBook(@PathVariable String name, @PathVariable String username, @RequestParam String isbn){
         try{
