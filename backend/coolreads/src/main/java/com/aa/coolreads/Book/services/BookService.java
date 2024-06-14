@@ -19,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -28,8 +27,6 @@ import java.util.stream.Collectors;
 @Service
 public class BookService {
     private final BookRepository bookRepository;
-
-    private final BookReviewRepository bookReviewRepository;
 
     private final BookRatingRepository bookRatingRepository;
 
@@ -42,9 +39,8 @@ public class BookService {
     private final FullBookMapper bookMapper;
 
     @Autowired
-    public BookService(BookRepository bookRepository, BookReviewRepository bookReviewRepository, BookRatingRepository bookRatingRepository, PublisherRepository publisherRepository, GenreRepository genreRepository, CustomerRepository customerRepository, FullBookMapper fullBookMapper) {
+    public BookService(BookRepository bookRepository, BookRatingRepository bookRatingRepository, PublisherRepository publisherRepository, GenreRepository genreRepository, CustomerRepository customerRepository, FullBookMapper fullBookMapper) {
         this.bookRepository = bookRepository;
-        this.bookReviewRepository = bookReviewRepository;
         this.bookRatingRepository = bookRatingRepository;
         this.publisherRepository = publisherRepository;
         this.genreRepository = genreRepository;
@@ -154,64 +150,6 @@ public class BookService {
     private void checkIfValidRating(Double rating) throws InvalidRatingException {
         if (rating == null || rating < 0.5 || rating > 5.0 || rating % 0.5 != 0)
             throw new InvalidRatingException(rating);
-    }
-
-    @Transactional
-    public Set<BookReviewDTO> getReviews(String isbn, Integer pageNumber, Integer pageSize) {
-
-        PageRequest pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Review> reviewsPage = this.bookReviewRepository.findByIsbn(isbn, pageable);
-
-        return reviewsPage.get().map(review -> {
-            BookReviewDTO bookReviewDTO = this.bookMapper.toBookReviewDTO(review, this.bookReviewRepository.getReviewCommentSize(review));
-            Optional<Double> rating = this.bookRatingRepository.findByBookIsbnAndUsername(isbn, bookReviewDTO.getCustomerUsername());
-            rating.ifPresent(bookReviewDTO::setRating);
-            return bookReviewDTO;
-        }).collect(Collectors.toSet());
-    }
-
-    @Transactional
-    public Set<BookReviewCommentDTO> getReviewComments(String isbn, String review_username, Integer pageNumber, Integer pageSize){
-
-        PageRequest pageable = PageRequest.of(pageNumber, pageSize);
-        Page<ReviewComment> commentsPage = this.bookReviewRepository.findCommentByReview(isbn, review_username, pageable);
-
-        return commentsPage.get().map(this.bookMapper::toReviewCommentDTO).collect(Collectors.toSet());
-    }
-
-    @Transactional
-    public void insertReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException{
-
-        Book book = findBookByIsbn(isbn);
-
-        Customer customer = findCustomerByUsername(username);
-
-        this.bookReviewRepository.save(this.bookMapper.toReview(simpleReviewDTO, customer, book));
-    }
-
-    @Transactional
-    public void updateReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException, ReviewNotFoundException, InsufficientReviewParametersException {
-        Book book = findBookByIsbn(isbn);
-        Customer customer = findCustomerByUsername(username);
-
-        Review review = this.bookReviewRepository.findById(new ReviewId(customer.getUsername(), book.getIsbn())).orElseThrow(() -> new ReviewNotFoundException(isbn, username));
-
-        String description = simpleReviewDTO.getDescription();
-        Date postDate = simpleReviewDTO.getPostDate();
-        if(description==null || postDate==null)
-            throw new InsufficientReviewParametersException(description, postDate);
-
-        review.setDescription(description);
-        review.setPostDate(postDate);
-        this.bookReviewRepository.save(review);
-    }
-
-    @Transactional
-    public void deleteReview(String isbn, String username) throws CustomerNotFoundException, BookNotFoundException {
-        findBookByIsbn(isbn);
-        findCustomerByUsername(username);
-
-        this.bookReviewRepository.deleteById(new ReviewId(username, isbn));
     }
 
     @Transactional

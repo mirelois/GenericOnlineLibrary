@@ -50,68 +50,6 @@ public class BookController {
         }
     }
 
-    @GetMapping("/{isbn}/review")
-    public Set<BookReviewDTO> getReview(@PathVariable String isbn, @RequestParam Integer page, @RequestParam Integer size){
-        return this.bookService.getReviews(isbn, page, size);
-    }
-
-    @PostMapping("/{isbn}/review")
-    public void insertReview(@PathVariable String isbn, @RequestParam String username, @RequestBody SimpleReviewDTO simpleReviewDTO){
-        try{
-            this.bookService.insertReview(isbn, username, simpleReviewDTO);
-        } catch (BookNotFoundException | CustomerNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
-
-    @PatchMapping("/{isbn}/review")
-    public void updateReview(@PathVariable String isbn, @RequestParam String username, @RequestBody SimpleReviewDTO simpleReviewDTO){
-        try{
-            this.bookService.updateReview(isbn, username, simpleReviewDTO);
-        } catch (BookNotFoundException | CustomerNotFoundException | ReviewNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch (InsufficientReviewParametersException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
-    }
-
-    @DeleteMapping("/{isbn}/review")
-    public void deleteReview(@PathVariable String isbn, @RequestParam String username){
-        try{
-            this.bookService.deleteReview(isbn, username);
-        } catch (BookNotFoundException | CustomerNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
-
-    /*
-    @GetMapping("/{isbn}/review/like")
-    public void getLike(@PathVariable String isbn, @RequestParam String username){
-
-    }
-
-    @PostMapping("/{isbn}/review/like")
-    public void insertLike(@PathVariable String isbn, @RequestParam String username, @RequestBody String likeType){
-
-    }
-
-    @PatchMapping("/{isbn}/review/like")
-    public void updateLike(@PathVariable String isbn, @RequestParam String username, @RequestBody String likeType){
-
-    }
-
-    @DeleteMapping("/{isbn}/review/like")
-    public void deleteLike(@PathVariable String isbn, @RequestParam String username){
-
-    }
-
-     */
-
-    @GetMapping("/{isbn}/review/comment")
-    public Set<BookReviewCommentDTO> getReviewComment(@PathVariable String isbn, @RequestParam String review_username, @RequestParam Integer page, @RequestParam Integer size){
-        return this.bookService.getReviewComments(isbn, review_username, page, size);
-    }
-
     @GetMapping("/{isbn}/rate")
     public RatingDTO getBookRating(@PathVariable String isbn, @RequestParam String username){
         try {

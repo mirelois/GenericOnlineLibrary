@@ -4,6 +4,7 @@ import com.aa.coolreads.Book.dto.BookDTO;
 import com.aa.coolreads.Book.dto.FullBookDTO;
 import com.aa.coolreads.Book.dto.SimpleReviewDTO;
 import com.aa.coolreads.Book.exception.*;
+import com.aa.coolreads.Book.services.BookReviewService;
 import com.aa.coolreads.Book.services.BookService;
 import com.aa.coolreads.User.dto.NotificationCreationDTO;
 import com.aa.coolreads.User.dto.NotificationDTO;
@@ -27,6 +28,10 @@ class CoolreadsApplicationTests {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private BookReviewService bookReviewService;
+
     @Autowired
     private NotificationService notificationService;
 
@@ -130,7 +135,7 @@ class CoolreadsApplicationTests {
         );
 
         try {
-            bookService.insertReview(
+            bookReviewService.insertReview(
                     "978-3-16-148410-0",
                     "techguru",
                     reviewDTO
