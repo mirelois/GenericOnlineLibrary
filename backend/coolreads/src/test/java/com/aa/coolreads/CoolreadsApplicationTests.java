@@ -6,6 +6,7 @@ import com.aa.coolreads.Book.dto.SimpleReviewDTO;
 import com.aa.coolreads.Book.exception.*;
 import com.aa.coolreads.Book.services.BookReviewService;
 import com.aa.coolreads.Book.services.BookService;
+import com.aa.coolreads.Book.services.StatisticService;
 import com.aa.coolreads.User.dto.NotificationCreationDTO;
 import com.aa.coolreads.User.dto.NotificationDTO;
 import com.aa.coolreads.User.dto.PostCreationDTO;
@@ -34,6 +35,9 @@ class CoolreadsApplicationTests {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private StatisticService statisticService;
 
     @Test
 	void contextLoads() {
@@ -228,6 +232,15 @@ class CoolreadsApplicationTests {
         Set<NotificationDTO> notifications = notificationService.getNotificationsByUserName("techguru", 0, 10);
 
         assert notifications.isEmpty();
+
+    }
+
+    //-----------------Statistics tests----------------------
+
+    @Test
+    void testStatisticsNumber(){
+
+        statisticService.getStatisticsNumbers()
 
     }
 

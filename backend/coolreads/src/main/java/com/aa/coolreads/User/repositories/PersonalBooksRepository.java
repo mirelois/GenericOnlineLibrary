@@ -41,9 +41,9 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
     with ages as (
     select customer.username, extract('YEAR' from AGE(CURRENT_DATE, customer.birth_date)) as age
     from personal_book
-    inner join bookshelf on bookshelf.name = 'bookshelf1'
+    inner join bookshelf on bookshelf.name = :bookshelf
     inner join customer on bookshelf.customer_username = customer.username
-    where book_isbn = '1')
+    where book_isbn = :isbn)
     select ageClass, amount
     from ageRange
     inner join (
