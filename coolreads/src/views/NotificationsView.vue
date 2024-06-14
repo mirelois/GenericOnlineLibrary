@@ -1,28 +1,43 @@
+<script setup>
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+
+const store = useStore();
+
+const translations = computed(() => store.getters['language/currentTranslations']);
+const setLanguage = (language) => store.dispatch('language/setLanguage', language);
+const selectedLanguage = computed(() => store.state.language.selectedLanguage);
+
+if (localStorage.getItem('selectedLanguage')) {
+    setLanguage(localStorage.getItem('selectedLanguage'));
+}
+</script>
+
 <template>
-  <div>
-    <div class="notificationspage-child"></div>
-    <b class="all-notifications">All Notifications</b>
-    <div class="notification2all">
-      <div v-for="notification in notifications" :key="notification.id" class="notification">
-        <img class="clock-icon" alt="" src="/img/clock.svg">
-        <b class="time">{{ notification.time }}</b>
-        <b class="message">{{ notification.message }}</b>
-        <button @click="handleDelete(notification.id)">Delete</button>
+      <div>
+        <div class="notificationspage-child"></div>
+        <b class="all-notifications">{{ translations.allnotifications }}</b>
+        <div class="notification2all">
+          <div v-for="notification in notifications" :key="notification.id" class="notification">
+            <img class="clock-icon" alt="" src="/img/clock.svg">
+            <b class="time">{{ notification.time }}</b>
+            <b class="message">{{ notification.message }}</b>
+            <button @click="handleDelete(notification.id)">{{ translations.delete }}</button>
+          </div>
+        </div>
+        <NavComponent></NavComponent>
       </div>
-    </div>
-    <NavComponent></NavComponent>
-  </div>
 </template>
+
 
 <script>
 import { mapState } from 'vuex';
 import NavComponent from '../components/NavComponent.vue';
 import FooterComponent from '../components/FooterComponent.vue';
-
 export default {
   components: {
     NavComponent,
-    FooterComponent
+    FooterComponent,
   },
   data() {
     return {
