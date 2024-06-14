@@ -34,7 +34,7 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
     @Query(value = "SELECT COUNT(*) FROM PersonalBook pb WHERE pb.bookshelf.name = :bookshelf AND pb.book.isbn = :isbn")
     Integer getBooksSizeByBookShelfName(String bookshelf, String isbn);
 
-    @Query(value = "SELECT pb.bookshelf.customer.country, COUNT(*) FROM PersonalBook pb WHERE pb.bookshelf.name = :bookshelf AND pb.book.isbn = :isbn GROUP BY pb.bookshelf.customer.country")
+    @Query(value = "SELECT pb.bookshelf.customer.profileDetails.birthDate, COUNT(*) FROM PersonalBook pb WHERE pb.bookshelf.name = :bookshelf AND pb.book.isbn = :isbn GROUP BY pb.bookshelf.customer.profileDetails.country")
     List<SliceDTO> getCountrySlicesByBookshelfName(String bookshelf, String isbn);
 
     @Query(nativeQuery = true, value = """
@@ -53,9 +53,9 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
     )
     on ageRange.id=bucket
     """)
-    List<Integer> getAgesByBookshelfName(String bookshelf, String isbn);
+    List<SliceDTO> getAgesByBookshelfName(String bookshelf, String isbn);
 
-    @Query(value = "select pb.bookshelf.customer.gender, count(*) from PersonalBook pb where pb.bookshelf.name = :bookshelf and pb.book.isbn = :isbn group by pb.bookshelf.customer.gender")
+    @Query(value = "select pb.bookshelf.customer.profileDetails.gender, count(*) from PersonalBook pb where pb.bookshelf.name = :bookshelf and pb.book.isbn = :isbn group by pb.bookshelf.customer.profileDetails.gender")
     List<SliceDTO> getGenderSlicesByBookshelfName(String bookshelf, String isbn);
 
     //@Query(value = "SELECT count(*) from PersonalBook pb where pb.bookshelf.name = :bookshelf and pb.book.isbn = :isbn")

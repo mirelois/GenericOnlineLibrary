@@ -46,46 +46,12 @@ public class StatisticService {
         return new StatisticsPieChartDTO(slices);
     }
 
-    private String processAge(Integer age) {
-        if (age >= 0 && age < 13) {
-            return "child";
-        }else if (age >= 13 && age < 18) {
-            return "teen";
-        }else if (age >= 18 && age < 30) {
-            return "young_adult";
-        }else if (age >= 30 && age < 60) {
-            return "adult";
-        }else if (age >= 60) {
-            return "elder";
-        }else{
-            throw new IllegalArgumentException("Invalid age");
-        }
-    }
-
-    private StatisticsPieChartDTO processAges(List<Integer> ages) {
-
-        Map<String, Integer> amountMap = new HashMap<>();
-        String ageClass;
-
-        for (Integer age : ages) {
-            ageClass = processAge(age);
-            if (amountMap.containsKey(ageClass)) {
-                amountMap.put(ageClass, amountMap.get(ageClass) + 1);
-            }else{
-                amountMap.put(ageClass, 1);
-            }
-        }
-
-        return statisticsMapper.toStatisticsPieChartDTO(amountMap);
-
-    }
-
     @Transactional
     public StatisticsPieChartDTO getStatisticsAgePieChart(DefaultBookshelf bookshelf, String isbn) {
 
-        List<Integer> ages = this.personalBooksRepository.getAgesByBookshelfName(bookshelf.name(), isbn);
+        List<SliceDTO> slices = this.personalBooksRepository.getAgesByBookshelfName(bookshelf.name(), isbn);
 
-        return processAges(ages);
+        return new StatisticsPieChartDTO(slices);
     }
 
     @Transactional
