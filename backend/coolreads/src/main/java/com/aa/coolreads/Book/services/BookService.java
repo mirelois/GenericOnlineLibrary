@@ -119,6 +119,18 @@ public class BookService {
         return books.stream().map(this.bookMapper::toBookDTO).collect(Collectors.toSet());
     }
 
+    @Cacheable(value = "booksByGenre", key = "#genre")
+    @Transactional
+    public Set<BookDTO> findBooksByGenre(String genre) throws GenresNotFoundException {
+        Set<String> genres = new HashSet<>();
+        genres.add(genre);
+        this.genreRepository.findById(genre).orElseThrow(() -> new GenresNotFoundException(genres));
+
+        PageRequest pageable = PageRequest.of(0, 5);
+        Page<Book> books =  this.bookRepository.findBooksByGenre(genre,pageable);
+        return books.stream().map(this.bookMapper::toBookDTO).collect(Collectors.toSet());
+    }
+
 
     private void checkIfValidISBN(String isbn) throws InvalidISBNExeption {
 

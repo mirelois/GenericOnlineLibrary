@@ -1,7 +1,6 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import NavComponent from '../components/NavComponent.vue';
-import FooterComponent from '../components/FooterComponent.vue';
 import ChangePasswordComponent from '../components/ChangePasswordComponent.vue';
 
 </script>
@@ -19,20 +18,31 @@ import ChangePasswordComponent from '../components/ChangePasswordComponent.vue';
     </div>
   </div>
   <ChangePasswordComponent v-if="showChangePasswordPopup" @close="closeChangePasswordPopup" />
+  <div class="language-selection">
+      <div class="select-your-prefered">Select your preferred language</div>
+      <div class="language-option" @click="setLanguage('portuguese')" :class="{ selected: selectedLanguage === 'portuguese' }">
+        <img class="flagpt-icon" alt="" src="/img/PT.svg">
+        <div class="language-name">Português</div>
+      </div>
+      <div class="language-option" @click="setLanguage('english')" :class="{ selected: selectedLanguage === 'english' }">
+        <img class="flagus-icon" alt="" src="/img/US.svg">
+        <div class="language-name">English</div>
+      </div>
+    </div>
   <div class="privacy-settings">
-	<div class="public">Public</div>
-	<div class="bookshelf1">BookShelf</div>
-	<div class="friends-only">Friends Only</div>
-	<div class="privacy-settings1">Privacy Settings</div>
-	<div class="private">Private</div>
-	<div class="privacy-settings-child">
-	</div>
-	<div class="privacy-settings-item">
-	</div>
-	<div class="privacy-settings-inner">
-	</div>
-   </div>
-
+    <div class="privacy-settings-title">Default Privacy Settings for Bookshelf</div>
+    <div class="privacy-options">
+      <div class="privacy-option" @click="setPrivacy('public')" :class="{ selected: Bookshelfprivacy === 'public' }">
+        Public
+      </div>
+      <div class="privacy-option" @click="setPrivacy('friends')" :class="{ selected: Bookshelfprivacy === 'friends' }">
+        Friends Only
+      </div>
+      <div class="privacy-option" @click="setPrivacy('private')" :class="{ selected: Bookshelfprivacy === 'private' }">
+        Private
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -45,6 +55,25 @@ function openChangePasswordPopup() {
 function closeChangePasswordPopup() {
   showChangePasswordPopup.value = false;
 }
+
+const Bookshelfprivacy = ref('public');
+
+function setPrivacy(option) {
+  Bookshelfprivacy.value = option;
+}
+
+const selectedLanguage = ref('english');
+
+function setLanguage(language) {
+  selectedLanguage.value = language;
+}
+
+onMounted(() => {
+  if (!['public', 'friends', 'private'].includes(Bookshelfprivacy.value)) {
+    Bookshelfprivacy.value = 'public'; 
+  }
+
+});
 </script>
 <style scoped>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,700&display=swap');
@@ -121,184 +150,120 @@ function closeChangePasswordPopup() {
     overflow: hidden;
   }
 
-  .public {
-    position: absolute;
-    top: 92px;
-    left: 322px;
-  }
+  .privacy-settings-title {
+  margin: 20px;
+  font-size: 24px;
+  text-align: center;
+}
 
-  .bookshelf1 {
-    position: absolute;
-    top: 200px;
-    left: 38px;
-  }
+.privacy-options {
+  flex-direction: column;
+  display: flex;
+  justify-content: space-around;
+}
 
-  .friends-only {
-    position: absolute;
-    top: 92px;
-    left: 447px;
-  }
+.privacy-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
 
-  .privacy-settings1 {
-    position: absolute;
-    top: 33px;
-    left: 314px;
-  }
+.privacy-option:hover {
+  border-color: #fff;
+}
 
+.selected {
+  background-color: #fff;
+  color: #131313;
+}
   .private {
     position: absolute;
     top: 92px;
     left: 640px;
   }
 
-  .privacy-settings-child {
-    position: absolute;
-    top: 200px;
-    left: 340px;
-    border-radius: 4px;
-    background-color: #fff;
-    border: 1.3px solid #fff;
-    box-sizing: border-box;
-    width: 31px;
-    height: 26px;
-  }
-
-  .privacy-settings-item {
-    position: absolute;
-    top: 200px;
-    left: 662px;
-    border-radius: 4px;
-    background-color: #fff;
-    border: 1.3px solid #fff;
-    box-sizing: border-box;
-    width: 31px;
-    height: 26px;
-  }
-
-  .privacy-settings-inner {
-    position: absolute;
-    top: 200px;
-    left: 501px;
-    border-radius: 4px;
-    background-color: #fff;
-    border: 1.3px solid #fff;
-    box-sizing: border-box;
-    width: 31px;
-    height: 26px;
-  }
-
-  .vector-icon {
-    position: absolute;
-    height: 2.32%;
-    width: 1.86%;
-    top: 66.56%;
-    right: 54.78%;
-    bottom: 31.11%;
-    left: 43.35%;
-    max-width: 100%;
-    overflow: hidden;
-    max-height: 100%;
-    mix-blend-mode: normal;
-  }
-
   .privacy-settings {
-	color: #fff;
-	font-size: 21px;
-    position: absolute;
-    top: 1071px;
-    left: 513px;
-    border-radius: 20px;
-    background-color: #131313;
-    width: 805px;
-    height: 314px;
-    overflow: hidden;
-  }
+  color: #fff;
+  font-size: 21px;
+  position: absolute;
+  top: 1071px;
+  left: 513px;
+  border-radius: 20px;
+  background-color: #131313;
+  width: 805px;
+  height: 314px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
 
-  .select-your-prefered {
-    position: absolute;
-    top: 32px;
-    left: 237px;
-  }
+.select-your-prefered {
+  margin: 20px;
+  font-size: 24px;
+  text-align: center;
+}
 
-  .flagpt-icon {
-    position: absolute;
-    top: 91px;
-    left: 40px;
-    width: 77px;
-    height: 52px;
-    overflow: hidden;
-  }
+.language-name {
+  font-size: 20px;
+}
+.flagpt-icon, .flagus-icon {
+  width: 50px;
+  height: 30px;
+  margin-right: 10px;
+}
+.language-selection-child {
+  position: absolute;
+  top: 200px;
+  left: 685px;
+  border-radius: 4px;
+  background-color: #fff;
+  border: 1.3px solid #fff;
+  box-sizing: border-box;
+  width: 31px;
+  height: 26px;
+}
 
-  .portugus {
-    position: absolute;
-    top: 102px;
-    left: 141px;
-  }
-
-  .english {
-    position: absolute;
-    top: 200px;
-    left: 141px;
-  }
-
-  .flagus-icon {
-    position: absolute;
-    top: 189px;
-    left: 40px;
-    width: 78px;
-    height: 52px;
-    overflow: hidden;
-  }
-
-  .language-selection-child {
-    position: absolute;
-    top: 200px;
-    left: 685px;
-    border-radius: 4px;
-    background-color: #fff;
-    border: 1.3px solid #fff;
-    box-sizing: border-box;
-    width: 31px;
-    height: 26px;
-  }
-
-  .language-selection-item {
-    position: absolute;
-    top: 107px;
-    left: 685px;
-    border-radius: 4px;
-    background-color: #fff;
-    border: 1.3px solid #fff;
-    box-sizing: border-box;
-    width: 31px;
-    height: 26px;
-  }
-
-  .vector-icon1 {
-    position: absolute;
-    height: 4.21%;
-    width: 1.86%;
-    top: 73.33%;
-    right: 12.14%;
-    bottom: 22.46%;
-    left: 86%;
-    max-width: 100%;
-    overflow: hidden;
-    max-height: 100%;
-    mix-blend-mode: normal;
-  }
-
+.language-selection-item {
+  position: absolute;
+  top: 107px;
+  left: 685px;
+  border-radius: 4px;
+  background-color: #fff;
+  border: 1.3px solid #fff;
+  box-sizing: border-box;
+  width: 31px;
+  height: 26px;
+}
   .language-selection {
     position: absolute;
     top: 707px;
     left: 513px;
     border-radius: 20px;
+    color: #fff;
     background-color: #131313;
     width: 805px;
     height: 285px;
     overflow: hidden;
   }
+  .language-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
 
+.language-option:hover {
+  border-color: #fff;
+}
   .background {
     position: absolute;
     top: 0px;
@@ -308,69 +273,4 @@ function closeChangePasswordPopup() {
     height: 151px;
   }
 
-  .linearity-gmb {
-    position: absolute;
-    width: 100%;
-    top: calc(50% - 10.55px);
-    left: 0%;
-    line-height: 26px;
-    display: inline-block;
-    height: 21.1px;
-    mix-blend-mode: normal;
-  }
-
-  .footer-ui1 {
-    position: absolute;
-    width: 100%;
-    top: calc(50% + 40.89px);
-    right: 0%;
-    left: 0%;
-    height: 21.1px;
-  }
-
-  .c1 {
-    position: absolute;
-    top: 0px;
-    left: 108px;
-    font-size: 96px;
-    font-family: Inika;
-    color: #c48930;
-    text-align: left;
-    display: inline-block;
-    width: 57px;
-    height: 101.5px;
-  }
-
-  .footer-ui {
-    position: absolute;
-    width: 16.2%;
-    top: calc(50% - 62px);
-    right: 40.69%;
-    left: 43.11%;
-    height: 124px;
-  }
-
-  .footer {
-    position: absolute;
-    top: 3259px;
-    left: -2px;
-    background-color: #fff;
-    width: 1821px;
-    height: 124px;
-    overflow: hidden;
-    font-size: 16px;
-    font-family: Inter;
-  }
-
-  .settingspage {
-    width: 100%;
-    position: relative;
-    background-color: #222831;
-    height: 3383px;
-    overflow: hidden;
-    text-align: center;
-    font-size: 24px;
-    color: #fff;
-    font-family: Inika;
-  }
 </style>
