@@ -13,13 +13,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookReviewRepository extends JpaRepository<Review, ReviewId> {
 
-    /*
-    @Modifying
-    @Query("DELETE FROM Customer ")
-    void deleteReview(Book book, Customer customer);
-
-     */
-
     @Query("SELECT r FROM Review r WHERE r.book.isbn = :isbn")
     Page<Review> findByIsbn(@Param("isbn") String isbn, PageRequest pageable);
 

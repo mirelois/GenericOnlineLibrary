@@ -8,10 +8,7 @@ import com.aa.coolreads.Book.exception.InsufficientReviewParametersException;
 import com.aa.coolreads.Book.exception.ReviewNotFoundException;
 import com.aa.coolreads.Book.mappers.FullBookMapper;
 import com.aa.coolreads.Book.models.*;
-import com.aa.coolreads.Book.repositories.BookRatingRepository;
-import com.aa.coolreads.Book.repositories.BookRepository;
-import com.aa.coolreads.Book.repositories.BookReviewLikeRepository;
-import com.aa.coolreads.Book.repositories.BookReviewRepository;
+import com.aa.coolreads.Book.repositories.*;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.repositories.CustomerRepository;
@@ -34,6 +31,8 @@ public class BookReviewService {
 
     private final BookReviewLikeRepository reviewLikeRepository;
 
+    private final BookReviewCommentRepository bookReviewCommentRepository;
+
     private final BookRatingRepository bookRatingRepository;
 
     private final BookRepository bookRepository;
@@ -43,9 +42,10 @@ public class BookReviewService {
     private final FullBookMapper bookMapper;
 
     @Autowired
-    public BookReviewService(BookReviewRepository bookReviewRepository, BookReviewLikeRepository reviewLikeRepository, BookRatingRepository bookRatingRepository, BookRepository bookRepository, CustomerRepository customerRepository, FullBookMapper bookMapper){
+    public BookReviewService(BookReviewRepository bookReviewRepository, BookReviewLikeRepository reviewLikeRepository, BookReviewCommentRepository bookReviewCommentRepository, BookRatingRepository bookRatingRepository, BookRepository bookRepository, CustomerRepository customerRepository, FullBookMapper bookMapper){
         this.bookReviewRepository = bookReviewRepository;
         this.reviewLikeRepository = reviewLikeRepository;
+        this.bookReviewCommentRepository = bookReviewCommentRepository;
         this.bookRatingRepository = bookRatingRepository;
         this.bookRepository = bookRepository;
         this.customerRepository = customerRepository;
@@ -109,8 +109,7 @@ public class BookReviewService {
     }
 
     @Transactional
-    public void insertLike(String isbn, String review_username, String likeType) throws BookNotFoundException, CustomerNotFoundException, IllegalArgumentException, ReviewNotFoundException {
-        this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
+    public void insertLike(String isbn, String review_username, String likeType) throws CustomerNotFoundException, IllegalArgumentException, ReviewNotFoundException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
         Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
@@ -126,12 +125,29 @@ public class BookReviewService {
     }
 
     @Transactional
-    public void deleteLike(String isbn, String review_username) throws BookNotFoundException, CustomerNotFoundException, ReviewNotFoundException {
-        this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
+    public void deleteLike(String isbn, String review_username) throws CustomerNotFoundException, ReviewNotFoundException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
         Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
 
         this.reviewLikeRepository.deleteById(new ReviewLikeId(customer, review));
+    }
+
+    @Transactional
+    public void insertComment(String isbn, String review_username, String comment) throws CustomerNotFoundException, ReviewNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
+
+        this.bookReviewCommentRepository.save(new ReviewComment(comment, customer, review));
+    }
+
+    @Transactional
+    public void deleteComment(String isbn, String review_username) throws CustomerNotFoundException, ReviewNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
+
+        this.bookReviewCommentRepository.deleteById(new ReviewCommentId(username, new ReviewId(review.getCustomer().getUsername(), review.getBook().getIsbn())));
     }
 }
