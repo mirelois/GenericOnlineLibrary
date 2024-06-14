@@ -1,48 +1,70 @@
+<script setup>
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+
+const store = useStore();
+
+const translations = computed(() => store.getters['language/currentTranslations']);
+const setLanguage = (language) => store.dispatch('language/setLanguage', language);
+const selectedLanguage = computed(() => store.state.language.selectedLanguage);
+
+if (localStorage.getItem('selectedLanguage')) {
+    setLanguage(localStorage.getItem('selectedLanguage'));
+}
+</script>
 <template>
     <main>
         <div class="navegador">
-            <div class="logo"><div class="text-wrapper">C</div></div>
-            <div  v-if="username!==''" class="profile-section" @click="openProfile" id="profileSectionContainer"  v-bind:style="{ 'background-color': computedColor }">
+            <div class="logo">
+                <div class="text-wrapper">C</div>
+            </div>
+            <div v-if="username !== ''" class="profile-section" @click="openProfile" id="profileSectionContainer" :style="{ 'background-color': computedColor }">
                 <img class="vuesaxoutlineframe-icon" alt="" src="/img/frame.svg">
                 <img class="chevron-icon" alt="" src="/img/Chevron.svg">
-                <div v-if="username!==''"class="c">{{username}}</div>
-                <div v-if="username===''"class="c">Profile</div>
+                <div v-if="username !== ''" class="c">{{ username }}</div>
+                <div v-if="username === ''" class="c">{{ translations.profile }}</div>
             </div>
-            <div v-if="isProfileOpen===true && username!=''" tabindex="0" class="dropdown-profile">
+            <div v-if="isProfileOpen && username !== ''" tabindex="0" class="dropdown-profile">
                 <div class="viewprofileoption" id="viewProfileOptionContainer">
-                    <a href="/profile">View Profile<div class="view-profile"><a></a></div></a>
+                    <a href="/profile">{{ translations.viewProfile }}<div class="view-profile"></div></a>
                 </div>
                 <div class="signoutoption" id="signoutOptionContainer">
-                <div class="view-profile"><a>Sign Out</a></div>
+                    <div class="view-profile"><a @click="handle_logout">Sign Out</a></div>
                 </div>
-            </div>  
-            <a href="/settings"><div div v-if="username!==''" class="settings-section">
-                <img class="settings" src="/img/settings.svg"/>Settings    
-            </div></a>
-            <a href="/"><div class="home-section">
-                <img class="vuesax-outline-home" src="/img/home-2.svg"/>Home
-            </div></a>
+            </div>
+            <a href="/settings">
+                <div v-if="username !== ''" class="settings-section">
+                    <img class="settings" src="/img/settings.svg"/> {{ translations.settings }}
+                </div>
+            </a>
+            <a href="/">
+                <div class="home-section">
+                    <img class="vuesax-outline-home" src="/img/home-2.svg"/> {{ translations.home }}
+                </div>
+            </a>
             <div>
-                <input type="text" v-model="inputtxt" class="my-search-box" placeholder="Search for books, readers and writers . . ." name="search">
-                <div v-if="inputtxt!=''" id="myDropdown" class="dropdown-content">
-                    <div class="txtinserted">Results for: {{textInserted}}</div>
-                    <div class="myresult" v-for="result in results">
-                        <a :href="`/books/${result.isbn}`" :key="result.isbn">{{result.title}}<img :src="result.imageUrl" class="result-img" width="30px" height="50px" /></a>
+                <input type="text" v-model="inputtxt" class="my-search-box" :placeholder="translations.searchPlaceholder" name="search">
+                <div v-if="inputtxt !== ''" id="myDropdown" class="dropdown-content">
+                    <div class="txtinserted">{{ translations.resultsFor }}: {{ textInserted }}</div>
+                    <div class="myresult" v-for="result in results" :key="result.isbn">
+                        <a :href="`/books/${result.isbn}`">{{ result.title }}<img :src="result.imageUrl" class="result-img" width="30px" height="50px" /></a>
                     </div>
                 </div>
             </div>
-            <a href="/bookmenu"><div class="books-section">
-                <img class="book-light" src="/img/Book_light.svg"/>Books
-            </div></a>
-            <div v-if="username!==''" class="notifications-section" @click="openNotifications" id="notificationsSectionContainer">
+            <a href="/bookmenu">
+                <div class="books-section">
+                    <img class="book-light" src="/img/Book_light.svg"/> {{ translations.books }}
+                </div>
+            </a>
+            <div v-if="username !== ''" class="notifications-section" @click="openNotifications" id="notificationsSectionContainer">
                 <img class="bell-light" alt="" src="/img/Bell_light.svg">
-                <div class="notifications-text">Notifications</div>
+                <div class="notifications-text">{{ translations.notifications }}</div>
             </div>
-            <div v-if="isNotificationsOpen==true" tabindex="0" class="dropdown-notifications">
+            <div v-if="isNotificationsOpen" tabindex="0" class="dropdown-notifications">
                 <div class="notification1">
                     <b class="marlena">
                         <span>Marlena</span>
-                        <span class="span">  </span>
+                        <span class="span"> </span>
                     </b>
                     <div class="liked-your-review">Liked your review of Soul by Olivia Wilson.</div>
                     <div class="min">15min</div>
@@ -53,14 +75,14 @@
                     <div class="min">1h</div>
                 </div>
                 <div class="notification11" id="notification1Container1">
-                    <div class="view-all"><a href="/notifications">View All</a></div>
+                    <div class="view-all"><a href="/notifications">{{ translations.viewAll }}</a></div>
                 </div>
             </div>
             <a href="/bookshelves/all">
-                <div v-if="username!==''" class="bookshelf-section">
+                <div v-if="username !== ''" class="bookshelf-section">
                     <img class="icon" alt="" src="/img/bookshelf.svg">
-                    <div class="c">Bookshelf</div>
-                </div> 
+                    <div class="c">{{ translations.bookshelf }}</div>
+                </div>
             </a>
             <button v-if="username!==''" @click="handle_logout()" class="authbtn1">Logout</button>
             <div>
@@ -70,6 +92,7 @@
         </div>
     </main>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -148,6 +171,7 @@ export default {
             this.getResults();
         }
     }
+    
 }
 </script>
 

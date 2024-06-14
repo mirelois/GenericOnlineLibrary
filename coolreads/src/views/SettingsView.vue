@@ -1,52 +1,24 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
 import NavComponent from '../components/NavComponent.vue';
 import ChangePasswordComponent from '../components/ChangePasswordComponent.vue';
 
-</script>
-
-<template>
-<NavComponent></NavComponent>
-  <div class="account-info">
-    <div class="email">Email: </div>
-    <div class="password">Password: </div>
-    <div class="goodreadsuser1gmailcom">Goodreadsuser1@gmail.com</div>
-    <div class="changepassword" @click="openChangePasswordPopup">
-      <div class="changepassword-child">
-        <div class="change-password-text">Change Password</div>
-      </div>
-    </div>
-  </div>
-  <ChangePasswordComponent v-if="showChangePasswordPopup" @close="closeChangePasswordPopup" />
-  <div class="language-selection">
-      <div class="select-your-prefered">Select your preferred language</div>
-      <div class="language-option" @click="setLanguage('portuguese')" :class="{ selected: selectedLanguage === 'portuguese' }">
-        <img class="flagpt-icon" alt="" src="/img/PT.svg">
-        <div class="language-name">Português</div>
-      </div>
-      <div class="language-option" @click="setLanguage('english')" :class="{ selected: selectedLanguage === 'english' }">
-        <img class="flagus-icon" alt="" src="/img/US.svg">
-        <div class="language-name">English</div>
-      </div>
-    </div>
-  <div class="privacy-settings">
-    <div class="privacy-settings-title">Default Privacy Settings for Bookshelf</div>
-    <div class="privacy-options">
-      <div class="privacy-option" @click="setPrivacy('public')" :class="{ selected: Bookshelfprivacy === 'public' }">
-        Public
-      </div>
-      <div class="privacy-option" @click="setPrivacy('friends')" :class="{ selected: Bookshelfprivacy === 'friends' }">
-        Friends Only
-      </div>
-      <div class="privacy-option" @click="setPrivacy('private')" :class="{ selected: Bookshelfprivacy === 'private' }">
-        Private
-      </div>
-    </div>
-  </div>
-</template>
-
-<script>
 const showChangePasswordPopup = ref(false);
+const Bookshelfprivacy = ref('public');
+
+const store = useStore();
+
+const translations = computed(() => store.getters['language/currentTranslations']);
+const selectedLanguage = computed(() => store.state.language.selectedLanguage);
+
+function setLanguage(language) {
+  store.dispatch('language/setLanguage', language);
+}
+
+function setPrivacy(option) {
+  Bookshelfprivacy.value = option;
+}
 
 function openChangePasswordPopup() {
   showChangePasswordPopup.value = true;
@@ -55,26 +27,49 @@ function openChangePasswordPopup() {
 function closeChangePasswordPopup() {
   showChangePasswordPopup.value = false;
 }
-
-const Bookshelfprivacy = ref('public');
-
-function setPrivacy(option) {
-  Bookshelfprivacy.value = option;
-}
-
-const selectedLanguage = ref('english');
-
-function setLanguage(language) {
-  selectedLanguage.value = language;
-}
-
-onMounted(() => {
-  if (!['public', 'friends', 'private'].includes(Bookshelfprivacy.value)) {
-    Bookshelfprivacy.value = 'public'; 
-  }
-
-});
 </script>
+
+<template>
+  <NavComponent />
+  <div class="account-info">
+    <div class="email">{{ translations.email }}</div>
+    <div class="password">{{ translations.password }}</div>
+    <div class="goodreadsuser1gmailcom">Goodreadsuser1@gmail.com</div>
+    <div class="changepassword" @click="openChangePasswordPopup">
+      <div class="changepassword-child">
+        <div class="change-password-text">{{ translations.changePassword }}</div>
+      </div>
+    </div>
+  </div>
+  <ChangePasswordComponent v-if="showChangePasswordPopup" @close="closeChangePasswordPopup" />
+  <div class="language-selection">
+    <div class="select-your-prefered">{{ translations.selectLanguage }}</div>
+    <div class="language-option" @click="setLanguage('portuguese')" :class="{ selected: selectedLanguage === 'portuguese' }">
+      <img class="flagpt-icon" alt="" src="/img/PT.svg">
+      <div class="language-name">Português</div>
+    </div>
+    <div class="language-option" @click="setLanguage('english')" :class="{ selected: selectedLanguage === 'english' }">
+      <img class="flagus-icon" alt="" src="/img/US.svg">
+      <div class="language-name">English</div>
+    </div>
+  </div>
+  <div class="privacy-settings">
+    <div class="privacy-settings-title">{{ translations.privacyTitle }}</div>
+    <div class="privacy-options">
+      <div class="privacy-option" @click="setPrivacy('public')" :class="{ selected: Bookshelfprivacy === 'public' }">
+        {{ translations.public }}
+      </div>
+      <div class="privacy-option" @click="setPrivacy('friends')" :class="{ selected: Bookshelfprivacy === 'friends' }">
+        {{ translations.friends }}
+      </div>
+      <div class="privacy-option" @click="setPrivacy('private')" :class="{ selected: Bookshelfprivacy === 'private' }">
+        {{ translations.private }}
+      </div>
+    </div>
+  </div>
+</template>
+
+
 <style scoped>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,700&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Inika:wght@400&display=swap');
