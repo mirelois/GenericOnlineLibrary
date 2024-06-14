@@ -47,23 +47,29 @@ import Rating from 'primevue/rating';
 	<div v-bind:style="{ 'color': reviewcolor, 'font-weight': reviewfont }" @click="changeTabStyle(`Reviews`)" class="reviews-title">Reviews 
 			<img class="line-icon" alt="" src="/img/line.svg"> 
 			<div v-if="activeTab=='Reviews'">
-			<MyReviewComponent @newpost="getReviews(this.isbn)" :username="username" :profileImg="profileImg" :isbn="isbn"></MyReviewComponent>
+			<MyReviewComponent :canInteract="can_interact" @newpost="getReviews(this.isbn,1)" :username="username" :profileImg="profileImg" :isbn="isbn"></MyReviewComponent>
 			<div class="review-div" v-for="review in reviews" v-if="!review">
-					<ReviewComponent :likesCount="review.likes" :emojiIds="review.emojiIds" :reviewRate="review.rating" :reviewDescription="review.description"
+					<ReviewComponent :canInteract="can_interact" :isbn="isbn" :marginReviewBottom="marginReviewBottom" @expandHeight="increaseHeight" :likesCount="review.likes" :emojiIds="review.emojiIds" :reviewRate="review.rating" :reviewDescription="review.description"
 					:imageReviewer="review.customerUrl" :usernameReviewer="review.customerUsername"></ReviewComponent>					
 			</div>
 			<div v-show="showLoading==true">
 					<img alt="" width="30px" height="30px" src="/img/kOnzy.gif">
 				</div>
-			<div v-if="showMoretxt==true" @click="getMoreReviews" class="loadtxt">Load More Reviews
+			<div v-if="showMoretxt==true" :style="{'margin-top':loadtxt_margintop}" @click="getMoreReviews" class="loadtxt">Load More Reviews
 			</div>
 			</div>
     		</div>
 	<div v-bind:style="{ 'color': authorcolor, 'font-weight': authorfont }" @click="changeTabStyle(`Author`)" class="author-title">Author 
 			<div class="author-content" v-if="activeTab=='Author'">
-				<br>Author: {{ author }}</br>
+				<img :src="authorImage" class="authorImage"/>
+				<br>Author: {{ authorName }}</br>
 				<br>Publisher: {{ publisher }}</br>
 				<br>Launch Date: {{ launchDate }}</br>
+			</div>
+    		</div>
+	<div v-bind:style="{ 'color': statisticscolor, 'font-weight': statisticsfont }" @click="changeTabStyle(`Statistics`)" class="statistics-title">Statistics 
+			<div class="author-content" v-if="activeTab=='Statistics'">
+				<br>Stats</br>
 			</div>
     		</div>
 	</div>
@@ -92,6 +98,8 @@ export default {
 			reviewfont: "bold",
 			authorcolor: "#5d5d5e",
 			authorfont: "normal",
+			statisticscolor: "#5d5d5e",
+			statisticsfont: "normal",
 			activeTab:"Reviews",
 			stateSelected:"Want To Read",
 			ratingAverage:0.0,
@@ -106,7 +114,12 @@ export default {
 			showMoretxt:true,
 			showConfirm:false,
 			showAddtoBookshelf:false,
-			confirm_msg:'Are you sure you want to add the book to Want to Read ?'
+			confirm_msg:'Are you sure you want to add the book to Want to Read ?',
+			loadtxt_margintop:"20px",
+			marginReviewBottom:"10px",
+			can_interact:true,
+			authorName:'',
+			authorImage:''
 		}
 	},
 	components: {
@@ -117,22 +130,22 @@ export default {
 		ConfirmComponent,
 		AddToBookshelfComponent
     },created(){
+		this.isbn = this.$route.params.bookisbn;
+		this.getBook(this.isbn);
+		this.getReviews(this.isbn,0);
 		const token = localStorage.getItem('user');
 		if (!token || this.$store.state.auth.status.loggedIn===false) {
-			return;
+			this.can_interact=false;
 		}
 		try {
 			const decodedToken = JSON.parse(token);
 			if(decodedToken.info.exp<Date.now()/1000) {
-				this.handle_logout();
+				this.can_interact=false;
 			}
 			this.setUsername(decodedToken.info.sub);
 		} catch (error) {
 			console.error('Error parsing user token:', error);
 		}
-		this.isbn = this.$route.params.bookisbn;
-		this.getBook(this.isbn);
-		this.getReviews(this.isbn);
 	},methods:{
 		getBook(isbn){
 			axios.get("http://localhost:8080/book/"+isbn).then(book =>{
@@ -149,14 +162,19 @@ export default {
 				console.log(err)
 			})
 		},
-		getReviews(isbn){
+		getReviews(isbn,update){
+			if(update==1) this.nrpageReview=0;
 			axios.get("http://localhost:8080/book/"+isbn+"/review?page="+this.nrpageReview+"&size=1").then(review =>{
 				if(review.data.length==0){
 					this.showMoretxt=false;
 					return;
 				}
-				this.reviews= this.reviews.concat(review.data);
-				//else this.reviews = review.data;
+				if(update==0) this.reviews= this.reviews.concat(review.data);
+				else{
+					this.reviews = review.data;
+					console.log("pssst");
+					console.log(review.data);
+				} 
 				let descreview = this.reviews.filter(b=> b.description!="");
 				this.nrreviews = descreview.length;
 				this.nrratings = this.reviews.length;
@@ -170,24 +188,42 @@ export default {
 			})
 		},
 		getMoreReviews(){
+			let h = this.marginReviewBottom.replace('px','');
+            h=parseInt(h)+250+"px";
+            this.marginReviewBottom=h;
+
 			this.nrpageReview = this.nrpageReview + 1;
-			this.getReviews(this.isbn);
+			this.getReviews(this.isbn,0);
 			this.showLoading = false;
 		},
 		changeTabStyle(tab){
 			if(tab=="Author"){
 				this.authorcolor="#ffffff",
-				this.authorfont= "bold"
+				this.authorfont= "bold",
 				this.reviewcolor="#5d5d5e",
-				this.reviewfont= "normal"
+				this.reviewfont= "normal",
+				this.statisticscolor="#5d5d5e",
+				this.statisticsfont= "normal",
 				this.activeTab="Author"
+				this.getAuthorInfo();
 			}
 			if(tab=="Reviews"){
 				this.reviewcolor="#ffffff",
-				this.reviewfont= "bold"
+				this.reviewfont= "bold",
 				this.authorcolor="#5d5d5e",
-				this.authorfont= "normal"
+				this.authorfont= "normal",
+				this.statisticscolor="#5d5d5e",
+				this.statisticsfont= "normal",
 				this.activeTab="Reviews"
+			}
+			if(tab=="Statistics"){
+				this.statisticscolor="#ffffff",
+				this.statisticsfont= "bold",
+				this.authorcolor="#5d5d5e",
+				this.authorfont= "normal",
+				this.reviewcolor="#5d5d5e",
+				this.reviewfont= "normal",
+				this.activeTab="Statistics"
 			}
 		},
 		getBookState(state){
@@ -204,19 +240,19 @@ export default {
 		setUsername(username){
 			this.username=username;
 		},
-		handle_logout(){
-            this.$store.dispatch('auth/logout').then(
-            () => {
-                router.go()
-            },
-            error => {
-              this.message =
-                (error.response && error.response.data && error.response.data.message) ||
-                error.message ||
-                error.toString();
-            }
-      		);
-    	} 
+		increaseHeight(){
+            let h = this.loadtxt_margintop.replace('px','');
+            h=parseInt(h)+300+"px";
+            this.loadtxt_margintop=h;
+		},
+		getAuthorInfo(){
+			axios.get("http://localhost:8080/customer/"+this.author).then(resp=>{
+				this.authorName = resp.data.name;
+				this.authorImage = resp.data.profileImageUrl;
+			}).catch(error=>{
+				console.log(error)
+			})
+		} 
 	}
 
 }
@@ -235,6 +271,10 @@ export default {
 #estrelas{
 	left:30px;
 	top:10px;
+}
+
+.authorImage{
+	border-radius: 50%;
 }
 
 .canva-brown-rusty-mystery-nove-icon {
@@ -461,6 +501,19 @@ export default {
 	position: absolute;
 	top: 1044px;
 	left: 355px;
+	font-size: 32px;
+	font-weight: 600;
+	font-family: 'Open Sans';
+	display: inline-block;
+	width: 238px;
+	height: 61px;
+	cursor:pointer;
+}
+
+.statistics-title{
+	position: absolute;
+	top: 1044px;
+	left: 525px;
 	font-size: 32px;
 	font-weight: 600;
 	font-family: 'Open Sans';

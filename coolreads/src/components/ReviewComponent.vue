@@ -1,6 +1,6 @@
 <template>
 	<main>
-    <div class="my-review">
+    <div :style="{'margin-bottom':marginReviewBottom}" class="my-review">
         <div class="review-box">
         </div>
         <img class="foto-icon" alt="" :src="imageReviewer">
@@ -13,29 +13,40 @@
 		</div>
         <div class="review">{{ reviewDescription }}</div>
 		<EmojiReactionComponent :likes="likesCount" :emojiIds="emojiIds"></EmojiReactionComponent>
-    </div> 
+		<CommentSectionComponent :canInteract="canInteract" :reviewer="usernameReviewer" :isbn="isbn" @comment_opened="expandHeight"></CommentSectionComponent>
+	</div> 
 	</main>
 </template>
 <script>
 import Rating from 'primevue/rating';
 import EmojiReactionComponent from './EmojiReactionComponent.vue';
+import CommentSectionComponent from './CommentSectionComponent.vue';
 export default{
 	props:{
 		reviewRate: 0,
 		reviewDescription: '',
 		imageReviewer:'',
+		isbn:'',
 		usernameReviewer:'',
 		emojiIds:[],
-		likesCount:{}
+		likesCount:{},
+		marginReviewBottom:"10px",
+		canInteract:Boolean
 	},
 	data(){
 		return{
-			bookrate:2
+			bookRate:2
 		}
 	},
 	components: {
 		Rating,
-		EmojiReactionComponent
+		EmojiReactionComponent,
+		CommentSectionComponent
+	},
+	methods:{
+		expandHeight(){
+			this.$emit("expandHeight");
+		}
 	}
 }
 </script>

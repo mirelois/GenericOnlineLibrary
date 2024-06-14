@@ -22,7 +22,8 @@ export default{
 	props:{
 		username:'',
 		isbn:'',
-		profileImg:''
+		profileImg:'',
+		canInteract: Boolean
 	},
 	data(){
 		return{
@@ -32,7 +33,7 @@ export default{
 	},
 	methods:{
 		publishReview(){
-			if(this.username==='') router.push({path:'/signup'})
+			if(this.canInteract===false) this.handle_logout();
 			const headers = {
         		'Content-Type': 'application/json',
 		    };
@@ -73,7 +74,20 @@ export default{
 				console.log("obrigar utilizador a inserir rating");
 				return;
 			} 
-		}
+		},
+		handle_logout(){
+            this.$store.dispatch('auth/logout').then(
+            () => {
+                router.push({path:'/signup'})
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+            }
+      		);
+    	},
 	},
 	components: {
 		Rating
