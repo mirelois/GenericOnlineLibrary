@@ -58,14 +58,13 @@ public class AuthenticationService {
 
         this.mailService.sendAccountCreationMail(registerDTO.getEmail());
 
+        registerDTO.setPassword(this.passwordEncoder.encode(registerDTO.getPassword()));
         Customer customer = this.customerMapper.toCustomer(registerDTO);
+        this.customerRepository.save(customer);
 
         for(DefaultBookshelf bookshelfNameType: DefaultBookshelf.values()){
             this.bookshelfRepository.save(this.bookshelfMapper.toBookshelf(bookshelfNameType.name(), Privacy.PRIVATE, customer));
         }
-
-        registerDTO.setPassword(this.passwordEncoder.encode(registerDTO.getPassword()));
-        this.customerRepository.save(customer);
     }
 
     @Transactional

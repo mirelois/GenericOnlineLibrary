@@ -10,6 +10,7 @@ import com.aa.coolreads.Book.services.BookReviewService;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -60,31 +61,48 @@ public class BookReviewController {
         }
     }
 
-    @GetMapping("/comment")
-    public Set<BookReviewCommentDTO> getReviewComment(@PathVariable String isbn, @RequestParam String review_username, @RequestParam Integer page, @RequestParam Integer size){
+    @GetMapping("/{review_username}/comment")
+    public Set<BookReviewCommentDTO> getReviewComments(@PathVariable String isbn, @PathVariable String review_username, @RequestParam Integer page, @RequestParam Integer size){
         return this.bookReviewService.getReviewComments(isbn, review_username, page, size);
     }
 
-    /*
-    @GetMapping("/{isbn}/review/like")
-    public void getLike(@PathVariable String isbn, @RequestParam String username){
-
+    @PostMapping("/{review_username}/comment")
+    public ResponseEntity<String> insertReviewComment(@PathVariable String isbn, @PathVariable String review_username, @RequestBody String comment){
+        try{
+            this.bookReviewService.insertComment(isbn, review_username, comment);
+            return ResponseEntity.ok().build();
+        } catch (ReviewNotFoundException | CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
-    @PostMapping("/{isbn}/review/like")
-    public void insertLike(@PathVariable String isbn, @RequestParam String username, @RequestBody String likeType){
-
+    @DeleteMapping("/{review_username}/comment")
+    public ResponseEntity<String> deleteReviewComment(@PathVariable String isbn, @PathVariable String review_username){
+        try{
+            this.bookReviewService.deleteComment(isbn, review_username);
+            return ResponseEntity.ok().build();
+        } catch (ReviewNotFoundException | CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
-    @PatchMapping("/{isbn}/review/like")
-    public void updateLike(@PathVariable String isbn, @RequestParam String username, @RequestBody String likeType){
-
+    @PostMapping("/{review_username}/like")
+    public ResponseEntity<String> insertLike(@PathVariable String isbn, @PathVariable String review_username, @RequestBody String likeType){
+        try {
+            this.bookReviewService.insertLike(isbn, review_username, likeType);
+            return ResponseEntity.ok().build();
+        } catch (ReviewNotFoundException | CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
-    @DeleteMapping("/{isbn}/review/like")
-    public void deleteLike(@PathVariable String isbn, @RequestParam String username){
-
+    @DeleteMapping("/{review_username}/like")
+    public ResponseEntity<String> deleteLike(@PathVariable String isbn, @PathVariable String review_username){
+        try{
+            this.bookReviewService.deleteLike(isbn, review_username);
+            return ResponseEntity.ok().build();
+        } catch (ReviewNotFoundException | CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
-
-     */
 }

@@ -7,6 +7,7 @@ import com.aa.coolreads.User.exception.AuthorNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -59,6 +60,7 @@ public class BookController {
         }
     }
 
+    @PreAuthorize("#username == principal.username")
     @PostMapping("/{isbn}/rate")
     public void insertBookRating(@PathVariable String isbn, @RequestParam String username, @RequestParam Double rating){
         try{
@@ -70,6 +72,7 @@ public class BookController {
         }
     }
 
+    @PreAuthorize("#username == principal.username")
     @PatchMapping("/{isbn}/rate")
     public void UpdateBookRating(@PathVariable String isbn, @RequestParam String username, @RequestParam Double rating){
         try{
@@ -81,6 +84,7 @@ public class BookController {
         }
     }
 
+    @PreAuthorize("#username == principal.username")
     @DeleteMapping("/{isbn}/rate")
     public void DeleteBookRating(@PathVariable String isbn, @RequestParam String username){
         try{
