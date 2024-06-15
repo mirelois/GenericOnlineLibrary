@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,7 @@ public class BookReviewService {
         Page<Review> reviewsPage = this.bookReviewRepository.findByIsbn(isbn, pageable);
 
         return reviewsPage.get().map(review -> {
-            BookReviewDTO bookReviewDTO = this.bookMapper.toBookReviewDTO(review, this.bookReviewRepository.getReviewCommentSize(review));
+            BookReviewDTO bookReviewDTO = this.bookMapper.toBookReviewDTO(review, this.bookReviewCommentRepository.getReviewCommentSize(review));
             Optional<Double> rating = this.bookRatingRepository.findByBookIsbnAndUsername(isbn, bookReviewDTO.getCustomerUsername());
             rating.ifPresent(bookReviewDTO::setRating);
             return bookReviewDTO;
@@ -72,12 +73,13 @@ public class BookReviewService {
     }
 
     @Transactional
-    public Set<BookReviewCommentDTO> getReviewComments(String isbn, String review_username, Integer pageNumber, Integer pageSize){
+    public Set<BookReviewCommentDTO> getReviewComments(String isbn, String review_username, Integer pageNumber, Integer pageSize) throws CustomerNotFoundException, BookNotFoundException {
 
-        PageRequest pageable = PageRequest.of(pageNumber, pageSize);
-        Page<ReviewComment> commentsPage = this.bookReviewRepository.findCommentByReview(isbn, review_username, pageable);
+        Customer customer = this.customerRepository.findById(review_username).orElseThrow(() -> new CustomerNotFoundException(review_username));
+        Book book = this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
 
-        System.out.println(commentsPage);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<ReviewComment> commentsPage = this.bookReviewCommentRepository.findCommentByReview(book, customer, pageable);
 
         return commentsPage.get().map(this.bookMapper::toReviewCommentDTO).collect(Collectors.toSet());
     }

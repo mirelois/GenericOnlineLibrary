@@ -63,7 +63,11 @@ public class BookReviewController {
 
     @GetMapping("/{review_username}/comment")
     public Set<BookReviewCommentDTO> getReviewComments(@PathVariable String isbn, @PathVariable String review_username, @RequestParam Integer page, @RequestParam Integer size){
-        return this.bookReviewService.getReviewComments(isbn, review_username, page, size);
+        try {
+            return this.bookReviewService.getReviewComments(isbn, review_username, page, size);
+        } catch (BookNotFoundException | CustomerNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @PostMapping("/{review_username}/comment")
