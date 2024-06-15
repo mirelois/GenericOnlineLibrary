@@ -1,56 +1,80 @@
 <script setup>
 import NavComponent from '../components/NavComponent.vue';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+import router from '../router/index';
+
+const store = useStore();
+const translations = computed(() => store.getters['language/currentTranslations']);
+
+function navigateToCategory(category) {
+    const categoryTranslations = {
+        Adventure: translations.value.adventure,
+        Mystery: translations.value.mystery,
+        Biography: translations.value.biography,
+        'Sci-Fi': translations.value.sciFi,
+        Fantasy: translations.value.fantasy,
+        Music: translations.value.music,
+        Sports: translations.value.sports,
+        Romance: translations.value.romance,
+        Horror: translations.value.horror,
+        Manga: translations.value.manga,
+    };
+    const translatedCategory = categoryTranslations[category] || category;
+    router.push({ name: 'bookCategoria', params: { category: translatedCategory } });
+}
 </script>
+
 <template>
     <main>
-        <b class="order-by">Genres</b>
-        <b class="for-you">For You</b>
+        <b class="order-by">{{ translations.genres }}</b>
+        <b class="for-you">{{ translations.forYou }}</b>
         <div class="allcategories">
             <div class="image-4-parent" @click="navigateToCategory('Adventure')">
             <img class="image-4-icon" alt="" src="/img/aventura.png">
-            <b class="adventure">Adventure</b>
+            <b class="adventure">{{ translations.adventure }}</b>
             </div>
             <div class="image-6-parent" @click="navigateToCategory('Mystery')">
             <img class="image-4-icon" alt="" src="/img/misterio.png">
-            <b class="mystery">Mystery</b>
+            <b class="mystery">{{ translations.mystery }}</b>
             </div>
             <div class="image-5-parent" @click="navigateToCategory('Biography')">
             <img class="image-4-icon" alt="" src="/img/biografia.png">
-            <b class="biography">Biography</b>
+            <b class="biography">{{ translations.biography }}</b>
             </div>
             <div class="image-2-parent" @click="navigateToCategory('Sci-Fi')">
             <img class="image-4-icon" alt="" src="/img/ficcao.png">
-            <b class="sci-fi">Sci-Fi</b>
+            <b class="sci-fi">{{ translations.sciFi }}</b>
             </div>
             <div class="image-3-parent" @click="navigateToCategory('Fantasy')">
             <img class="image-4-icon" alt="" src="/img/fantasia.png">
-            <b class="fantasy">Fantasy</b>
+            <b class="fantasy">{{ translations.fantasy }}</b>
             </div>
             <div class="image-9-parent" @click="navigateToCategory('Music')">
             <img class="image-4-icon" alt="" src="/img/musica.png">
-            <b class="music">Music</b>
+            <b class="music">{{ translations.music }}</b>
             </div>
             <div class="rectangle-parent" @click="navigateToCategory('Sports')">
             <div class="group-child">
             </div>
             <img class="image-4-icon" alt="" src="/img/desporto.png">
-            <b class="sports">Sports</b>
+            <b class="sports">{{ translations.sports }}</b>
             </div>
             <div class="rectangle-group" @click="navigateToCategory('Romance')">
             <div class="group-item">
             </div>
             <img class="image-4-icon" alt="" src="/img/romance.png">
-            <b class="music">Romance</b>
+            <b class="music">{{ translations.romance }}</b>
             </div>
             <div class="rectangle-container" @click="navigateToCategory('Horror')">
             <div class="group-item">
             </div>
             <img class="image-12-icon" alt="" src="/img/terror.png">
-            <b class="horror">Horror</b>
+            <b class="horror">{{ translations.horror }}</b>
             </div>
             <div class="image-7-parent" @click="navigateToCategory('Manga')">
             <img class="image-7-icon" alt="" src="/img/manga.png">
-            <b class="manga">Manga</b>
+            <b class="manga">{{ translations.manga }}</b>
             </div>
         </div>
         <NavComponent :username="username"></NavComponent>

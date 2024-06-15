@@ -1,128 +1,151 @@
-<script setup>
-
-import NavComponent from '../components/NavComponent.vue';
-import FooterComponent from '../components/FooterComponent.vue';
-
-</script>
-
 <template>
-	<div class="body">
-	  <NavComponent></NavComponent>
-	  <b class="category-fantasy">Category - {{ category }}</b>
-	  <input type="text" class="my-search-box" placeholder="Search for books..." />
-	  <div class="sort-component">
-		<div class="listbox-title" @click="showMenu">
-		  <img v-if="showDropdownMenu" class="chevron-icon-d" alt="" src="/img/updroplist.svg">
-		  <img v-if="!showDropdownMenu" class="chevron-icon-d" alt="" src="/img/downdroplist.svg">
-		  <div class="order-by-title">Order By</div>
-		</div>
-		<div class="listbox-main">
-		  <div class="listboxbg"></div>
-		  <div class="placeholder-text">
-			<div class="order-by-placeholder">{{ selectedOption }}</div>
-		  </div>
-		</div>
-		<div v-show="showDropdownMenu" class="clip-list">
-		  <div class="dropdown-list">
-			<div class="item-option-d" @click="sortBooks('Date')">
-			  <div class="item-content">Date</div>
-			</div>
-			<div class="item-option-d" @click="sortBooks('Title')">
-			  <div class="item-content">Title</div>
-			</div>
-			<div class="item-option-d" @click="sortBooks('Rate')">
-			  <div class="item-content">Rate</div>
-			</div>
-		  </div>
-		</div>
-	  </div>
-	  <div class="separator"></div>
-	  <div class="books-search-result">
-		<div class="book-row">
-		  <img class="book-icon" alt="" src="/img/desporto.png">
-		  <img class="book-icon" alt="" src="/img/aventura.png">
-		  <img class="book-icon" alt="" src="/img/misterio.png">
-		  <img class="book-icon" alt="" src="/img/biografia.png">
-		  <img class="book-icon" alt="" src="/img/ficcao.png">
-		</div>
-		<div class="book-row">
-		  <img class="book-icon" alt="" src="/img/fantasia.png">
-		  <img class="book-icon" alt="" src="/img/musica.png">
-		  <img class="book-icon" alt="" src="/img/romance.png">
-		  <img class="book-icon" alt="" src="/img/manga.png">
-		  <img class="book-icon" alt="" src="/img/fantasia.png">
-		</div>
-		<div class="book-row">
-		  <img class="book-icon" alt="" src="/img/manga.png">
-		  <img class="book-icon" alt="" src="/img/terror.png">
-		  <img class="book-icon" alt="" src="/img/manga.png">
-		  <img class="book-icon" alt="" src="/img/romance.png">
-		  <img class="book-icon" alt="" src="/img/musica.png">
-		</div>
-	  </div>
-	  <div class="pagination">
-            <div class="pagination-child">
+    <div class="body">
+        <NavComponent></NavComponent>
+        <b class="category-fantasy">{{ translations.category }} {{ translatedCategory }}</b>
+        <input type="text" class="my-search-box" :placeholder="translations.searchPlaceholderBooks" />
+        <div class="sort-component">
+            <div class="listbox-title" @click="showMenu">
+                <img v-if="showDropdownMenu" class="chevron-icon-d" alt="" src="/img/updroplist.svg">
+                <img v-else class="chevron-icon-d" alt="" src="/img/downdroplist.svg">
+                <div class="order-by-title">{{ translations.orderBy }}</div>
             </div>
-            <div class="div">
-            <div class="parent">
-            <img class="vector-icon" @click="backPage()" alt="" src="/img/back.svg">
-            <div v-for="(n,index) in nrpages" class="div3" :class="activate[n -1]==true? 'child':''">{{n}}</div>
-            <img class="vector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
+            <div class="listbox-main">
+                <div class="listboxbg"></div>
+                <div class="placeholder-text">
+                    <div class="order-by-placeholder">{{ selectedOption }}</div>
+                </div>
             </div>
-            </div>
-            <div class="newfooter">
-                <FooterComponent></FooterComponent>
+            <div v-show="showDropdownMenu" class="clip-list">
+                <div class="dropdown-list">
+                    <div class="item-option-d" @click="sortBooks(translations.date)">
+                        <div class="item-content">{{ translations.date }}</div>
+                    </div>
+                    <div class="item-option-d" @click="sortBooks(translations.title)">
+                        <div class="item-content">{{ translations.title }}</div>
+                    </div>
+                    <div class="item-option-d" @click="sortBooks(translations.rate)">
+                        <div class="item-content">{{ translations.rate }}</div>
+                    </div>
+                </div>
             </div>
         </div>
-	</div>
-  </template>
-  
+        <div class="separator"></div>
+        <div class="books-search-result">
+            <div class="book-row">
+                <img class="book-icon" alt="" src="/img/desporto.png">
+                <img class="book-icon" alt="" src="/img/aventura.png">
+                <img class="book-icon" alt="" src="/img/misterio.png">
+                <img class="book-icon" alt="" src="/img/biografia.png">
+                <img class="book-icon" alt="" src="/img/ficcao.png">
+            </div>
+            <div class="book-row">
+                <img class="book-icon" alt="" src="/img/fantasia.png">
+                <img class="book-icon" alt="" src="/img/musica.png">
+                <img class="book-icon" alt="" src="/img/romance.png">
+                <img class="book-icon" alt="" src="/img/manga.png">
+                <img class="book-icon" alt="" src="/img/fantasia.png">
+            </div>
+            <div class="book-row">
+                <img class="book-icon" alt="" src="/img/manga.png">
+                <img class="book-icon" alt="" src="/img/terror.png">
+                <img class="book-icon" alt="" src="/img/manga.png">
+                <img class="book-icon" alt="" src="/img/romance.png">
+                <img class="book-icon" alt="" src="/img/musica.png">
+            </div>
+        </div>
+        <div class="pagination">
+            <div class="pagination-child">
+                <div class="parent">
+                    <img class="vector-icon" @click="backPage()" alt="" src="/img/back.svg">
+                    <div v-for="(n, index) in nrpages" :key="index" class="div3" :class="{ 'child': activate[n - 1] }">{{ n }}</div>
+                    <img class="vector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
+                </div>
+            </div>
+        </div>
+        <div class="newfooter">
+        </div>
+    </div>
+</template>
 
 <script>
-import { defineComponent } from 'vue';
+import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
 import NavComponent from '../components/NavComponent.vue';
 import FooterComponent from '../components/FooterComponent.vue';
 
-export default defineComponent({
-  components: {
-    NavComponent,
-    FooterComponent
-  },
-  data() {
-    return {
-      category: this.$route.params.category,
-      showDropdownMenu: false,
-      selectedOption: 'Select an option'
-    };
-  },
-  methods: {
-    showMenu() {
-		this.showDropdownMenu = !this.showDropdownMenu;
-	},
-    sortBooks(option) {
-		this.selectedOption = option;
-		this.showDropdownMenu = false;
+export default {
+    components: {
+        NavComponent,
     },
-	nextPage(){
-		console.log(this.page)
-		console.log(this.nrpages)
-		if(this.page+2<=this.nrpages){
-			this.activate[this.page] = !this.activate[this.page]
-			this.page = this.page + 1;
-			this.activate[this.page] = !this.activate[this.page]
-		}
-    },
-    backPage(){
-		if(this.page-1>=0){
-			this.activate[this.page] = !this.activate[this.page]
-			this.page = this.page - 1;
-			this.activate[this.page] = !this.activate[this.page]
-		}
-	}
-  }
-});
-</script>
+    setup() {
+        const route = useRoute();
+        const store = useStore();
 
+        const translations = computed(() => store.getters['language/currentTranslations']);
+        const category = computed(() => route.params.category);
+        const translatedCategory = computed(() => {
+            const categoryTranslations = {
+                'Aventura': translations.value.adventure,
+                'Mistério': translations.value.mystery,
+                'Biografia': translations.value.biography,
+                'Ficção Científica': translations.value.sciFi,
+                'Fantasia': translations.value.fantasy,
+                'Música': translations.value.music,
+                'Desporto': translations.value.sports,
+                'Romance': translations.value.romance,
+                'Terror': translations.value.horror,
+                'Manga': translations.value.manga,
+            };
+            return category.value ? categoryTranslations[category.value] || category.value : '';
+        });
+
+        const showDropdownMenu = ref(false);
+        const selectedOption = ref('Select an option');
+        const page = ref(0);
+        const nrpages = 10;
+        const activate = ref(Array(10).fill(false));
+
+        const showMenu = () => {
+            showDropdownMenu.value = !showDropdownMenu.value;
+        };
+
+        const sortBooks = (option) => {
+            selectedOption.value = option;
+            showDropdownMenu.value = false;
+        };
+
+        const nextPage = () => {
+            if (page.value + 2 <= nrpages) {
+                activate.value[page.value] = false;
+                page.value += 1;
+                activate.value[page.value] = true;
+            }
+        };
+
+        const backPage = () => {
+            if (page.value - 1 >= 0) {
+                activate.value[page.value] = false;
+                page.value -= 1;
+                activate.value[page.value] = true;
+            }
+        };
+
+        return {
+            translations,
+            translatedCategory,
+            showDropdownMenu,
+            selectedOption,
+            showMenu,
+            page,
+            nrpages,
+            activate,
+            nextPage,
+            backPage
+        };
+    }
+};
+</script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inika:wght@400;700&display=swap');
@@ -264,20 +287,15 @@ margin: 0; line-height: normal;
   	width: 856px;
   	height: 92px;
 }
-.pagination-child {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	box-shadow: 0px 4.972476959228516px 4.97px rgba(0, 0, 0, 0.2);
-  	border-radius: 32.32px;
-  	background-color: #f7f9ff;
-  	width: 542px;
-  	height: 68.4px;
-}
+
 .vector-icon {
-	
 	width: 9px;
-  	position: relative;
+  	position: absolute;
+  	height: 16px;
+}
+.vector-icon1 {
+  	width: 9px;
+  	position: absolute;
   	height: 16px;
 }
 .child {
@@ -317,7 +335,7 @@ margin: 0; line-height: normal;
 }
 .parent {
   	position: absolute;
-  	top: 10.5px;
+  	top: 25.5px;
   	left: 78px;
   	width: 363px;
   	height: 19.5px;
@@ -337,13 +355,23 @@ margin: 0; line-height: normal;
 }
 .pagination {
   	position: absolute;
-  	top: 1567px;
-  	left: 584px;
-  	width: 542px;
+  	top: 1467px;
+  	left: 464px;
+  	width: 642px;
   	height: 68.4px;
   	text-align: center;
   	font-size: 18px;
   	font-family: Lato;
+}
+.pagination-child {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: 0px 4.972476959228516px 4.97px rgba(0, 0, 0, 0.2);
+  	border-radius: 32.32px;
+  	background-color: #f7f9ff;
+  	width: 762px;
+  	height: 68.4px;
 }
 .order-by {
   	position: absolute;

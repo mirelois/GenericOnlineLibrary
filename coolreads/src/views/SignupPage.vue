@@ -5,8 +5,8 @@
         <div class="coolreads">
           <div class="welcomeToCoolreadsContainer">
             <span class="welcomeToCoolreadsContainer1">
-              <p class="welcomeToCoolreads">Welcome to CoolReads! 📚 </p>
-              <p class="welcomeToCoolreads">Join us in our book loving community today!</p>
+              <p class="welcomeToCoolreads">{{ translations.welcomeToCoolreads }} 📚 </p>
+              <p class="welcomeToCoolreads">{{ translations.joinUs }}</p>
             </span>
           </div>
           <div class="titlenameWrapper"></div>
@@ -20,12 +20,16 @@
       </div>
       <div class="form">
         <div class="titleWrapper">
-          <div class="title">Create an account</div>
+          <div class="title">{{ translations.createAccountTitle }}</div>
+          <div class="language-selection">
+				      <img class="flag-icon" alt="Português" src="/img/PT.svg" @click="setLanguage('portuguese')"/>
+				      <img class="flag-icon" alt="English"   src="/img/US.svg" @click="setLanguage('english')"   />
+        	</div>
         </div>
         <div class="frameParent">
           <div class="frameGroup">
             <div class="emailWrapper">
-              <div class="email">Email</div>
+              <div class="email">{{ translations.email }}</div>
             </div>
             <div class="inputTextWrapper">
               <input v-model="email" class="inputText"  placeholder="example@example.com"/>
@@ -33,18 +37,18 @@
           </div>
           <div class="frameGroup">
             <div class="emailWrapper">
-              <div class="email">Username</div>
+              <div class="email">{{ translations.username }}</div>
             </div>
             <div class="input">
-              <input v-model="username" class="inputText1" placeholder="Enter your username"/>
+              <input v-model="username" class="inputText1" :placeholder="translations.passwordPlaceholder"/>
             </div>
           </div>
           <div class="frameGroup">
             <div class="emailWrapper">
-              <div class="email">Password</div>
+              <div class="email">{{ translations.password }}</div>
             </div>
             <div class="input">
-              <input v-model="password" class="inputText1" :type="type" placeholder="Enter your password"/>
+              <input v-model="password" class="inputText1" :type="type" :placeholder="translations.passwordPlaceholder"/>
                 <div class="iconeye-wrapper">
                   <img class="iconeye" alt="" @click="changeType" src="/img/iconeye.svg">
               </div>
@@ -52,10 +56,10 @@
           </div>
         </div>
         <div class="buttonParent">
-            <button class="createbutton" @click="createAccount">Create account</button>
+            <button class="createbutton" @click="createAccount">{{ translations.createAccountButton }}</button>
           <div class="alreadyHaveAnAccountParent">
-            <div class="alreadyHaveAn">Already have an account?</div>
-            <a class="logIn" href="/login">Log in</a>
+            <div class="alreadyHaveAn">{{ translations.alreadyHaveAccount }}</div>
+            <a class="logIn" href="/login">{{ translations.login }}</a>
           </div>
         </div>
       </div>
@@ -103,7 +107,13 @@ export default {
   },computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
-    }
+    },
+    translations() {
+      return this.$store.getters['language/currentTranslations'];
+    },
+    selectedLanguage() {
+      return this.$store.state.language.selectedLanguage;
+    },
   },
   created() {
     if (this.loggedIn) {
@@ -112,6 +122,11 @@ export default {
   },
   components:{
     ToastComponent
+  },
+  methods: {
+    setLanguage(language) {
+      		this.$store.dispatch('language/setLanguage', language);
+    },
   }
 };
 </script>
@@ -430,5 +445,17 @@ flex-shrink: 0;
 .button1 .textButton {
   font-size: 14.4px;
   font-family: Inika;
+}
+.language-selection {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  top: 300px;
+  right: 120px;
+}
+.flag-icon {
+  cursor: pointer;
+  width: 30px;
+  height: 20px;
 }
 </style>
