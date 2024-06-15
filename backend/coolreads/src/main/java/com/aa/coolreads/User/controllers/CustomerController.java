@@ -75,6 +75,16 @@ public class CustomerController {
         }
     }
 
+    @PutMapping("/me/password")
+    public ResponseEntity<String> changePassword(@RequestParam String password){
+        try{
+            this.authenticationService.changePassword(password);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @GetMapping("/{username}")
     public ResponseEntity<SimpleCustomerDTO> getCustomer(@PathVariable String username) {
         try{
