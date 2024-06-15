@@ -54,11 +54,3 @@ docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO review (book_i
 docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO rating (book_isbn, customer_username, rating) VALUES
 ('1','techguru',5),
 ('1','historybuff',3);";
-
-docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO bookshelf (id, name, privacy, customer_username) VALUES
-(1, 'bookshelf1', 'PUBLIC', 'techguru'),
-(2, 'bookshelf2', 'PUBLIC', 'techguru'),
-(3, 'bookshelf3', 'PUBLIC', 'techguru'),
-(4, 'bookshelf4', 'PUBLIC', 'techguru'),
-(5, 'bookshelf5', 'PUBLIC', 'techguru');";
-

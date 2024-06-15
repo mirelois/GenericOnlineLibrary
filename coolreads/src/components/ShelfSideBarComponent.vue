@@ -6,22 +6,6 @@
 			<button @click="showCreateBookshelfMenu" class="createbs">+ Create Bookshelf</button>
 			<img class="transfer-icon" alt="" src="/img/transfer.svg">
 		</div>
-		<div class="shelves-parent">
-			<div class="shelves"><a  class="prateleiralink" href="/bookshelves/want_to_read">Want To Read</a></div>
-			<div class="shelves1">-</div>
-		</div>
-		<div class="shelves-group">
-			<div class="shelves1">-</div>
-			<div class="shelves3"><a class="prateleiralink" href="/bookshelves/currently_reading">Currently Reading</a></div>
-		</div>
-		<div class="shelves-container">
-			<div class="shelves1">-</div>
-			<div class="shelves5"><a class="prateleiralink" href="/bookshelves/read">Read</a></div>
-		</div>
-		<div class="shelves-parent2" id="groupContainer5">
-			<div class="shelves10" id="shelvesText">All</div>
-			<div class="shelves1">-</div>
-		</div>
 		<div v-for="(bookshelf,index) in mybookshelves" :key="index" class="children-shelves-parent">
 			<div class="shelves1">{{ bookshelf.bookCount }}</div>
 			<a class="prateleiralink" :href="`/bookshelves/${bookshelf.name}`">{{ bookshelf.name }}</a>
@@ -162,7 +146,7 @@ export default{
 }
 .children-shelves-parent {
 	position:relative;
-	top: 280px;
+	top: 150px;
 	left: 31px;
 	height:40px;
 	margin-bottom:5px;

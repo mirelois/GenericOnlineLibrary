@@ -6,6 +6,7 @@
         <input type="checkbox" :id="option.name" :value="option.name" v-model="checkedOptions">
         <span class="checkmark"></span>
     </label>
+    <label v-if="options.length==0" class="container">You have no public bookshelves yet.<br> Go create some!</label>
     <label class="container"><button class="insert-bookshelf-btn" @click="insertBook">INSERT</button></label>
     <div v-show="showPopup==true">
 		  <ToastComponent :msg="msg" @close_toast="showPopup=false"></ToastComponent>
@@ -40,7 +41,9 @@ export default {
             let config = {headers:header}
             header['Content-Type']='application/json';
             axios.get("http://localhost:8080/customer/"+this.username+"/bookshelf",config).then(resp =>{
-				this.options = resp.data;
+              for(let i=0;i<resp.data.length;i++){
+                if(resp.data[i].name!="did_not_finish" && resp.data[i].name!="want_to_read" && resp.data[i].name!="currently_reading" && resp.data[i].name!="already_read" && resp.data[i].name!="all") this.options.push(resp.data[i]);
+              }
 			}).catch(err=>{
 				console.log(err)
 			})
@@ -113,6 +116,7 @@ export default {
   font-size: 18px;
   border-radius: 10px;
   margin-top: 25px;
+  cursor:pointer;
 }
 
 .container input {

@@ -34,6 +34,9 @@ import Rating from 'primevue/rating';
 			<div class="classificacao">{{ ratingAverage }}/5</div>
     		<div class="nr-rates">{{ nrratings }} ratings</div>
     		<div class="nr-reviews">{{ nrreviews }} reviews</div>
+			<div v-show="showPopup==true">
+		  		<ToastComponent :msg="msg" @close_toast="showPopup=false"></ToastComponent>
+			</div>
 			<div>
 				<StateComponent v-if="username!==''" @choosen_state="showConfirm=true" :stateValue ="stateSelected" @bookStateSelected="getBookState"></StateComponent>
 			</div>
@@ -84,6 +87,8 @@ import axios from "axios";
 import ConfirmComponent from '@/components/ConfirmComponent.vue';
 import AddToBookshelfComponent from '@/components/AddToBookshelfComponent.vue';
 import BookshelfSelectorComponent from '@/components/BookshelfSelectorComponent.vue';
+import authHeader from '@/services/auth.header';
+import ToastComponent from '@/components/ToastComponent.vue'
 export default {
 	data(){
 		return{
@@ -110,8 +115,10 @@ export default {
 			profileImg: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
 			isbn:'',
 			nrpageReview:0,
+			msg:'',
 			showLoading:false,
 			showMoretxt:true,
+			showPopup:false,
 			showConfirm:false,
 			showAddtoBookshelf:false,
 			confirm_msg:'Are you sure you want to add the book to Want to Read ?',
@@ -128,7 +135,8 @@ export default {
 		StateComponent,
 		FooterComponent,
 		ConfirmComponent,
-		AddToBookshelfComponent
+		AddToBookshelfComponent,
+		ToastComponent
     },created(){
 		this.isbn = this.$route.params.bookisbn;
 		this.getBook(this.isbn);
@@ -235,7 +243,34 @@ export default {
 		},
 		book_management(resp){
 			if(resp=='no') this.showConfirm=false;
-			console.log(resp)
+			else{
+
+				let header = authHeader();
+	            let config = {headers:header}
+    	        header['Content-Type']='application/json';
+        	    let state = this.stateSelected.replaceAll(" ","_").toLowerCase();
+				const date = new Date();
+				const isoDateString = date.toISOString();
+				axios.post("http://localhost:8080/customer/"+this.username+"/bookshelf/"+state,
+				    {
+                      pagesRead:0,
+                      insertDate:isoDateString,
+                      bookISBN: this.bookISBN
+				    },
+                    config 
+            	).then(resp =>{
+                    if(resp.status==200){
+                        this.msg="The book was inserted to your "+state+" collection.";
+						this.showPopup=true;
+                    }else{
+                        this.msg="Something went wrong."
+                    }
+					this.showConfirm=false;
+					console.log(resp)
+                    }).catch(err=>{
+                      console.log(err)
+                    })
+			}
 		},
 		setUsername(username){
 			this.username=username;

@@ -73,6 +73,15 @@ import router from "../router/index";
 import User from "@/models/user";
 import ToastComponent from "@/components/ToastComponent.vue";
 export default {
+  data(){
+    return{
+        email:'',
+        username:'',
+        password:'',
+        error_msg:'',
+        type:'password'
+    }
+  },
   methods: {
     createAccount() {
       if(this.username==='' || this.password==='' || this.email===''){
@@ -81,6 +90,7 @@ export default {
 		  }
       this.$store.dispatch('auth/register', new User(this.username,this.email,this.password)).then(
             data => {
+              console.log(data);
             	router.push('/login');
             },
             error => {
@@ -94,15 +104,9 @@ export default {
     changeType(){
       if(this.type==='password') this.type='text';
       else this.type='password';
-    }
-  },
-  data(){
-    return{
-        email:'',
-        username:'',
-        password:'',
-        error_msg:'',
-        type:'password'
+    },
+    setLanguage(language) {
+      		this.$store.dispatch('language/setLanguage', language);
     }
   },computed: {
     loggedIn() {
@@ -122,11 +126,6 @@ export default {
   },
   components:{
     ToastComponent
-  },
-  methods: {
-    setLanguage(language) {
-      		this.$store.dispatch('language/setLanguage', language);
-    },
   }
 };
 </script>
