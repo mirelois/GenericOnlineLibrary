@@ -25,7 +25,7 @@ public class Customer implements UserDetails {
     @ManyToMany
     private Set<Customer> friends;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private Set<Genre> favoriteGenres;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -121,5 +121,21 @@ public class Customer implements UserDetails {
 
     public void setFriends(Set<Customer> friends) {
         this.friends = friends;
+    }
+
+    public void addFriend(Customer customer){
+        this.friends.add(customer);
+    }
+
+    public void removeFriend(Customer customer){
+        this.friends.remove(customer);
+    }
+
+    public void addNotification(Notification notification){
+        this.notifications.add(notification);
+    }
+
+    public void addBookshelf(Bookshelf bookshelf){
+        this.bookshelves.add(bookshelf);
     }
 }

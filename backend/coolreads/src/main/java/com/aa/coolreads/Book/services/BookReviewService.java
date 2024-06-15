@@ -14,6 +14,8 @@ import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
@@ -41,8 +43,10 @@ public class BookReviewService {
 
     private final FullBookMapper bookMapper;
 
+    private final ApplicationEventPublisher eventPublisher;
+
     @Autowired
-    public BookReviewService(BookReviewRepository bookReviewRepository, BookReviewLikeRepository reviewLikeRepository, BookReviewCommentRepository bookReviewCommentRepository, BookRatingRepository bookRatingRepository, BookRepository bookRepository, CustomerRepository customerRepository, FullBookMapper bookMapper){
+    public BookReviewService(BookReviewRepository bookReviewRepository, BookReviewLikeRepository reviewLikeRepository, BookReviewCommentRepository bookReviewCommentRepository, BookRatingRepository bookRatingRepository, BookRepository bookRepository, CustomerRepository customerRepository, FullBookMapper bookMapper, ApplicationEventPublisher eventPublisher){
         this.bookReviewRepository = bookReviewRepository;
         this.reviewLikeRepository = reviewLikeRepository;
         this.bookReviewCommentRepository = bookReviewCommentRepository;
@@ -50,6 +54,7 @@ public class BookReviewService {
         this.bookRepository = bookRepository;
         this.customerRepository = customerRepository;
         this.bookMapper = bookMapper;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -71,6 +76,8 @@ public class BookReviewService {
 
         PageRequest pageable = PageRequest.of(pageNumber, pageSize);
         Page<ReviewComment> commentsPage = this.bookReviewRepository.findCommentByReview(isbn, review_username, pageable);
+
+        System.out.println(commentsPage);
 
         return commentsPage.get().map(this.bookMapper::toReviewCommentDTO).collect(Collectors.toSet());
     }

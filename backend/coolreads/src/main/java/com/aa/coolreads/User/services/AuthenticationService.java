@@ -60,11 +60,10 @@ public class AuthenticationService {
 
         registerDTO.setPassword(this.passwordEncoder.encode(registerDTO.getPassword()));
         Customer customer = this.customerMapper.toCustomer(registerDTO);
-        this.customerRepository.save(customer);
-
         for(DefaultBookshelf bookshelfNameType: DefaultBookshelf.values()){
-            this.bookshelfRepository.save(this.bookshelfMapper.toBookshelf(bookshelfNameType.name(), Privacy.PRIVATE, customer));
+            customer.addBookshelf(this.bookshelfMapper.toBookshelf(bookshelfNameType.name(), Privacy.PRIVATE, customer));
         }
+        this.customerRepository.save(customer);
     }
 
     @Transactional

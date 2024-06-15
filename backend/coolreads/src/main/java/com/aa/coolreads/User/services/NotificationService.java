@@ -6,11 +6,13 @@ import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.mappers.NotificationMapper;
 import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.models.Notification;
+import com.aa.coolreads.User.models.NotificationType;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import com.aa.coolreads.User.repositories.NotificationRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -32,6 +34,30 @@ public class NotificationService {
         this.customerRepository = customerRepository;
         this.notificationMapper = notificationMapper;
         this.mailService = mailService;
+    }
+
+    @Transactional
+    public void sendFriendRequestNotification(String friend_username) throws CustomerNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer myCustomer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Customer customer = this.customerRepository.findById(friend_username).orElseThrow(() -> new CustomerNotFoundException(friend_username));
+
+        this.notificationRepository.save(new Notification(customer, myCustomer, NotificationType.FRIEND_REQUEST_NOTIFICATION));
+
+        this.customerRepository.save(customer);
+    }
+
+    @Transactional
+    public void addFriend(String friend_username) throws CustomerNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer myCustomer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Customer customer = this.customerRepository.findById(friend_username).orElseThrow(() -> new CustomerNotFoundException(friend_username));
+
+        customer.addFriend(myCustomer);
+
+        this.notificationRepository.save(new Notification(customer, myCustomer, NotificationType.FRIEND_REQUEST_ACCEPTED_NOTIFICATION));
+
+        this.customerRepository.save(customer);
     }
 
     @Transactional
