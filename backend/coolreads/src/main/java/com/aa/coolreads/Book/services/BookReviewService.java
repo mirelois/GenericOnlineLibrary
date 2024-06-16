@@ -10,6 +10,7 @@ import com.aa.coolreads.Book.mappers.FullBookMapper;
 import com.aa.coolreads.Book.models.*;
 import com.aa.coolreads.Book.repositories.*;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
+import com.aa.coolreads.User.exception.InvalidLikeTypeException;
 import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
@@ -116,19 +117,21 @@ public class BookReviewService {
     }
 
     @Transactional
-    public void insertLike(String isbn, String review_username, String likeType) throws CustomerNotFoundException, IllegalArgumentException, ReviewNotFoundException {
+    public void insertLike(String isbn, String review_username, String likeType) throws CustomerNotFoundException, ReviewNotFoundException, InvalidLikeTypeException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
         Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
 
-        LikeType likeTypeEnum;
-        try {
-            likeTypeEnum = LikeType.valueOf(likeType.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid like type: " + likeType);
+        LikeType like = null;
+        for(LikeType type: LikeType.values()){
+            if(likeType.toLowerCase().equals(type.name()))
+                like = type;
         }
 
-        this.reviewLikeRepository.save(new ReviewLike(likeTypeEnum, customer, review));
+        if(like == null)
+            throw new InvalidLikeTypeException(likeType);
+
+        this.reviewLikeRepository.save(new ReviewLike(like, customer, review));
     }
 
     @Transactional

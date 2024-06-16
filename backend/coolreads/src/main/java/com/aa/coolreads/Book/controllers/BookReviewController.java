@@ -8,6 +8,7 @@ import com.aa.coolreads.Book.exception.InsufficientReviewParametersException;
 import com.aa.coolreads.Book.exception.ReviewNotFoundException;
 import com.aa.coolreads.Book.services.BookReviewService;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
+import com.aa.coolreads.User.exception.InvalidLikeTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,12 +92,14 @@ public class BookReviewController {
     }
 
     @PostMapping("/{review_username}/like")
-    public ResponseEntity<String> insertLike(@PathVariable String isbn, @PathVariable String review_username, @RequestBody String likeType){
+    public ResponseEntity<String> insertLike(@PathVariable String isbn, @PathVariable String review_username, @RequestParam String likeType){
         try {
             this.bookReviewService.insertLike(isbn, review_username, likeType);
             return ResponseEntity.ok().build();
         } catch (ReviewNotFoundException | CustomerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (InvalidLikeTypeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
