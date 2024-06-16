@@ -66,15 +66,15 @@ public class StatisticService {
         return statisticsMapper.toStatisticsPieChartDTO(slices);
     }
 
-    @Transactional
-    public StatisticsPieChartDTO getTimeLineChart(DefaultBookshelf bookshelf, String isbn, TimeFrame timeFrame, Integer pageNumber, Integer pageSize){
+    //@Transactional
+    //public StatisticsPieChartDTO getTimeLineChart(DefaultBookshelf bookshelf, String isbn, TimeFrame timeFrame, Integer pageNumber, Integer pageSize){
 
-        PageRequest pageable = PageRequest.of(pageNumber, pageSize);
+    //    PageRequest pageable = PageRequest.of(pageNumber, pageSize);
 
-        Page<SliceInterfaceDTO> slices = this.personalBooksRepository.getTimeLine(bookshelf.name(), isbn, timeFrame.name(), pageable);
+    //    Page<SliceInterfaceDTO> slices = this.personalBooksRepository.getTimeLine(bookshelf.name(), isbn, timeFrame.name(), pageable);
 
-        return statisticsMapper.toStatisticsPieChartDTO(slices);
+    //    return statisticsMapper.toStatisticsPieChartDTO(slices);
 
-    }
+    //}
 
 }
