@@ -6,12 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Component
 public class StatisticsMapper {
 
-    public StatisticsChartDTO toStatisticsPieChartDTO(List<SliceInterfaceDTO> slices) {
+    public StatisticsChartDTO toStatisticsPieChartDTO(Iterable<SliceInterfaceDTO> slices) {
 
         List<String> labels = new ArrayList<>();
         List<Integer> data = new ArrayList<>();
@@ -24,19 +25,4 @@ public class StatisticsMapper {
         return new StatisticsChartDTO(labels, data);
 
     }
-
-    public StatisticsChartDTO toStatisticsPieChartDTO(Page<SliceInterfaceDTO> slices) {
-
-        List<String> labels = new ArrayList<>();
-        List<Integer> data = new ArrayList<>();
-
-        for (SliceInterfaceDTO slice : slices){
-            labels.add(slice.getClassName());
-            data.add(slice.getAmount());
-        }
-
-        return new StatisticsChartDTO(labels, data);
-
-    }
-
 }
