@@ -1,3 +1,8 @@
+docker exec -it postgres psql -U postgres -d cool -c "CREATE TABLE IF NOT EXISTS Genre (
+    genre_type VARCHAR(255) UNIQUE NOT NULL PRIMARY KEY
+);"
+
+
 docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO Genre (genre_type) VALUES
 ('scifi'),
 ('fantasy'),
@@ -10,7 +15,12 @@ docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO Genre (genre_t
 ('romance')
 ON CONFLICT (genre_type) DO NOTHING;";
 
-docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO AgeRange (ageClass, upperLimit) VALUES
+docker exec -it postgres psql -U postgres -d cool -c "CREATE TABLE IF NOT EXISTS AgeRange (
+    id SERIAL PRIMARY KEY,
+    ageClass VARCHAR(255) UNIQUE NOT NULL
+);"
+
+docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO AgeRange (ageClass, ageClass) VALUES
 ('child'),
 ('teen'),
 ('young_adult'),
@@ -49,7 +59,7 @@ VALUES
 ('4','Harry Potter, along with his best friends, Ron and Hermione, is about to start his third year at Hogwarts School of Witchcraft and Wizardry. Harry cant wait to get back to school after the summer holidays. (Who wouldnt if they lived with the horrible Dursleys?) But when Harry gets to Hogwarts, the atmosphere is tense.','https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630547330i/5.jpg','1999-07-08','Harry Potter and the Prisoner of Azkaban',734,'jkrowling','Future Fiction House'),
 ('5','It is the summer holidays and soon Harry Potter will be starting his fourth year at Hogwarts School of Witchcraft and Wizardry. Harry is counting the days: there are new spells to be learnt, more Quidditch to be played, and Hogwarts castle to continue exploring.','https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1554006152i/6.jpg','2000-07-08','Harry Potter and the Goblet of Fire',734,'jkrowling','Future Fiction House'),
 ('6','Harry Potter is about to start his fifth year at Hogwarts School of Witchcraft and Wizardry. Unlike most schoolboys, Harry never enjoys his summer holidays, but this summer is even worse than usual. The Dursleys, of course, are making his life a misery, but even his best friends, Ron and Hermione, seem to be neglecting him.','https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1546910265i/2.jpg','2003-06-21','Harry Potter and the Order of the Phoenix',912,'jkrowling','Future Fiction House'),
-('7','It is the middle of the summer, but there is an unseasonal mist pressing against the windowpanes. Harry Potter is waiting nervously in his bedroom at the Dursleys house in Privet Drive for a visit from Professor Dumbledore himself.','https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1587697303i/1.jpg','2005-07-16','Harry Potter and the Sorcerers Stone',652,'jkrowling','Future Fiction House'),
+('7','It is the middle of the summer, but there is an unseasonal mist pressing against the windowpanes. Harry Potter is waiting nervously in his bedroom at the Dursleys house in Privet Drive for a visit from Professor Dumbledore himself.','https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1587697303i/1.jpg','2005-07-16','Harry Potter and the Half-Blood Prince',652,'jkrowling','Future Fiction House'),
 ('8','Harry has been burdened with a dark, dangerous and seemingly impossible task: that of locating and destroying Voldemorts remaining Horcruxes. Never has Harry felt so alone, or faced a future so full of shadows.','https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1663805647i/136251.jpg','2007-07-21','Harry Potter and the Deathly Hallows',759,'jkrowling','Future Fiction House');";
 
 docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO book_genres (book_isbn, genres_genre_type) VALUES

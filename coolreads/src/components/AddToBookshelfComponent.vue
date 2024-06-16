@@ -6,7 +6,7 @@
     </div>
     <div class="frame-inner">
     </div>
-    <div class="add-to-bookshelf">Add to Public Bookshelf</div>
+    <div class="add-to-bookshelf">Add to Personal Bookshelf</div>
     </div>
 </div> 
 </template>

@@ -73,6 +73,8 @@ import Rating from 'primevue/rating';
 	<div v-bind:style="{ 'color': statisticscolor, 'font-weight': statisticsfont }" @click="changeTabStyle(`Statistics`)" class="statistics-title">Statistics 
 			<div class="author-content" v-if="activeTab=='Statistics'">
 				<br>Stats</br>
+				<br><div class="stats-row"><PieStatsComponent></PieStatsComponent><StateFrequencyComponent></StateFrequencyComponent></div></br>
+				<div class="stats-row"><LineGraphComponent></LineGraphComponent></div>
 			</div>
     		</div>
 	</div>
@@ -89,6 +91,9 @@ import AddToBookshelfComponent from '@/components/AddToBookshelfComponent.vue';
 import BookshelfSelectorComponent from '@/components/BookshelfSelectorComponent.vue';
 import authHeader from '@/services/auth.header';
 import ToastComponent from '@/components/ToastComponent.vue'
+import PieStatsComponent from '@/components/PieStatsComponent.vue';
+import StateFrequencyComponent from '@/components/StateFrequencyComponent.vue';
+import LineGraphComponent from '@/components/LineGraphComponent.vue';
 export default {
 	data(){
 		return{
@@ -136,7 +141,9 @@ export default {
 		FooterComponent,
 		ConfirmComponent,
 		AddToBookshelfComponent,
-		ToastComponent
+		ToastComponent,
+		PieStatsComponent,
+		LineGraphComponent
     },created(){
 		this.isbn = this.$route.params.bookisbn;
 		this.getBook(this.isbn);
@@ -233,6 +240,7 @@ export default {
 				this.reviewcolor="#5d5d5e",
 				this.reviewfont= "normal",
 				this.activeTab="Statistics"
+				this.getStatisticsInfo();
 			}
 		},
 		getBookState(state){
@@ -288,6 +296,9 @@ export default {
 			}).catch(error=>{
 				console.log(error)
 			})
+		},
+		getStatisticsInfo(){
+			
 		} 
 	}
 
@@ -348,6 +359,11 @@ export default {
 	font-size:20px;
 	color:#a5a3a3;
 	text-decoration:underline;
+}
+
+.stats-row{
+	display:inline-flex;
+	float: left;
 }
 
 

@@ -59,7 +59,7 @@ export default {
 
 
 </script>
-<style>
+<style scoped>
 @media (min-width: 1024px) {
     #app {
         padding: 0;
@@ -79,6 +79,6 @@ export default {
   border-right: 1px solid #dccfcf;
   box-sizing: border-box;
   height: 3176.1px;
-  left:-800px;
+  left: -800px;
 } 
 </style>

@@ -371,7 +371,7 @@ export default{
 	color: #bababa;
 	font-family: Inika;
 	margin-left: -800px;
-	margin-top: -350px;
+	margin-top: 350px;
 }
 
 </style>
