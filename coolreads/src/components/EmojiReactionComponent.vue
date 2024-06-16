@@ -5,26 +5,26 @@
     </head>    
     <div class="reaction-bar">
     <input type="checkbox" class="hide-input" :id="emojiIds[0]" :checked="emojiActivated[emojiIds[0]]" @click="changeEmoji(emojiIds[0])">
-    <label @click="updateLikes(`Like`)" :for="emojiIds[0]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Like }}</div>
+    <label @click="updateLikes(`like`)" :for="emojiIds[0]" class="react" style="--r:35px"><div class="nr-react">{{ likes.like }}</div>
     <i class="fas fa-thumbs-up" style="color:blue"></i>
     </label>
     
     <input type="checkbox"  class="hide-input" :id="emojiIds[1]" :checked="emojiActivated[emojiIds[1]]" @click="changeEmoji(emojiIds[1])">
-    <label @click="updateLikes(`Haha`)" :for="emojiIds[1]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Haha }}</div>
+    <label @click="updateLikes(`haha`)" :for="emojiIds[1]" class="react" style="--r:35px"><div class="nr-react">{{ likes.haha }}</div>
       <i class="fas fa-laugh-squint" style="color:gold"></i>
     </label>
     <input type="checkbox" class="hide-input" :id="emojiIds[2]" :checked="emojiActivated[emojiIds[2]]" @click="changeEmoji(emojiIds[2])">
-    <label @click="updateLikes(`Wow`)" :for="emojiIds[2]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Wow }}</div>
+    <label @click="updateLikes(`wow`)" :for="emojiIds[2]" class="react" style="--r:35px"><div class="nr-react">{{ likes.wow }}</div>
         <i class="fas fa-sad-tear" style="color:gold"></i>
     </label>
     
     <input type="checkbox"  class="hide-input" :id="emojiIds[3]" :checked="emojiActivated[emojiIds[3]]" @click="changeEmoji(emojiIds[3])">
-    <label @click="updateLikes(`Sad`)" :for="emojiIds[3]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Sad }}</div>
+    <label @click="updateLikes(`sad`)" :for="emojiIds[3]" class="react" style="--r:35px"><div class="nr-react">{{ likes.sad }}</div>
         <i class="fas fa-surprise" style="color:gold"></i>
     </label>
 
     <input type="checkbox" :id="emojiIds[4]" class="hide-input" :checked="emojiActivated[emojiIds[4]]" @click="changeEmoji(emojiIds[4])">
-    <label @click="updateLikes(`Clown`)" :for="emojiIds[4]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Clown }}</div>
+    <label @click="updateLikes(`clown`)" :for="emojiIds[4]" class="react" style="--r:35px"><div class="nr-react">{{ likes.clown }}</div>
     <i data-icon="🤡"></i>
     </label>
     </div>
@@ -47,7 +47,7 @@ export default{
   data(){
     return {
       emojiActivated:{},
-      emojiMap:{0:'Like',1:"Haha",2:"Wow",3:"Sad",4:"Clown"},
+      emojiMap:{0:'like',1:"haha",2:"wow",3:"sad",4:"clown"},
       emojiidMap:{}
     }
   },
@@ -78,9 +78,8 @@ export default{
         let config = {headers:header};
         console.log(type);
         header['Content-Type']='application/json';
-        axios.post("http://localhost:8080/book/"+this.isbn+"/review/"+this.reviewer+"/like",
-        type,
-        config).then(resp=>{console.log(resp)})
+        axios.post("http://localhost:8080/book/"+this.isbn+"/review/"+this.reviewer+"/like?likeType="+type,{},config)
+        .then(resp=>{console.log(resp)})
         .catch(error=>{console.log(error)})
       }
     }

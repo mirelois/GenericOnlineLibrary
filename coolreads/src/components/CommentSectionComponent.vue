@@ -10,25 +10,24 @@
             <input v-model="mycomment" type="text" class="mycommentarea"/> 
             <button @click="publishComment" class="publish-comment">Publish</button>
             <ul>
-                <li>
+                <li v-for="comentario in comentarios">
                     <div class="comment">
                         <div class="comment-img">
-                            <img src="https://rvs-comment-module.vercel.app/Assets/User Avatar.png" alt="">
+                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="">
                         </div>
                         <div class="comment-content">
                             <div class="comment-details">
-                                <h4 class="comment-name">Adamsdavid</h4>
-                                <span class="comment-log">20 hours ago</span>
+                                <h4 class="comment-name">{{ comentario.customerUserName }}</h4>
                             </div>
                             <div class="comment-desc">
-                                <p>I genuinely think that Codewell's community is AMAZING. It's just starting out but the templates on there amazing.</p>
+                                <p>{{  comentario.comment }}</p>
                             </div>
                         </div>
                     </div>
                 </li>
             </ul>
         </section>
-        <div @click="increaseArea" :style="{'margin-left':moreleft,'margin-top':moreheight}">more</div>
+        <div v-show="showMoretxt==true" @click="increaseArea" :style="{'margin-left':moreleft,'margin-top':moreheight}">more</div>
 
        </div>
     </main>
@@ -52,12 +51,13 @@ export default {
             left: "0px",
             position: "absolute",
             zIndex: "0",
-            moreheight:"-330px",
+            moreheight:"-210px",
             moreleft:"50px",
             openComments:false,
             comentarios:[],
             mycomment:'',
-            nrpage:0
+            morepage:0,
+            showMoretxt:true
         }
     },
     created(){
@@ -70,12 +70,16 @@ export default {
         },
         increaseArea(){
             this.$emit("comment_opened");
-            let h = this.height.replace('px','');
-            h=parseInt(h)+140+"px";
-            this.height=h;
-            let more = this.moreheight.replace('px','');
-            more=parseInt(more)+140+"px";
-            this.moreheight=more;            
+            this.morepage = this.morepage + 1; 
+            this.getComments();
+            if(this.morepage!==1){
+              let h = this.height.replace('px','');
+              h=parseInt(h)+140+"px";
+              this.height=h;
+              let more = this.moreheight.replace('px','');
+              more=parseInt(more)+140+"px";
+              this.moreheight=more;
+            }
         },
         publishComment(){
             if(this.mycomment!="" && this.canInteract==true){
@@ -96,10 +100,16 @@ export default {
             //let header = authHeader();
             //let config = {headers:header}
             //header['Content-Type']='application/json';
-            axios.get("http://localhost:8080/book/"+this.isbn+"/review/"+this.reviewer+"/comment?page="+this.nrpage+"&size=1"
+            axios.get("http://localhost:8080/book/"+this.isbn+"/review/"+this.reviewer+"/comment?page="+this.morepage+"&size=1"
             ).then(resp=>{
-                console.log("hey there")
-                console.log(resp);
+                if(resp.data.length==0){
+                    this.showMoretxt=false;
+                    this.morepage = -1;
+                    return 1;
+                }
+                console.log(resp.data)
+                this.comentarios = resp.data;
+                return 0;
             }).catch(error=>{
                 console.log(error);
             })
@@ -145,6 +155,7 @@ export default {
     border-radius: 30px;
     border-width: 0px 0px 0px 0px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    cursor:pointer;
 }
 .comment-button {
     background-color: #31363F;
@@ -357,6 +368,7 @@ main section.comment-module ul li .comment .comment-img {
 main section.comment-module ul li .comment .comment-img img {
     width: 40px;
     height: 40px;
+    border-radius: 50%;
 }
 main section.comment-module ul li .comment .comment-content {
     width: 85%;

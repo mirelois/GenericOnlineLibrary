@@ -72,8 +72,8 @@ import Rating from 'primevue/rating';
     		</div>
 	<div v-bind:style="{ 'color': statisticscolor, 'font-weight': statisticsfont }" @click="changeTabStyle(`Statistics`)" class="statistics-title">Statistics 
 			<div class="author-content" v-if="activeTab=='Statistics'">
-				<br>Stats</br>
-				<br><div class="stats-row"><PieStatsComponent></PieStatsComponent><StateFrequencyComponent></StateFrequencyComponent></div></br>
+				<br><div class="stats-row"><CategorySelectorComponent @category_selected="setCategorySelected"></CategorySelectorComponent><DefaultSelectorComponent @default_bookshelf="setDefaultSelected"></DefaultSelectorComponent></div></br>
+				<br><div class="stats-row"><PieStatsComponent :categoria="categorySelected" :bookshelf="defaultSelected" :isbn="isbn"></PieStatsComponent><StateFrequencyComponent></StateFrequencyComponent></div></br>
 				<div class="stats-row"><LineGraphComponent></LineGraphComponent></div>
 			</div>
     		</div>
@@ -94,6 +94,8 @@ import ToastComponent from '@/components/ToastComponent.vue'
 import PieStatsComponent from '@/components/PieStatsComponent.vue';
 import StateFrequencyComponent from '@/components/StateFrequencyComponent.vue';
 import LineGraphComponent from '@/components/LineGraphComponent.vue';
+import CategorySelectorComponent from '@/components/CategorySelectorComponent.vue';
+import DefaultSelectorComponent from '@/components/DefaultSelectorComponent.vue';
 export default {
 	data(){
 		return{
@@ -131,7 +133,9 @@ export default {
 			marginReviewBottom:"10px",
 			can_interact:true,
 			authorName:'',
-			authorImage:''
+			authorImage:'',
+			categorySelected:'',
+			defaultSelected:''
 		}
 	},
 	components: {
@@ -143,7 +147,9 @@ export default {
 		AddToBookshelfComponent,
 		ToastComponent,
 		PieStatsComponent,
-		LineGraphComponent
+		LineGraphComponent,
+		CategorySelectorComponent,
+		DefaultSelectorComponent
     },created(){
 		this.isbn = this.$route.params.bookisbn;
 		this.getBook(this.isbn);
@@ -205,7 +211,7 @@ export default {
 		},
 		getMoreReviews(){
 			let h = this.marginReviewBottom.replace('px','');
-            h=parseInt(h)+250+"px";
+            h=parseInt(h)+220+"px";
             this.marginReviewBottom=h;
 
 			this.nrpageReview = this.nrpageReview + 1;
@@ -240,7 +246,6 @@ export default {
 				this.reviewcolor="#5d5d5e",
 				this.reviewfont= "normal",
 				this.activeTab="Statistics"
-				this.getStatisticsInfo();
 			}
 		},
 		getBookState(state){
@@ -285,9 +290,9 @@ export default {
 			this.username=username;
 		},
 		increaseHeight(){
-            let h = this.loadtxt_margintop.replace('px','');
-            h=parseInt(h)+300+"px";
-            this.loadtxt_margintop=h;
+			let h = this.marginReviewBottom.replace('px','');
+            h=parseInt(h)+140+"px";
+            this.marginReviewBottom=h;
 		},
 		getAuthorInfo(){
 			axios.get("http://localhost:8080/customer/"+this.author).then(resp=>{
@@ -297,9 +302,12 @@ export default {
 				console.log(error)
 			})
 		},
-		getStatisticsInfo(){
-			
-		} 
+		setDefaultSelected(defaultselected){
+			this.defaultSelected = defaultselected;
+		},
+		setCategorySelected(categoryselected){
+			this.categorySelected = categoryselected;
+		}
 	}
 
 }

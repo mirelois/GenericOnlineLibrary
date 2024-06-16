@@ -30,7 +30,7 @@ export default{
 		usernameReviewer:'',
 		emojiIds:[],
 		likesCount:{},
-		marginReviewBottom:"10px",
+		marginReviewBottom:"100px",
 		canInteract:Boolean
 	},
 	data(){
@@ -44,7 +44,7 @@ export default{
 		CommentSectionComponent
 	},
 	methods:{
-		expandHeight(){
+		expandHeight(height){
 			this.$emit("expandHeight");
 		}
 	}

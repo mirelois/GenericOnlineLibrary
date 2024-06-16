@@ -6,24 +6,39 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 <template>
     <main>
         <div class="pie-container">
-            <Pie :data="dados" :options="options" />
+            <Pie :data="dados" :options="options" :key="updatekey" />
         </div>
     </main>
 </template>
 <script>
 import axios from "axios";
+import authHeader from '@/services/auth.header';
 export default {
+    props: {
+        categoria: {
+            type: String,
+            default: ''
+        },
+        bookshelf: {
+            type: String,
+            default: ''
+        },
+        isbn:''
+    },
     components:{
         Pie
     },
     data(){
         return {
+            mycategory:'',
+            mydefault:'',
+            updatekey: 0,  
             dados: {
-                labels: ['VueJs', 'EmberJs', 'ReactJs', 'AngularJs'],
+                labels: [],
                 datasets: [
                     {
                     backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
-                    data: [40, 20, 80, 10]
+                    data: []
                     }
                 ]
             },
@@ -42,17 +57,40 @@ export default {
             }       
         }
     },
-    created(){
-        //this.getData();
+    watch: {
+        categoria(newVal, oldVal) {
+            this.mycategory = newVal;
+            this.getData(this.mycategory,this.mydefault);
+        },
+        bookshelf(newVal, oldVal) {
+            this.mydefault = newVal;
+            this.getData(this.mycategory,this.mydefault);
+        }
+        
     },
     methods:{
-        getData(){
-            axios.get("http://localhost:8080/book/"+this.isbn+"/stats/pie&category="+this.category+"&default="+this.default).then(resp=>{
-                this.dados.datasets.data = resp.data.data;
-                this.dados.labels = resp.data.labels;
-            }).catch(error=>{
-                console.log(error);
-            })
+        getData(mycategory, mydefault){
+            if(mycategory!='' && mydefault!=''){
+                let header = authHeader();
+                let config = {headers:header};
+                let categ = mycategory;
+                let newcateg = categ.toLowerCase(); 
+                let bookshf = mydefault;
+                let newbookshf = bookshf.toLowerCase().replaceAll(" ","_"); 
+                console.log("htp://localhost:8080/book/"+this.isbn+"/stats/pie/"+newcateg+"?defaultBookshelf="+newbookshf);
+                axios.get("http://localhost:8080/book/"+this.isbn+"/stats/pie/"+newcateg+"?defaultBookshelf="+newbookshf,config).then(resp=>{
+                    this.dados.datasets = [{
+                        backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+                        data: resp.data.data
+                        }
+                    ]
+                    this.dados.labels = resp.data.labels;
+                    this.updatekey++;
+                    console.log(this.dados);
+                }).catch(error=>{
+                    console.log(error);
+                })
+            }
         }
     }
 }

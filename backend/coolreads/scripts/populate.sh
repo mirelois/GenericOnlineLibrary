@@ -20,7 +20,7 @@ docker exec -it postgres psql -U postgres -d cool -c "CREATE TABLE IF NOT EXISTS
     ageClass VARCHAR(255) UNIQUE NOT NULL
 );"
 
-docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO AgeRange (ageClass, ageClass) VALUES
+docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO AgeRange (ageClass, upperLimit) VALUES
 ('child'),
 ('teen'),
 ('young_adult'),
