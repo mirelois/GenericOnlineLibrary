@@ -2,6 +2,7 @@ package com.aa.coolreads;
 
 import com.aa.coolreads.Book.dto.*;
 import com.aa.coolreads.Book.exception.*;
+import com.aa.coolreads.Book.models.TimeFrame;
 import com.aa.coolreads.Book.services.BookReviewService;
 import com.aa.coolreads.Book.services.BookService;
 import com.aa.coolreads.Book.services.StatisticService;
@@ -12,9 +13,7 @@ import com.aa.coolreads.User.dto.PostDTO;
 import com.aa.coolreads.User.exception.AuthorNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.models.DefaultBookshelf;
-import com.aa.coolreads.User.models.Notification;
 import com.aa.coolreads.User.models.NotificationType;
-import com.aa.coolreads.User.models.Post;
 import com.aa.coolreads.User.services.NotificationService;
 import com.aa.coolreads.User.services.PostService;
 import org.junit.jupiter.api.Test;
@@ -251,12 +250,15 @@ class CoolreadsApplicationTests {
     @Test
     void testStatisticsSlice(){
 
-        StatisticsPieChartDTO pieCountry = statisticService.getStatisticsCountryPieChart(DefaultBookshelf.already_read, "1");
+        StatisticsChartDTO pieCountry = statisticService.getStatisticsCountryPieChart(DefaultBookshelf.already_read, "1");
 
-        StatisticsPieChartDTO pieAge = statisticService.getStatisticsAgePieChart(DefaultBookshelf.already_read, "1");
+        StatisticsChartDTO pieAge = statisticService.getStatisticsAgePieChart(DefaultBookshelf.already_read, "1");
 
+    }
 
-
+    @Test
+    void testLineChart(){
+        StatisticsChartDTO line = statisticService.getTimeLineChart(DefaultBookshelf.already_read, "1", TimeFrame.month, 0, 10);
     }
 
 }

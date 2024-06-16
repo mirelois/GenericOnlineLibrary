@@ -1,40 +1,41 @@
 package com.aa.coolreads.Book.mappers;
 
-import com.aa.coolreads.Book.dto.SliceDTO;
 import com.aa.coolreads.Book.dto.SliceInterfaceDTO;
-import com.aa.coolreads.Book.dto.StatisticsPieChartDTO;
+import com.aa.coolreads.Book.dto.StatisticsChartDTO;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class StatisticsMapper {
 
-    public StatisticsPieChartDTO toStatisticsPieChartDTO(List<SliceInterfaceDTO> slices) {
+    public StatisticsChartDTO toStatisticsPieChartDTO(List<SliceInterfaceDTO> slices) {
 
-        List<SliceDTO> sliceDTOList = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
+        List<Integer> data = new ArrayList<>();
 
         for (SliceInterfaceDTO slice : slices){
-            sliceDTOList.add(new SliceDTO(slice.getClassName(), slice.getAmount()));
+            labels.add(slice.getClassName());
+            data.add(slice.getAmount());
         }
 
-        return new StatisticsPieChartDTO(sliceDTOList);
+        return new StatisticsChartDTO(labels, data);
 
     }
 
-    public StatisticsPieChartDTO toStatisticsPieChartDTO(Page<SliceInterfaceDTO> slices) {
+    public StatisticsChartDTO toStatisticsPieChartDTO(Page<SliceInterfaceDTO> slices) {
 
-        List<SliceDTO> sliceDTOList = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
+        List<Integer> data = new ArrayList<>();
 
-        for (SliceInterfaceDTO slice : slices) {
-            sliceDTOList.add(new SliceDTO(slice.getClassName(), slice.getAmount()));
+        for (SliceInterfaceDTO slice : slices){
+            labels.add(slice.getClassName());
+            data.add(slice.getAmount());
         }
 
-        return new StatisticsPieChartDTO(sliceDTOList);
+        return new StatisticsChartDTO(labels, data);
 
     }
 

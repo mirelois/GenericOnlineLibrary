@@ -1,8 +1,8 @@
 package com.aa.coolreads.Book.models;
 
 public enum TimeFrame {
-    month,
     year,
+    month,
+    week,
     day,
-    hour,
 }

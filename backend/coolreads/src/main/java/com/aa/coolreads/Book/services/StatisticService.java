@@ -1,22 +1,19 @@
 package com.aa.coolreads.Book.services;
 
-import com.aa.coolreads.Book.dto.SliceDTO;
 import com.aa.coolreads.Book.dto.SliceInterfaceDTO;
 import com.aa.coolreads.Book.dto.StatisticsNumberDTO;
-import com.aa.coolreads.Book.dto.StatisticsPieChartDTO;
+import com.aa.coolreads.Book.dto.StatisticsChartDTO;
 import com.aa.coolreads.Book.mappers.StatisticsMapper;
 import com.aa.coolreads.Book.models.TimeFrame;
 import com.aa.coolreads.User.models.DefaultBookshelf;
 import com.aa.coolreads.User.repositories.PersonalBooksRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class StatisticService {
@@ -25,6 +22,7 @@ public class StatisticService {
 
     private final StatisticsMapper statisticsMapper;
 
+    @Autowired
     public StatisticService(PersonalBooksRepository personalBooksRepository, StatisticsMapper statisticsMapper) {
         this.personalBooksRepository = personalBooksRepository;
         this.statisticsMapper = statisticsMapper;
@@ -43,7 +41,7 @@ public class StatisticService {
     }
 
     @Transactional
-    public StatisticsPieChartDTO getStatisticsCountryPieChart(DefaultBookshelf bookshelf, String isbn) {
+    public StatisticsChartDTO getStatisticsCountryPieChart(DefaultBookshelf bookshelf, String isbn) {
 
         List<SliceInterfaceDTO> slices = this.personalBooksRepository.getCountrySlicesByBookshelfName(bookshelf.name(), isbn);
 
@@ -51,7 +49,7 @@ public class StatisticService {
     }
 
     @Transactional
-    public StatisticsPieChartDTO getStatisticsAgePieChart(DefaultBookshelf bookshelf, String isbn) {
+    public StatisticsChartDTO getStatisticsAgePieChart(DefaultBookshelf bookshelf, String isbn) {
 
         List<SliceInterfaceDTO> slices = this.personalBooksRepository.getAgesByBookshelfName(bookshelf.name(), isbn);
 
@@ -59,22 +57,22 @@ public class StatisticService {
     }
 
     @Transactional
-    public StatisticsPieChartDTO getStatisticsGenderPieChart(DefaultBookshelf bookshelf, String isbn) {
+    public StatisticsChartDTO getStatisticsGenderPieChart(DefaultBookshelf bookshelf, String isbn) {
 
         List<SliceInterfaceDTO> slices = this.personalBooksRepository.getGenderSlicesByBookshelfName(bookshelf.name(), isbn);
 
         return statisticsMapper.toStatisticsPieChartDTO(slices);
     }
 
-    //@Transactional
-    //public StatisticsPieChartDTO getTimeLineChart(DefaultBookshelf bookshelf, String isbn, TimeFrame timeFrame, Integer pageNumber, Integer pageSize){
+    @Transactional
+    public StatisticsChartDTO getTimeLineChart(DefaultBookshelf bookshelf, String isbn, TimeFrame timeFrame, Integer pageNumber, Integer pageSize){
 
-    //    PageRequest pageable = PageRequest.of(pageNumber, pageSize);
+        PageRequest pageable = PageRequest.of(pageNumber, pageSize);
 
-    //    Page<SliceInterfaceDTO> slices = this.personalBooksRepository.getTimeLine(bookshelf.name(), isbn, timeFrame.name(), pageable);
+        Page<SliceInterfaceDTO> slices = this.personalBooksRepository.getTimeLine(bookshelf.name(), isbn, timeFrame.name(), pageable);
 
-    //    return statisticsMapper.toStatisticsPieChartDTO(slices);
+        return statisticsMapper.toStatisticsPieChartDTO(slices);
 
-    //}
+    }
 
 }
