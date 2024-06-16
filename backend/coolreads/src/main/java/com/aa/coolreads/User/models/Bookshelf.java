@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 public class Bookshelf implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(length = 50)
