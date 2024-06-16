@@ -19,4 +19,35 @@ public class StatisticsNumberDTO {
         this.wantToRead = wantToRead;
     }
 
+    public Integer getCurrentlyReading() {
+        return currentlyReading;
+    }
+
+    public void setCurrentlyReading(Integer currentlyReading) {
+        this.currentlyReading = currentlyReading;
+    }
+
+    public Integer getAlreadyRead() {
+        return alreadyRead;
+    }
+
+    public void setAlreadyRead(Integer alreadyRead) {
+        this.alreadyRead = alreadyRead;
+    }
+
+    public Integer getDidNotFinish() {
+        return didNotFinish;
+    }
+
+    public void setDidNotFinish(Integer didNotFinish) {
+        this.didNotFinish = didNotFinish;
+    }
+
+    public Integer getWantToRead() {
+        return wantToRead;
+    }
+
+    public void setWantToRead(Integer wantToRead) {
+        this.wantToRead = wantToRead;
+    }
 }
