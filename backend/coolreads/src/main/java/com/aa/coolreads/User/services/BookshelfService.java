@@ -20,8 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
-import java.util.Arrays;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,28 +103,59 @@ public class BookshelfService {
         return this.personalBooksRepository.findBooks(bookshelf).stream().map(this.bookshelfMapper::toPersonalBookDTO).collect(Collectors.toSet());
     }
 
+    public boolean checkIfExclusivityClassesAreConflictFree(String username, String isbn, String newBookshelfName) throws BookshelfNotFoundException, CustomerNotFoundException, BookNotFoundException {
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(newBookshelfName, customer)
+                .orElseThrow(() -> new BookshelfNotFoundException(newBookshelfName));
+
+        String newExclusivityClassName = bookshelf.getExclusivityClass().getName();
+
+        Book book = this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
+
+        Optional<PersonalBook> personalBook = this.personalBooksRepository
+                .getPersonalBookByBookAndCustomer(book, customer);
+
+        if(personalBook.isEmpty())
+            return true;
+
+        boolean isConflictFree = true;
+
+        Iterator<Bookshelf> iterator = personalBook.get().getBookshelves().iterator();
+        Bookshelf bookshelfTemp;
+        while(iterator.hasNext() && isConflictFree){
+            bookshelfTemp = iterator.next();
+            if(!Objects.equals(bookshelfTemp.getName(), newExclusivityClassName)){
+                isConflictFree = false;
+            }
+        }
+
+        return isConflictFree;
+    }
+
     @Transactional
-    public void insertBook(String name, String username, PersonalBookDTO personalBookDTO) throws CustomerNotFoundException, BookshelfNotFoundException, BookNotFoundException, PersonalBookAlreadyExists {
+    public void insertBook(String name, String username, String isbn) throws CustomerNotFoundException, BookshelfNotFoundException, BookNotFoundException, PersonalBookAlreadyExists {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
         Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(name, customer).orElseThrow(() -> new BookshelfNotFoundException(name));
 
-        Book book = this.bookRepository.findById(personalBookDTO.getBookISBN()).orElseThrow(() -> new BookNotFoundException(personalBookDTO.getBookISBN()));
+        Book book = this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
 
-        if(this.personalBooksRepository.getPersonalBookByBookAndBookshelf(book, bookshelf).isPresent())
-            throw new PersonalBookAlreadyExists(book.getIsbn());
+        PersonalBook personalBook = this.personalBooksRepository
+                .getPersonalBookByBookAndCustomer(book, customer).orElseGet(() -> new PersonalBook(0, book, customer));
 
-        PersonalBook personalBook = this.bookshelfMapper.toPersonalBook(personalBookDTO, book, bookshelf);
+        for(Bookshelf personalBookBookshelf: personalBook.getBookshelves()){
+            if(!Objects.equals(personalBookBookshelf.getExclusivityClass().getName(), bookshelf.getName())){
+                personalBook.removeBookshelf(bookshelf);
+            }
+        }
 
         this.personalBooksRepository.save(personalBook);
     }
 
     @Transactional
-    public void deleteBook(String name, String username, String isbn) throws CustomerNotFoundException, BookshelfNotFoundException {
+    public void deleteBook(String username, String isbn) throws CustomerNotFoundException{
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
-        Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(name, customer).orElseThrow(() -> new BookshelfNotFoundException(name));
-
-        this.personalBooksRepository.deletePersonalBookByIsbnAndBookshelf(isbn, bookshelf);
+        this.personalBooksRepository.deletePersonalBookByIsbnAndCustomer(isbn, customer);
     }
 }

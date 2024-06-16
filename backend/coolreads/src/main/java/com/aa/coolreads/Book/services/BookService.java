@@ -131,7 +131,6 @@ public class BookService {
         return books.stream().map(this.bookMapper::toBookDTO).collect(Collectors.toSet());
     }
 
-
     private void checkIfValidISBN(String isbn) throws InvalidISBNExeption {
 
         ISBNValidator isbnValidator = new ISBNValidator();

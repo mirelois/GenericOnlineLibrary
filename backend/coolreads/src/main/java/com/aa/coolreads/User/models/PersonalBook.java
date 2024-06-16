@@ -2,21 +2,14 @@ package com.aa.coolreads.User.models;
 
 import com.aa.coolreads.Book.models.Book;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-//@SqlResultSetMapping(
-//        name = "SliceDTO",
-//        classes = @ConstructorResult(
-//                targetClass = SliceDTO.class,
-//                columns = {
-//                        @ColumnResult(name = "categoryName", type = String.class),
-//                        @ColumnResult(name = "amount", type = Integer.class),
-//                }
-//        )
-//)
 public class PersonalBook implements Serializable {
 
     @Id
@@ -26,21 +19,33 @@ public class PersonalBook implements Serializable {
     private Integer pagesRead;
 
     @Temporal(TemporalType.DATE)
+    @CreationTimestamp
     private Date insertDate;
 
-    @ManyToOne
-    private Bookshelf bookshelf;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "bookshelf_personalbook",
+            joinColumns = @JoinColumn(name = "personalbook_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "bookshelf_id", referencedColumnName = "id")
+    )
+    private Set<Bookshelf> bookshelves;
 
     @ManyToOne
     private Book book;
 
-    public PersonalBook(){}
+    @ManyToOne
+    @JoinColumn(name="customer_username", referencedColumnName="username")
+    private Customer customer;
 
-    public PersonalBook(Integer pagesRead, Date insertDate, Book book, Bookshelf bookshelf) {
+    public PersonalBook(){
+        this.bookshelves = new HashSet<>();
+    }
+
+    public PersonalBook(Integer pagesRead, Book book, Customer customer) {
         this.pagesRead = pagesRead;
-        this.insertDate = insertDate;
         this.book = book;
-        this.bookshelf = bookshelf;
+        this.bookshelves = new HashSet<>();
+        this.customer = customer;
     }
 
     public Long getId() {
@@ -75,11 +80,27 @@ public class PersonalBook implements Serializable {
         this.book = book;
     }
 
-    public Bookshelf getBookshelf() {
-        return bookshelf;
+    public Set<Bookshelf> getBookshelves() {
+        return bookshelves;
     }
 
-    public void setBookshelf(Bookshelf bookshelf) {
-        this.bookshelf = bookshelf;
+    public void setBookshelves(Set<Bookshelf> bookshelves) {
+        this.bookshelves = bookshelves;
+    }
+
+    public void addBookshelf(Bookshelf bookshelf){
+        this.bookshelves.add(bookshelf);
+    }
+
+    public void removeBookshelf(Bookshelf bookshelf){
+        this.bookshelves.remove(bookshelf);
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

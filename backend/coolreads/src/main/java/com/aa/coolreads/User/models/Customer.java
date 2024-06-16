@@ -32,6 +32,9 @@ public class Customer implements UserDetails {
     private Set<Bookshelf> bookshelves;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PersonalBook> personalBooks;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Notification> notifications;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -44,6 +47,7 @@ public class Customer implements UserDetails {
         this.posts = new HashSet<>();
         this.friends = new HashSet<>();
         this.profileDetails = new CustomerProfileDetails();
+        this.personalBooks = new HashSet<>();
     }
 
     public Set<Notification> getNotifications() {
@@ -137,5 +141,13 @@ public class Customer implements UserDetails {
 
     public void addBookshelf(Bookshelf bookshelf){
         this.bookshelves.add(bookshelf);
+    }
+
+    public Set<PersonalBook> getPersonalBooks() {
+        return personalBooks;
+    }
+
+    public void setPersonalBooks(Set<PersonalBook> personalBooks) {
+        this.personalBooks = personalBooks;
     }
 }

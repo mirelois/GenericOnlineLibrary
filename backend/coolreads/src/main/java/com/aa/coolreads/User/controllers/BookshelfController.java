@@ -84,10 +84,21 @@ public class BookshelfController {
     }
 
     @PreAuthorize("#username == principal.username")
-    @PostMapping("/{name}")
-    public ResponseEntity<String> insertBook(@PathVariable String name, @PathVariable String username, @RequestBody PersonalBookDTO book){
+    @GetMapping("/{name}/checkConflicts")
+    public ResponseEntity<?> checkIfHasNoExclusivityClassConflicts(@PathVariable String name, @PathVariable String username, @RequestParam String isbn){
         try{
-            this.bookshelfService.insertBook(name, username, book);
+            Boolean isConflictFree = this.bookshelfService.checkIfExclusivityClassesAreConflictFree(username, isbn, name);
+            return ResponseEntity.ok().body(isConflictFree);
+        } catch (BookshelfNotFoundException | CustomerNotFoundException | BookNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PreAuthorize("#username == principal.username")
+    @PostMapping("/{name}")
+    public ResponseEntity<String> insertBook(@PathVariable String name, @PathVariable String username, @RequestParam String isbn){
+        try{
+            this.bookshelfService.insertBook(name, username, isbn);
             return ResponseEntity.ok().build();
         } catch (BookshelfNotFoundException | BookNotFoundException | CustomerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -97,12 +108,12 @@ public class BookshelfController {
     }
 
     @PreAuthorize("#username == principal.username")
-    @DeleteMapping("/{name}")
-    public ResponseEntity<Void> deleteBook(@PathVariable String name, @PathVariable String username, @RequestParam String isbn){
+    @DeleteMapping("/personalBook")
+    public ResponseEntity<Void> deleteBook(@PathVariable String username, @RequestParam String isbn){
         try{
-            this.bookshelfService.deleteBook(name, username, isbn);
+            this.bookshelfService.deleteBook(username, isbn);
             return ResponseEntity.ok().build();
-        } catch (BookshelfNotFoundException | CustomerNotFoundException e) {
+        } catch (CustomerNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
