@@ -5,6 +5,7 @@ import com.aa.coolreads.User.dto.LoginResponseDTO;
 import com.aa.coolreads.User.dto.RegisterDTO;
 import com.aa.coolreads.User.exception.CustomerAlreadyExistsException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
+import com.aa.coolreads.User.exception.PasswordsDontMatchException;
 import com.aa.coolreads.User.mappers.BookshelfMapper;
 import com.aa.coolreads.User.mappers.CustomerMapper;
 import com.aa.coolreads.User.models.Bookshelf;
@@ -80,9 +81,11 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public void changePassword(String newPassword) throws CustomerNotFoundException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+    public void changePassword(String oldPassword, String newPassword) throws CustomerNotFoundException, PasswordsDontMatchException {
+        Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(!this.passwordEncoder.matches(oldPassword, customer.getPassword()))
+            throw new PasswordsDontMatchException();
 
         customer.setPassword(this.passwordEncoder.encode(newPassword));
         this.customerRepository.save(customer);

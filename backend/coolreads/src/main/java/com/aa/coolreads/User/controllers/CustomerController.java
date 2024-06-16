@@ -4,6 +4,7 @@ import com.aa.coolreads.User.dto.*;
 import com.aa.coolreads.User.exception.BookshelfNotFoundException;
 import com.aa.coolreads.User.exception.CustomerAlreadyExistsException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
+import com.aa.coolreads.User.exception.PasswordsDontMatchException;
 import com.aa.coolreads.User.services.AuthenticationService;
 import com.aa.coolreads.User.services.CustomerService;
 import jakarta.validation.Valid;
@@ -76,12 +77,14 @@ public class CustomerController {
     }
 
     @PutMapping("/me/password")
-    public ResponseEntity<String> changePassword(@RequestParam String password){
+    public ResponseEntity<String> changePassword(@RequestParam String oldPassword, @RequestParam String newPassword){
         try{
-            this.authenticationService.changePassword(password);
+            this.authenticationService.changePassword(oldPassword, newPassword);
             return ResponseEntity.ok().build();
         } catch (CustomerNotFoundException e) {
            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (PasswordsDontMatchException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 

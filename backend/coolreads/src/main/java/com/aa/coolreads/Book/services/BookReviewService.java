@@ -118,8 +118,7 @@ public class BookReviewService {
 
     @Transactional
     public void insertLike(String isbn, String review_username, String likeType) throws CustomerNotFoundException, ReviewNotFoundException, InvalidLikeTypeException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
 
         LikeType like = null;
@@ -136,8 +135,7 @@ public class BookReviewService {
 
     @Transactional
     public void deleteLike(String isbn, String review_username) throws CustomerNotFoundException, ReviewNotFoundException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
 
         this.reviewLikeRepository.deleteById(new ReviewLikeId(customer, review));
@@ -145,8 +143,7 @@ public class BookReviewService {
 
     @Transactional
     public void insertComment(String isbn, String review_username, String comment) throws CustomerNotFoundException, ReviewNotFoundException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
 
         this.bookReviewCommentRepository.save(new ReviewComment(comment, customer, review));
@@ -154,10 +151,9 @@ public class BookReviewService {
 
     @Transactional
     public void deleteComment(String isbn, String review_username) throws CustomerNotFoundException, ReviewNotFoundException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
 
-        this.bookReviewCommentRepository.deleteById(new ReviewCommentId(username, new ReviewId(review.getCustomer().getUsername(), review.getBook().getIsbn())));
+        this.bookReviewCommentRepository.deleteById(new ReviewCommentId(customer.getUsername(), new ReviewId(review.getCustomer().getUsername(), review.getBook().getIsbn())));
     }
 }
