@@ -82,7 +82,8 @@ public class AuthenticationService {
 
     @Transactional
     public void changePassword(String oldPassword, String newPassword) throws CustomerNotFoundException, PasswordsDontMatchException {
-        Customer customer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
         if(!this.passwordEncoder.matches(oldPassword, customer.getPassword()))
             throw new PasswordsDontMatchException();

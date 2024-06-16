@@ -1,6 +1,7 @@
 package com.aa.coolreads.User.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -9,12 +10,12 @@ import org.springframework.stereotype.Service;
 public class MailService {
     private final JavaMailSender mailSender;
 
-    private final String coolReadsMail;
+    @Value("${coolreads.mail}")
+    private String coolReadsMail;
 
     @Autowired
     public MailService(JavaMailSender mailSender){
         this.mailSender = mailSender;
-        this.coolReadsMail = "no-reply@coolreads.com";
     }
 
 
