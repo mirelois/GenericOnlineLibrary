@@ -3,6 +3,18 @@ import NavComponent from '../components/NavComponent.vue';
 import FooterComponent from '../components/FooterComponent.vue';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+
+const store = useStore();
+
+const translations = computed(() => store.getters['language/currentTranslations']);
+const setLanguage = (language) => store.dispatch('language/setLanguage', language);
+const selectedLanguage = computed(() => store.state.language.selectedLanguage);
+
+if (localStorage.getItem('selectedLanguage')) {
+    setLanguage(localStorage.getItem('selectedLanguage'));
+}
 </script>
 
 <template>
@@ -35,15 +47,15 @@ import '@vuepic/vue-datepicker/dist/main.css';
 
   </div>
   <div class="details">
-    <div class="details-title">Details</div>
+    <div class="details-title">{{translations.details}}</div>
     <div class="detail-row">
-      <b class="label">Age</b>
+      <b class="label">{{translations.age}}</b>
       <div v-if="edit_activated==false" class="value">{{birthDate}}</div>
       <Datepicker v-if="edit_activated==true" v-model="date" />
 
     </div>
     <div class="detail-row">
-      <b class="label">Country</b>
+      <b class="label">{{translations.country}}</b>
       <div v-if="edit_activated==false" class="value">{{country}}</div>
         <select v-model="selected_country" class="value-aux" v-if="edit_activated==true" name="country">
           <option value="nd_country">-</option>
@@ -53,7 +65,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
       </select>
     </div>
     <div class="detail-row">
-      <b class="label">Gender</b>
+      <b class="label">{{translations.gender}}</b>
       <div v-if="edit_activated==false" class="value">{{gender}}</div>
       <select v-model="selected_gender" v-if="edit_activated==true" class="value-aux" name="gender" id="gender">
         <option value="Femaile">Female</option>
@@ -64,12 +76,12 @@ import '@vuepic/vue-datepicker/dist/main.css';
 
 
     </div>
-    <button class="edit-profile-wrapper" @click="edit_activated=true">Edit Profile</button>
-    <button v-if="edit_activated==true" class="edit-profile-wrapper-2" @click="handle_edit()">Save</button>
+    <button class="edit-profile-wrapper" @click="edit_activated=true">{{translations.editprofile}}</button>
+    <button v-if="edit_activated==true" class="edit-profile-wrapper-2" @click="handle_edit()">{{translations.save}}</button>
   </div>
   <div class="section">
     <div class="container">
-      <div class="about-me">About me</div>
+      <div class="about-me">{{translations.aboutme}}</div>
     </div>
     <div class="container1">
       <div class="theres-nothing-i-container">
@@ -82,7 +94,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
     </div>
     <div class="container2"></div>
     <div class="container3">
-      <div class="about-me">Interests</div>
+      <div class="about-me">{{translations.interests}}</div>
       <div class="container1">
         <div class="im-passionate-about-container">
           <span class="theres-nothing-i-container1">
@@ -94,7 +106,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
     </div>
   </div>
   <div class="highlighted-bookshelf-my-top-parent">
-    <div class="highlighted-bookshelf-my">Highlighted Bookshelf: My Top 5</div>
+    <div class="highlighted-bookshelf-my">{{translations.highlighted}}</div>
     <div v-for="book in highlightedBookshelf" v-if="!book" class="book-row">
       <img class="book-icon" alt="" :src="book.cover">
     </div>
@@ -418,7 +430,7 @@ export default {
   color: rgba(255, 255, 255, 0.9);
 }
 .details-title {
-  font-size: 48px;
+  font-size: 40px;
   line-height: 25px;
   color: #fcfcfd;
   margin-bottom: 30px;

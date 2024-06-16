@@ -1,151 +1,182 @@
 <template>
-    <div class="body">
-        <NavComponent></NavComponent>
-        <b class="category-fantasy">{{ translations.category }} {{ translatedCategory }}</b>
-        <input type="text" class="my-search-box" :placeholder="translations.searchPlaceholderBooks" />
-        <div class="sort-component">
-            <div class="listbox-title" @click="showMenu">
-                <img v-if="showDropdownMenu" class="chevron-icon-d" alt="" src="/img/updroplist.svg">
-                <img v-else class="chevron-icon-d" alt="" src="/img/downdroplist.svg">
-                <div class="order-by-title">{{ translations.orderBy }}</div>
-            </div>
-            <div class="listbox-main">
-                <div class="listboxbg"></div>
-                <div class="placeholder-text">
-                    <div class="order-by-placeholder">{{ selectedOption }}</div>
-                </div>
-            </div>
-            <div v-show="showDropdownMenu" class="clip-list">
-                <div class="dropdown-list">
-                    <div class="item-option-d" @click="sortBooks(translations.date)">
-                        <div class="item-content">{{ translations.date }}</div>
-                    </div>
-                    <div class="item-option-d" @click="sortBooks(translations.title)">
-                        <div class="item-content">{{ translations.title }}</div>
-                    </div>
-                    <div class="item-option-d" @click="sortBooks(translations.rate)">
-                        <div class="item-content">{{ translations.rate }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="separator"></div>
-        <div class="books-search-result">
-            <div class="book-row">
-                <img class="book-icon" alt="" src="/img/desporto.png">
-                <img class="book-icon" alt="" src="/img/aventura.png">
-                <img class="book-icon" alt="" src="/img/misterio.png">
-                <img class="book-icon" alt="" src="/img/biografia.png">
-                <img class="book-icon" alt="" src="/img/ficcao.png">
-            </div>
-            <div class="book-row">
-                <img class="book-icon" alt="" src="/img/fantasia.png">
-                <img class="book-icon" alt="" src="/img/musica.png">
-                <img class="book-icon" alt="" src="/img/romance.png">
-                <img class="book-icon" alt="" src="/img/manga.png">
-                <img class="book-icon" alt="" src="/img/fantasia.png">
-            </div>
-            <div class="book-row">
-                <img class="book-icon" alt="" src="/img/manga.png">
-                <img class="book-icon" alt="" src="/img/terror.png">
-                <img class="book-icon" alt="" src="/img/manga.png">
-                <img class="book-icon" alt="" src="/img/romance.png">
-                <img class="book-icon" alt="" src="/img/musica.png">
-            </div>
-        </div>
-        <div class="pagination">
-            <div class="pagination-child">
-                <div class="parent">
-                    <img class="vector-icon" @click="backPage()" alt="" src="/img/back.svg">
-                    <div v-for="(n, index) in nrpages" :key="index" class="div3" :class="{ 'child': activate[n - 1] }">{{ n }}</div>
-                    <img class="vector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
-                </div>
-            </div>
-        </div>
-        <div class="newfooter">
-        </div>
-    </div>
+  <div class="body">
+      <NavComponent></NavComponent>
+      <b class="category-fantasy">{{ translations.category }} {{ translatedCategory }}</b>
+      <input v-model="searchInput" type="text" class="my-search-box" :placeholder="translations.searchPlaceholderBooks" />
+      <div class="sort-component">
+          <div class="listbox-title" @click="showMenu">
+              <img v-if="showDropdownMenu" class="chevron-icon-d" alt="" src="/img/updroplist.svg">
+              <img v-else class="chevron-icon-d" alt="" src="/img/downdroplist.svg">
+              <div class="order-by-title">{{ translations.orderBy }}</div>
+          </div>
+          <div class="listbox-main">
+              <div class="listboxbg"></div>
+              <div class="placeholder-text">
+                  <div class="order-by-placeholder">{{ selectedOption }}</div>
+              </div>
+          </div>
+          <div v-show="showDropdownMenu" class="clip-list">
+              <div class="dropdown-list">
+                  <div class="item-option-d" @click="sortBooks('Date')">
+                      <div class="item-content">{{ translations.date }}</div>
+                  </div>
+                  <div class="item-option-d" @click="sortBooks('Title')">
+                      <div class="item-content">{{ translations.title }}</div>
+                  </div>
+                  <div class="item-option-d" @click="sortBooks('Rate')">
+                      <div class="item-content">{{ translations.rate }}</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="separator"></div>
+      <div class="books-search-result">
+          <div v-for="(bookRow, rowIndex) in paginatedBooks" :key="rowIndex" class="book-row">
+              <img v-for="book in bookRow" :key="book.id" class="book-icon" :src="book.cover" alt="" />
+          </div>
+      </div>
+      <div class="pagination">
+          <div class="pagination-child">
+              <div class="parent">
+                  <img class="vector-icon" @click="backPage" alt="" src="/img/back.svg">
+                  <div v-for="(n, index) in nrPages" :key="index" class="div3" :class="{ 'child': activate[n - 1] }" @click="goToPage(n - 1)">{{ n }}</div>
+                  <img class="vector-icon1" @click="nextPage" alt="" src="/img/front.svg">
+              </div>
+          </div>
+      </div>
+      <div class="newfooter"></div>
+  </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, watch} from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import NavComponent from '../components/NavComponent.vue';
-import FooterComponent from '../components/FooterComponent.vue';
 
 export default {
-    components: {
-        NavComponent,
-    },
-    setup() {
-        const route = useRoute();
-        const store = useStore();
+  components: {
+      NavComponent,
+  },
+  setup() {
+      const route = useRoute();
+      const store = useStore();
 
-        const translations = computed(() => store.getters['language/currentTranslations']);
-        const category = computed(() => route.params.category);
-        const translatedCategory = computed(() => {
-            const categoryTranslations = {
-                'Aventura': translations.value.adventure,
-                'Mistério': translations.value.mystery,
-                'Biografia': translations.value.biography,
-                'Ficção Científica': translations.value.sciFi,
-                'Fantasia': translations.value.fantasy,
-                'Música': translations.value.music,
-                'Desporto': translations.value.sports,
-                'Romance': translations.value.romance,
-                'Terror': translations.value.horror,
-                'Manga': translations.value.manga,
-            };
-            return category.value ? categoryTranslations[category.value] || category.value : '';
-        });
+      const translations = computed(() => store.getters['language/currentTranslations']);
+      const category = computed(() => route.params.category);
+      const translatedCategory = computed(() => {
+          const categoryTranslations = {
+              'Aventura': translations.value.adventure,
+              'Mistério': translations.value.mystery,
+              'Biografia': translations.value.biography,
+              'Ficção Científica': translations.value.sciFi,
+              'Fantasia': translations.value.fantasy,
+              'Música': translations.value.music,
+              'Desporto': translations.value.sports,
+              'Romance': translations.value.romance,
+              'Terror': translations.value.horror,
+              'Manga': translations.value.manga,
+          };
+          return category.value ? categoryTranslations[category.value] || category.value : '';
+      });
 
-        const showDropdownMenu = ref(false);
-        const selectedOption = ref('Select an option');
-        const page = ref(0);
-        const nrpages = 10;
-        const activate = ref(Array(10).fill(false));
+      const showDropdownMenu = ref(false);
+      const selectedOption = ref('Select an option');
+      const searchInput = ref('');
+      const page = ref(0);
+      const maxPerPage = 5;
+      const activate = ref([]);
+      const books = ref([]);
+      const filtered = ref([]);
 
-        const showMenu = () => {
-            showDropdownMenu.value = !showDropdownMenu.value;
-        };
+      const showMenu = () => {
+          showDropdownMenu.value = !showDropdownMenu.value;
+      };
 
-        const sortBooks = (option) => {
-            selectedOption.value = option;
-            showDropdownMenu.value = false;
-        };
+      const sortBooks = (param) => {
+          if (param === 'Date') {
+              filtered.value.sort((a, b) => new Date(a.insertDate) - new Date(b.insertDate));
+          } else if (param === 'Rate') {
+              filtered.value.sort((a, b) => a.rate - b.rate);
+          } else {
+              filtered.value.sort((a, b) => a.title.localeCompare(b.title));
+          }
+          selectedOption.value = param;
+          page.value = 0;
+          initializeActivate();
+      };
 
-        const nextPage = () => {
-            if (page.value + 2 <= nrpages) {
-                activate.value[page.value] = false;
-                page.value += 1;
-                activate.value[page.value] = true;
-            }
-        };
+      const nextPage = () => {
+          if (page.value + 1 < nrPages.value) {
+              activate.value[page.value] = false;
+              page.value += 1;
+              activate.value[page.value] = true;
+          }
+      };
 
-        const backPage = () => {
-            if (page.value - 1 >= 0) {
-                activate.value[page.value] = false;
-                page.value -= 1;
-                activate.value[page.value] = true;
-            }
-        };
+      const backPage = () => {
+          if (page.value > 0) {
+              activate.value[page.value] = false;
+              page.value -= 1;
+              activate.value[page.value] = true;
+          }
+      };
 
-        return {
-            translations,
-            translatedCategory,
-            showDropdownMenu,
-            selectedOption,
-            showMenu,
-            page,
-            nrpages,
-            activate,
-            nextPage,
-            backPage
-        };
-    }
+      const goToPage = (pageIndex) => {
+          activate.value[page.value] = false;
+          page.value = pageIndex;
+          activate.value[page.value] = true;
+      };
+
+      const initializeActivate = () => {
+          activate.value = new Array(nrPages.value).fill(false);
+          if (activate.value.length > 0) activate.value[0] = true;
+      };
+
+      const nrPages = computed(() => Math.ceil(filtered.value.length / maxPerPage));
+
+      const paginatedBooks = computed(() => {
+          const start = page.value * maxPerPage;
+          const end = start + maxPerPage;
+          const booksForPage = filtered.value.slice(start, end);
+          const rows = [];
+          for (let i = 0; i < booksForPage.length; i += 5) {
+              rows.push(booksForPage.slice(i, i + 5));
+          }
+          return rows;
+      });
+
+      watch(searchInput, (newSearch) => {
+          if (newSearch) {
+              filtered.value = books.value.filter((book) =>
+                  book.title.toLowerCase().includes(newSearch.toLowerCase())
+              );
+          } else {
+              filtered.value = books.value;
+          }
+          initializeActivate();
+      });
+
+      return {
+          translations,
+          translatedCategory,
+          showDropdownMenu,
+          selectedOption,
+          showMenu,
+          searchInput,
+          page,
+          nrPages,
+          activate,
+          nextPage,
+          backPage,
+          goToPage,
+          paginatedBooks,
+          sortBooks,
+      };
+  },
 };
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inika:wght@400;700&display=swap');

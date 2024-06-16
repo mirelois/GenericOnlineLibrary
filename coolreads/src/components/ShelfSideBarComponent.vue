@@ -1,9 +1,9 @@
 <template>
 	<main>
 	<div class="shelf-sidebar">
-		<b class="title">Your Bookshelves</b>
+		<b class="title">{{translations.yourbookshelves}}</b>
 		<div class="create-bookshelf-btn" id="createBookshelfBtnContainer">
-			<button @click="showCreateBookshelfMenu" class="createbs">+ Create Bookshelf</button>
+			<button @click="showCreateBookshelfMenu" class="createbs">+ {{translations.createbookshelf}}</button>
 			<img class="transfer-icon" alt="" src="/img/transfer.svg">
 		</div>
 		<div v-for="(bookshelf,index) in mybookshelves" :key="index" class="children-shelves-parent">
@@ -43,8 +43,20 @@ export default{
 			bookshelfname:'',
 			msg:'',
 			mybookshelves:[]
-		}
-	},methods:{
+		};
+	},
+	computed: {
+		translations() {
+			return this.$store.getters['language/currentTranslations'];
+    	},
+    	selectedLanguage() {
+      		return this.$store.state.language.selectedLanguage;
+    	}
+	},
+	methods:{
+		setLanguage(language) {
+      		this.$store.dispatch('language/setLanguage', language);
+    	},
 		showCreateBookshelfMenu(){
 			this.showAdddBookshelf= !this.showAdddBookshelf;
 			this.bookshelfname="";
@@ -147,7 +159,7 @@ export default{
 .children-shelves-parent {
 	position:relative;
 	top: 150px;
-	left: 31px;
+	left: 36px;
 	height:40px;
 	margin-bottom:5px;
 }

@@ -2,19 +2,31 @@
 import NavComponent from '../components/NavComponent.vue'
 import BookComponent from '../components/BookCoverComponent.vue'
 import FooterComponent from '../components/FooterComponent.vue';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+
+const store = useStore();
+
+const translations = computed(() => store.getters['language/currentTranslations']);
+const setLanguage = (language) => store.dispatch('language/setLanguage', language);
+const selectedLanguage = computed(() => store.state.language.selectedLanguage);
+
+if (localStorage.getItem('selectedLanguage')) {
+    setLanguage(localStorage.getItem('selectedLanguage'));
+}
 </script>
 <template>
     <ShelfSideBarComponent v-if="username!==''" :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
   	<div class="line-div">
     </div> 
     <div class="books-page">
-        <div class="text-wrapper-4">Bookshelf: {{ bookshelfname }}</div> 
+        <div class="text-wrapper-4">{{ translations.bookshelf }}: {{ bookshelfname }}</div> 
         <input v-model="search_input" class="search-bookshelf" type="text" placeholder="Filter by book name"/> 
         <div class="sort-component">
         <div class="listbox-title">
             <img v-if="showDropdownMenu==true" class="chevron-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
             <img v-if="showDropdownMenu==false" class="chevron-icon-d" @click='showMenu' alt="" src="/img/updroplist.svg">
-            <div class="order-by-title">Order By</div>
+            <div class="order-by-title">{{ translations.orderBy }}</div>
             </div>
             <div class="listbox-main">
             <div class="listboxbg">
@@ -26,13 +38,13 @@ import FooterComponent from '../components/FooterComponent.vue';
         <div v-show="showDropdownMenu==true" class="clip-list">
             <div class="dropdown-list">
             <div class="item-option-d" @click="sortBooks(`Date`)">
-            <div class="item-content">Date</div>
+            <div class="item-content">{{ translations.date }}</div>
             </div>
             <div class="item-option-d" @click="sortBooks(`Title`)">
-            <div class="item-content">Title</div>
+            <div class="item-content">{{ translations.title }}</div>
             </div>
             <div class="item-option-d" @click="sortBooks(`Rate`)">
-            <div class="item-content">Rate</div>
+            <div class="item-content">{{ translations.rate }}</div>
             </div>
             </div>
             <div class="clip-list-child">

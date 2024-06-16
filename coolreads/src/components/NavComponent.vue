@@ -29,7 +29,7 @@ if (localStorage.getItem('selectedLanguage')) {
                     <a href="/profile">{{ translations.viewProfile }}<div class="view-profile"></div></a>
                 </div>
                 <div class="signoutoption" id="signoutOptionContainer">
-                    <div class="view-profile"><a @click="handle_logout">Sign Out</a></div>
+                    <div class="view-profile"><a @click="handle_logout">{{translations.logout}}</a></div>
                 </div>
             </div>
             <a href="/settings">
@@ -84,10 +84,10 @@ if (localStorage.getItem('selectedLanguage')) {
                     <div class="c">{{ translations.bookshelf }}</div>
                 </div>
             </a>
-            <button v-if="username!==''" @click="handle_logout()" class="authbtn1">Logout</button>
+            <button v-if="username!==''" @click="handle_logout()" class="authbtn1">{{translations.logout}}</button>
             <div>
-                <div v-if="username===''"><button @click="handle_login()" class="authbtn1">Login</button></div>
-                <div v-if="username===''"><button @click="handle_signup()" class="authbtn2">Sign Up</button></div>
+                <div v-if="username===''"><button @click="handle_login()" class="authbtn1">{{translations.login}}</button></div>
+                <div v-if="username===''"><button @click="handle_signup()" class="authbtn2">{{translations.signup}}</button></div>
             </div>
         </div>
     </main>
