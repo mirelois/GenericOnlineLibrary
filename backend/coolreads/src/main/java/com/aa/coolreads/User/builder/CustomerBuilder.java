@@ -92,11 +92,6 @@ public class CustomerBuilder implements UserBuilder {
         return this;
     }
 
-    public CustomerBuilder setFavoriteGenres(Set<Genre> favoriteGenres){
-        this.customer.setFavoriteGenres(favoriteGenres);
-        return this;
-    }
-
     public CustomerBuilder setBookshelves(Set<Bookshelf> bookshelves){
         this.customer.setBookshelves(bookshelves);
         return this;

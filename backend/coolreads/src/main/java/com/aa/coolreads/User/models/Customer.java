@@ -1,6 +1,5 @@
 package com.aa.coolreads.User.models;
 
-import com.aa.coolreads.Book.models.Genre;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,9 +24,6 @@ public class Customer implements UserDetails {
     @ManyToMany
     private Set<Customer> friends;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private Set<Genre> favoriteGenres;
-
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Bookshelf> bookshelves;
 
@@ -41,7 +37,6 @@ public class Customer implements UserDetails {
     private Set<Post> posts;
 
     public Customer(){
-        this.favoriteGenres = new HashSet<>();
         this.bookshelves = new HashSet<>();
         this.notifications = new HashSet<>();
         this.posts = new HashSet<>();
@@ -88,14 +83,6 @@ public class Customer implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Set<Genre> getFavoriteGenres() {
-        return favoriteGenres;
-    }
-
-    public void setFavoriteGenres(Set<Genre> favoriteGenres) {
-        this.favoriteGenres = favoriteGenres;
     }
 
     public Set<Bookshelf> getBookshelves() {
