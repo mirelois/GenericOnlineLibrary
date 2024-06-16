@@ -4,8 +4,11 @@ import BookComponent from '../components/BookCoverComponent.vue'
 import FooterComponent from '../components/FooterComponent.vue';
 </script>
 <template>
+    <ShelfSideBarComponent v-if="username!==''" :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
+  	<div class="line-div">
+    </div> 
     <div class="books-page">
-        <div class="text-wrapper-4">My Bookshelf</div> 
+        <div class="text-wrapper-4">Bookshelf: {{ bookshelfname }}</div> 
         <input v-model="search_input" class="search-bookshelf" type="text" placeholder="Filter by book name"/> 
         <div class="sort-component">
         <div class="listbox-title">
@@ -77,12 +80,13 @@ import axios from "axios";
 import ConfirmComponent from '@/components/ConfirmComponent.vue';
 import router from '@/router';
 import authHeader from '@/services/auth.header';
-
+import ShelfSideBarComponent from '@/components/ShelfSideBarComponent.vue';
 export default {
     components: {
         NavComponent,
         BookComponent,
-        ConfirmComponent
+        ConfirmComponent,
+        ShelfSideBarComponent
     },
     data(){
         return {
@@ -234,13 +238,25 @@ export default {
     margin-top: 500px;
     margin-left: -800px;
 }
-.books-page .overlap {
-    position: relative;
-    width: 1379px;
-    height: 1763px;
-    top: -12px;
-    left: -277px;
+::placeholder {
+  color: black;
 }
+.books-page .overlap {
+  position: relative;
+  width: 1379px;
+  height: 1763px;
+  top: 550px;
+  left: -150px;
+}
+.line-div {
+  width: 100%;
+  position: relative;
+  border-right: 1px solid #dccfcf;
+  box-sizing: border-box;
+  height: 3176.1px;
+  left:-250px;
+} 
+
 .books-page .book-row {
     display: flex;
     width: 1060px;
@@ -280,7 +296,7 @@ export default {
 .books-page .text-wrapper-4 {
   position: absolute;
   top: 300px;
-  left: 100px;
+  left: 600px;
   font-family: "Inika-Regular", Helvetica;
   font-weight: 400;
   color: #e9e9e9;
@@ -464,7 +480,7 @@ export default {
     width: 739px;
     height: 57px;
     top: 444px;
-    left: 115px;
+    left: 615px;
     background-color: #e6e6e66e;
     border-radius: 25px;
 }
@@ -687,7 +703,7 @@ export default {
   font-size: 16px;
   color: #fff;
   font-family: Montserrat;
-  left: 900px;
+  left: 1400px;
   top: 410px;
 }
 

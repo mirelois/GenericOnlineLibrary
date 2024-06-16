@@ -7,9 +7,12 @@ import FooterComponent from '../components/FooterComponent.vue';
   <main>
     <NavComponent :username="username"></NavComponent>
     <ShelfSideBarComponent v-if="username!==''" :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
+  	<div class="line-div">
+    </div> 
   </main>
 </template>
 <script>
+import router from '@/router';
 export default {
   data(){
     return{
@@ -70,4 +73,12 @@ export default {
     margin-top: 0px;
     margin-left: -1400px;
 }
+.line-div {
+  width: 100%;
+  position: relative;
+  border-right: 1px solid #dccfcf;
+  box-sizing: border-box;
+  height: 3176.1px;
+  left:-800px;
+} 
 </style>

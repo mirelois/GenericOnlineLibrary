@@ -12,7 +12,7 @@
 			</div>
 		</div>
         <div class="review">{{ reviewDescription }}</div>
-		<EmojiReactionComponent :likes="likesCount" :emojiIds="emojiIds"></EmojiReactionComponent>
+		<EmojiReactionComponent :reviewer="usernameReviewer" :isbn="isbn" :likes="likesCount" :emojiIds="emojiIds"></EmojiReactionComponent>
 		<CommentSectionComponent :canInteract="canInteract" :reviewer="usernameReviewer" :isbn="isbn" @comment_opened="expandHeight"></CommentSectionComponent>
 	</div> 
 	</main>

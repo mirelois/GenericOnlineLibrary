@@ -187,10 +187,11 @@ export default {
 				this.nrreviews = descreview.length;
 				this.nrratings = this.reviews.length;
 				for (let i = 0; i < this.reviews.length; i++) {
-					let ids = ["r"+(4*i+1),"r"+(4*i+2),"r"+(4*i+3),"r"+(4*i+4),"r"+(4*i+5)];
+					let ids = ["r"+(5*i+1),"r"+(5*i+2),"r"+(5*i+3),"r"+(5*i+4),"r"+(5*i+5)];
 					this.reviews[i]["emojiIds"]=ids;
 				}
-				console.log(review.data)
+				console.log("the reviews");
+				console.log(review.data);
 			}).catch(err=>{
 				console.log(err)
 			})
@@ -255,7 +256,7 @@ export default {
 				    {
                       pagesRead:0,
                       insertDate:isoDateString,
-                      bookISBN: this.bookISBN
+                      bookISBN: this.isbn
 				    },
                     config 
             	).then(resp =>{
