@@ -11,9 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, String> {
-    @Query("SELECT b FROM Book b WHERE b.title LIKE CONCAT('%',:title,'%')")
-    Page<Book> findBooksByTitle(@Param("title") String title, PageRequest pageable);
 
-    @Query("SELECT b FROM Book b JOIN b.genres g WHERE g = :genre")
-    Page<Book> findBooksByGenre(@Param("genre") String genre, PageRequest pageable);
+    @Query("SELECT b FROM Book b where b.title LIKE CONCAT('%',:title,'%')")
+    Page<Book> findBooksByTitle(@Param("title") String title, PageRequest pageable);
 }

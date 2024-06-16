@@ -1,12 +1,16 @@
 package com.aa.coolreads.Book.services;
 
 import com.aa.coolreads.Book.dto.SliceDTO;
+import com.aa.coolreads.Book.dto.SliceInterfaceDTO;
 import com.aa.coolreads.Book.dto.StatisticsNumberDTO;
 import com.aa.coolreads.Book.dto.StatisticsPieChartDTO;
 import com.aa.coolreads.Book.mappers.StatisticsMapper;
+import com.aa.coolreads.Book.models.TimeFrame;
 import com.aa.coolreads.User.models.DefaultBookshelf;
 import com.aa.coolreads.User.repositories.PersonalBooksRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,25 +45,36 @@ public class StatisticService {
     @Transactional
     public StatisticsPieChartDTO getStatisticsCountryPieChart(DefaultBookshelf bookshelf, String isbn) {
 
-        List<SliceDTO> slices = this.personalBooksRepository.getCountrySlicesByBookshelfName(bookshelf.name(), isbn);
+        List<SliceInterfaceDTO> slices = this.personalBooksRepository.getCountrySlicesByBookshelfName(bookshelf.name(), isbn);
 
-        return new StatisticsPieChartDTO(slices);
+        return statisticsMapper.toStatisticsPieChartDTO(slices);
     }
 
     @Transactional
     public StatisticsPieChartDTO getStatisticsAgePieChart(DefaultBookshelf bookshelf, String isbn) {
 
-        List<SliceDTO> slices = this.personalBooksRepository.getAgesByBookshelfName(bookshelf.name(), isbn);
+        List<SliceInterfaceDTO> slices = this.personalBooksRepository.getAgesByBookshelfName(bookshelf.name(), isbn);
 
-        return new StatisticsPieChartDTO(slices);
+        return statisticsMapper.toStatisticsPieChartDTO(slices);
     }
 
     @Transactional
     public StatisticsPieChartDTO getStatisticsGenderPieChart(DefaultBookshelf bookshelf, String isbn) {
 
-        List<SliceDTO> slices = this.personalBooksRepository.getGenderSlicesByBookshelfName(bookshelf.name(), isbn);
+        List<SliceInterfaceDTO> slices = this.personalBooksRepository.getGenderSlicesByBookshelfName(bookshelf.name(), isbn);
 
-        return new StatisticsPieChartDTO(slices);
+        return statisticsMapper.toStatisticsPieChartDTO(slices);
+    }
+
+    @Transactional
+    public StatisticsPieChartDTO getTimeLineChart(DefaultBookshelf bookshelf, String isbn, TimeFrame timeFrame, Integer pageNumber, Integer pageSize){
+
+        PageRequest pageable = PageRequest.of(pageNumber, pageSize);
+
+        Page<SliceInterfaceDTO> slices = this.personalBooksRepository.getTimeLine(bookshelf.name(), isbn, timeFrame.name(), pageable);
+
+        return statisticsMapper.toStatisticsPieChartDTO(slices);
+
     }
 
 }
