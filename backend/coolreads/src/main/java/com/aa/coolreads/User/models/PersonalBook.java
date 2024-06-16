@@ -1,5 +1,6 @@
 package com.aa.coolreads.User.models;
 
+import com.aa.coolreads.Book.dto.SliceDTO;
 import com.aa.coolreads.Book.models.Book;
 import jakarta.persistence.*;
 
@@ -7,6 +8,16 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+@SqlResultSetMapping(
+        name = "SliceDTO",
+        classes = @ConstructorResult(
+                targetClass = SliceDTO.class,
+                columns = {
+                        @ColumnResult(name = "categoryName", type = String.class),
+                        @ColumnResult(name = "amount", type = Integer.class),
+                }
+        )
+)
 public class PersonalBook implements Serializable {
 
     @Id
@@ -15,6 +26,7 @@ public class PersonalBook implements Serializable {
 
     private Integer pagesRead;
 
+    @Temporal(TemporalType.DATE)
     private Date insertDate;
 
     @ManyToOne

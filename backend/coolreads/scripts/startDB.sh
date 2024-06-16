@@ -9,3 +9,8 @@ docker exec -it postgres psql -U postgres -d cool -c "CREATE TABLE IF NOT EXISTS
     genre_type VARCHAR(255) UNIQUE NOT NULL PRIMARY KEY
 );"
 
+docker exec -it postgres psql -U postgres -d cool -c "CREATE TABLE IF NOT EXISTS AgeRange (
+    id SERIAL PRIMARY KEY,
+    ageClass VARCHAR(255) UNIQUE NOT NULL
+);"
+

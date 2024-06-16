@@ -10,7 +10,7 @@ docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO Genre (genre_t
 ('romance')
 ON CONFLICT (genre_type) DO NOTHING;";
 
-docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO AgeRange (ageClass) VALUES
+docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO AgeRange (ageClass, upperLimit) VALUES
 ('child'),
 ('teen'),
 ('young_adult'),
@@ -55,7 +55,23 @@ VALUES
 ('7','It is the middle of the summer, but there is an unseasonal mist pressing against the windowpanes. Harry Potter is waiting nervously in his bedroom at the Dursleys house in Privet Drive for a visit from Professor Dumbledore himself.','https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1587697303i/1.jpg','2005-07-16','Harry Potter and the Sorcerers Stone',652,'jkrowling','Future Fiction House'),
 ('8','Harry has been burdened with a dark, dangerous and seemingly impossible task: that of locating and destroying Voldemorts remaining Horcruxes. Never has Harry felt so alone, or faced a future so full of shadows.','https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1663805647i/136251.jpg','2007-07-21','Harry Potter and the Deathly Hallows',759,'jkrowling','Future Fiction House');";
 
-docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO book_genres (book_isbn, genres_genre_type) VALUES ('1','scifi'),('1','fantasy'),('2','adventure'),('2','fantasy'),('3','adventure'),('3','fantasy'),('4','adventure'),('4','fantasy'),('5','adventure'),('5','fantasy'),('6','adventure'),('6','fantasy'),('7','adventure'),('7','fantasy'),('8','adventure'),('8','fantasy');";
+docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO book_genres (book_isbn, genres_genre_type) VALUES
+('1','scifi'),
+('1','fantasy'),
+('2','adventure'),
+('2','fantasy'),
+('3','adventure'),
+('3','fantasy'),
+('4','adventure'),
+('4','fantasy'),
+('5','adventure'),
+('5','fantasy'),
+('6','adventure'),
+('6','fantasy'),
+('7','adventure'),
+('7','fantasy'),
+('8','adventure'),
+('8','fantasy');";
 
 docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO review (book_isbn, customer_username, description, post_date) VALUES
 ('1','techguru','Excelente leitura, muito envolvente e bem escrito.', '2024-05-01'),
@@ -65,42 +81,32 @@ docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO rating (book_i
 ('1','techguru',5),
 ('1','historybuff',3);";
 
-docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO bookshelf (id, name, privacy, customer_username) VALUES
-(1, 'bookshelf1', 'PUBLIC', 'techguru'),
-(2, 'bookshelf2', 'PUBLIC', 'techguru'),
-(3, 'bookshelf3', 'PUBLIC', 'techguru'),
-(4, 'bookshelf4', 'PUBLIC', 'techguru'),
-(5, 'bookshelf5', 'PUBLIC', 'techguru'),
-(6, 'bookshelf1', 'PUBLIC', 'jkrowling'),
-(7, 'bookshelf2', 'PUBLIC', 'jkrowling'),
-(8, 'bookshelf3', 'PUBLIC', 'jkrowling'),
-(9, 'bookshelf4', 'PUBLIC', 'jkrowling'),
-(10, 'bookshelf5', 'PUBLIC', 'jkrowling');";
+docker exec -it postgres psql -U postgres -d cool -c "
+INSERT INTO bookshelf (id, name, privacy, customer_username) VALUES
+(1, 'currently_reading', 'PUBLIC', 'techguru'),
+(2, 'already_read', 'PUBLIC', 'techguru'),
+(3, 'did_not_finish', 'PUBLIC', 'techguru'),
+(4, 'want_to_read', 'PUBLIC', 'techguru'),
+(5, 'bookshelf1', 'PUBLIC', 'techguru'),
+(6, 'currently_reading', 'PUBLIC', 'jkrowling'),
+(7, 'already_read', 'PUBLIC', 'jkrowling'),
+(8, 'did_not_finish', 'PUBLIC', 'jkrowling'),
+(9, 'want_to_read', 'PUBLIC', 'jkrowling'),
+(10, 'bookshelf1', 'PUBLIC', 'jkrowling');";
 
-docker exec -it postgres psql -U postgres -d cool -c "INSERT INTO personal_book (insert_date, pages_read, book_isbn, bookshelf_id) values
+docker exec -it postgres psql -U postgres -d cool -c "
+INSERT INTO personal_book (insert_date, pages_read, book_isbn, bookshelf_id)
+values
 ('2000-01-01', 100, '1', 1),
-('2000-01-01', 100, '2', 1),
-('2000-01-01', 100, '3', 1),
-('2001-01-01', 100, '1', 2),
-('2001-01-01', 100, '2', 2),
-('2001-01-01', 100, '3', 2),
+('2000-02-01', 100, '1', 1),
+('2000-03-01', 100, '1', 1),
+('2000-04-01', 100, '1', 1),
+('2001-05-01', 100, '1', 2),
 ('2001-01-01', 100, '1', 3),
-('2002-01-01', 100, '2', 3),
-('2003-01-01', 100, '3', 3),
-('2004-01-01', 100, '2', 4),
-('2005-01-01', 100, '3', 4),
-('2006-01-01', 100, '4', 4),
 ('2007-01-01', 100, '1', 5),
-('2008-01-01', 100, '3', 5),
-('2009-01-01', 100, '4', 5),
 ('2010-01-01', 100, '1', 6),
-('2011-01-01', 100, '2', 6),
-('2012-01-01', 100, '3', 6),
 ('2013-01-01', 100, '1', 7),
-('2014-01-01', 100, '2', 7),
-('2015-01-01', 100, '3', 8),
-('2016-01-01', 100, '4', 8),
 ('2017-01-01', 100, '1', 9),
-('2018-01-01', 100, '2', 10);";
+('2017-01-01', 100, '1', 10);";
 
 
