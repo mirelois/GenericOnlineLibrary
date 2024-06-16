@@ -92,4 +92,12 @@ public class Notification implements Serializable {
     public void setCustomerCreator(Customer customerCreator) {
         this.customerCreator = customerCreator;
     }
+
+    public Book getRelatedBook() {
+        return relatedBook;
+    }
+
+    public void setRelatedBook(Book relatedBook) {
+        this.relatedBook = relatedBook;
+    }
 }
