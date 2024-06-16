@@ -1,6 +1,5 @@
 package com.aa.coolreads.User.repositories;
 
-import com.aa.coolreads.Book.dto.SliceDTO;
 import com.aa.coolreads.Book.dto.SliceInterfaceDTO;
 import com.aa.coolreads.Book.models.Book;
 import com.aa.coolreads.User.models.Bookshelf;
@@ -59,7 +58,7 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
     @Query(value = "select pb.bookshelf.customer.profileDetails.gender as className, count(*) as amount from PersonalBook pb where pb.bookshelf.name = :bookshelf and pb.book.isbn = :isbn group by pb.bookshelf.customer.profileDetails.gender")
     List<SliceInterfaceDTO> getGenderSlicesByBookshelfName(String bookshelf, String isbn);
 
-    //@Query(value = "SELECT date_trunc(:timeframe, pb.insertDate) as className, count(*) as amount from PersonalBook pb where pb.bookshelf.name = :bookshelf and pb.book.isbn = :isbn group by className")
-    //Page<SliceInterfaceDTO> getTimeLine(String bookshelf, String isbn, String timeframe, PageRequest pageable);
+    @Query(value = "SELECT date_trunc(:timeframe, pb.insertDate) as className, count(*) as amount from PersonalBook pb where pb.bookshelf.name = :bookshelf and pb.book.isbn = :isbn group by pb.insertDate")
+    Page<SliceInterfaceDTO> getTimeLine(String bookshelf, String isbn, String timeframe, PageRequest pageable);
 }
 
