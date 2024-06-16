@@ -1,3 +1,18 @@
+<script setup>
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+
+const store = useStore();
+
+const translations = computed(() => store.getters['language/currentTranslations']);
+const setLanguage = (language) => store.dispatch('language/setLanguage', language);
+const selectedLanguage = computed(() => store.state.language.selectedLanguage);
+
+if (localStorage.getItem('selectedLanguage')) {
+    setLanguage(localStorage.getItem('selectedLanguage'));
+}
+</script>
+
 <template>
     <div class="popup-overlay" @click.self="closePopup">
       <div class="change-password-popup">
@@ -6,14 +21,14 @@
         </div>
         <div class="content">
           <div class="input-group">
-            <label for="current-password">Current Password</label>
+            <label for="current-password">{{ translations.currentPassword }}</label>
             <input v-model="currentPassword" type="password" id="current-password" />
           </div>
           <div class="input-group">
-            <label for="new-password">New Password</label>
+            <label for="new-password">{{ translations.newPassword }}</label>
             <input v-model="newPassword" type="password" id="new-password" />
           </div>
-          <button class="confirm-button" @click="confirmChange">Confirm</button>
+          <button class="confirm-button" @click="confirmChange">{{ translations.confirm }}</button>
         </div>
       </div>
     </div>

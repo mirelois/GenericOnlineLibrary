@@ -28,6 +28,7 @@ export default{
   left: 0;
   right: 0;
   transition: opacity 500ms;
+  z-index:30;
 }
 .overlay:target {
   visibility: visible;
@@ -42,7 +43,6 @@ export default{
   width: 30%;
   position: relative;
   transition: all 5s ease-in-out;
-  z-index:30;
 }
 
 .popup h2 {

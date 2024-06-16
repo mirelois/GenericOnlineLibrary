@@ -8,18 +8,16 @@ import com.aa.coolreads.Book.exception.InsufficientReviewParametersException;
 import com.aa.coolreads.Book.exception.ReviewNotFoundException;
 import com.aa.coolreads.Book.mappers.FullBookMapper;
 import com.aa.coolreads.Book.models.*;
-import com.aa.coolreads.Book.repositories.BookRatingRepository;
-import com.aa.coolreads.Book.repositories.BookRepository;
-import com.aa.coolreads.Book.repositories.BookReviewLikeRepository;
-import com.aa.coolreads.Book.repositories.BookReviewRepository;
+import com.aa.coolreads.Book.repositories.*;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +32,8 @@ public class BookReviewService {
 
     private final BookReviewLikeRepository reviewLikeRepository;
 
+    private final BookReviewCommentRepository bookReviewCommentRepository;
+
     private final BookRatingRepository bookRatingRepository;
 
     private final BookRepository bookRepository;
@@ -42,14 +42,18 @@ public class BookReviewService {
 
     private final FullBookMapper bookMapper;
 
+    private final ApplicationEventPublisher eventPublisher;
+
     @Autowired
-    public BookReviewService(BookReviewRepository bookReviewRepository, BookReviewLikeRepository reviewLikeRepository, BookRatingRepository bookRatingRepository, BookRepository bookRepository, CustomerRepository customerRepository, FullBookMapper bookMapper){
+    public BookReviewService(BookReviewRepository bookReviewRepository, BookReviewLikeRepository reviewLikeRepository, BookReviewCommentRepository bookReviewCommentRepository, BookRatingRepository bookRatingRepository, BookRepository bookRepository, CustomerRepository customerRepository, FullBookMapper bookMapper, ApplicationEventPublisher eventPublisher){
         this.bookReviewRepository = bookReviewRepository;
         this.reviewLikeRepository = reviewLikeRepository;
+        this.bookReviewCommentRepository = bookReviewCommentRepository;
         this.bookRatingRepository = bookRatingRepository;
         this.bookRepository = bookRepository;
         this.customerRepository = customerRepository;
         this.bookMapper = bookMapper;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -59,7 +63,7 @@ public class BookReviewService {
         Page<Review> reviewsPage = this.bookReviewRepository.findByIsbn(isbn, pageable);
 
         return reviewsPage.get().map(review -> {
-            BookReviewDTO bookReviewDTO = this.bookMapper.toBookReviewDTO(review, this.bookReviewRepository.getReviewCommentSize(review));
+            BookReviewDTO bookReviewDTO = this.bookMapper.toBookReviewDTO(review, this.bookReviewCommentRepository.getReviewCommentSize(review));
             Optional<Double> rating = this.bookRatingRepository.findByBookIsbnAndUsername(isbn, bookReviewDTO.getCustomerUsername());
             rating.ifPresent(bookReviewDTO::setRating);
             return bookReviewDTO;
@@ -67,10 +71,13 @@ public class BookReviewService {
     }
 
     @Transactional
-    public Set<BookReviewCommentDTO> getReviewComments(String isbn, String review_username, Integer pageNumber, Integer pageSize){
+    public Set<BookReviewCommentDTO> getReviewComments(String isbn, String review_username, Integer pageNumber, Integer pageSize) throws CustomerNotFoundException, BookNotFoundException {
 
-        PageRequest pageable = PageRequest.of(pageNumber, pageSize);
-        Page<ReviewComment> commentsPage = this.bookReviewRepository.findCommentByReview(isbn, review_username, pageable);
+        Customer customer = this.customerRepository.findById(review_username).orElseThrow(() -> new CustomerNotFoundException(review_username));
+        Book book = this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<ReviewComment> commentsPage = this.bookReviewCommentRepository.findCommentByReview(book, customer, pageable);
 
         return commentsPage.get().map(this.bookMapper::toReviewCommentDTO).collect(Collectors.toSet());
     }
@@ -109,8 +116,7 @@ public class BookReviewService {
     }
 
     @Transactional
-    public void insertLike(String isbn, String review_username, String likeType) throws BookNotFoundException, CustomerNotFoundException, IllegalArgumentException, ReviewNotFoundException {
-        this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
+    public void insertLike(String isbn, String review_username, String likeType) throws CustomerNotFoundException, IllegalArgumentException, ReviewNotFoundException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
         Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
@@ -126,12 +132,29 @@ public class BookReviewService {
     }
 
     @Transactional
-    public void deleteLike(String isbn, String review_username) throws BookNotFoundException, CustomerNotFoundException, ReviewNotFoundException {
-        this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
+    public void deleteLike(String isbn, String review_username) throws CustomerNotFoundException, ReviewNotFoundException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
         Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
 
         this.reviewLikeRepository.deleteById(new ReviewLikeId(customer, review));
+    }
+
+    @Transactional
+    public void insertComment(String isbn, String review_username, String comment) throws CustomerNotFoundException, ReviewNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
+
+        this.bookReviewCommentRepository.save(new ReviewComment(comment, customer, review));
+    }
+
+    @Transactional
+    public void deleteComment(String isbn, String review_username) throws CustomerNotFoundException, ReviewNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Review review = this.bookReviewRepository.findById(new ReviewId(review_username, isbn)).orElseThrow(() -> new ReviewNotFoundException(isbn, review_username));
+
+        this.bookReviewCommentRepository.deleteById(new ReviewCommentId(username, new ReviewId(review.getCustomer().getUsername(), review.getBook().getIsbn())));
     }
 }

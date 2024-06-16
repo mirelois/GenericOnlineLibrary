@@ -76,6 +76,8 @@ import FooterComponent from '../components/FooterComponent.vue';
 import axios from "axios";
 import ConfirmComponent from '@/components/ConfirmComponent.vue';
 import router from '@/router';
+import authHeader from '@/services/auth.header';
+
 export default {
     components: {
         NavComponent,
@@ -142,8 +144,11 @@ export default {
             this.activate[0] = true;
         },
         getBooks(){
+            let header = authHeader();
+            let config = {headers:header}
+            header['Content-Type']='application/json';
             this.bookshelfname = this.$route.params.bookshelfname;
-            axios.get('http://localhost:8080/customer/'+this.username+'/bookshelf/'+this.bookshelfname).then(books=>{
+            axios.get('http://localhost:8080/customer/'+this.username+'/bookshelf/'+this.bookshelfname,config).then(books=>{
                 this.bookshelf = books.data;
                 console.log("allbooks");
                 console.log(books.data);
@@ -154,7 +159,10 @@ export default {
         confirmdeleteBook(resp){
             if(resp=="no") this.showConfirmDel= false;
             else{
-                axios.delete('http://localhost:8080/customer/'+this.username+'/bookshelf/'+this.bookshelfname+'?isbn='+this.removeBook).then(resp=>{
+                let header = authHeader();
+                let config = {headers:header}
+                header['Content-Type']='application/json';
+                axios.delete('http://localhost:8080/customer/'+this.username+'/bookshelf/'+this.bookshelfname+'?isbn='+this.removeBook,config).then(resp=>{
                     this.bookshelf = this.bookshelf.filter(b=> b.bookISBN!=this.removeBook)
                     this.showConfirmDel = false;
                 }).catch(error=>{

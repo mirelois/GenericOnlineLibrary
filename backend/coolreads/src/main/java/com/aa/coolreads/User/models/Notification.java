@@ -1,5 +1,6 @@
 package com.aa.coolreads.User.models;
 
+import com.aa.coolreads.Book.models.Book;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -32,6 +33,9 @@ public class Notification implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
+
+    @ManyToOne
+    private Book relatedBook;
 
     public Notification() {}
 

@@ -2,44 +2,49 @@
 	<div>
 		<div class="form">
 		<div class="title-wrapper">
-			<div class="title">Login to your account</div>
+		  <div class="title">{{ translations.loginTitle }}</div>
+		  <div class="language-selection">
+			<img class="flag-icon" alt="Português" src="/img/PT.svg" @click="setLanguage('portuguese')"/>
+			<img class="flag-icon" alt="English"   src="/img/US.svg" @click="setLanguage('english')"   />
+		  </div>
 		</div>
-		<div class ="frame-parent">
-			<div class ="frame-group">
-				<div class="email-wrapper">
-					<div class="email">Email or Username</div>
-				</div>
-				<div class = "input-text-wrapper">
-						<input v-model="username" class="input-text" placeholder="example@example.com"/>
-						<div class="input-text-child">
-						</div> 
-				</div>
+		<div class="frame-parent">
+		  <div class="frame-group">
+			<div class="email-wrapper">
+			  <div class="email">{{ translations.emailOrUsername }}</div>
 			</div>
-			<div class="frame-group">
-				<div class = "email-wrapper">
-					<div class="email">Password</div>
-					<div class="forgot">Forgot?</div>
-				</div>
-				<div class ="input">
-						<input v-model="password" class="input-text1" :type="type" placeholder="Enter your password"/>
-						<div class="iconeye-wrapper">
-							<img class="iconeye" @click="changeInputType" alt="" src="/img/iconeye.svg">
-						</div>
-				</div>
+			<div class="input-text-wrapper">
+			  <input v-model="username" class="input-text" placeholder="example@example.com"/>
+			  <div class="input-text-child"></div>
 			</div>
-        <button @click="handleLogin" class="buttonlogin" id="buttonloginContainer">Login now</button>
-        <div class="dont-have-an-account-parent">
-          <div class="dont-have-an">Don't have an account?</div>
-          <div class="sign-up"><a class= "sign-upcolor" href="/signup"> Sign up</a></div>
-        </div>
-      </div>
-    </div>
-	<ToastComponent v-if="error_msg!==''" :msg="error_msg" @close_toast="closemsg"></ToastComponent>
+		  </div>
+		  <div class="frame-group">
+			<div class="email-wrapper">
+			  <div class="email">{{ translations.password }}</div>
+			  <div class="forgot">{{ translations.forgot }}</div>
+			</div>
+			<div class="input">
+			  <input v-model="password" class="input-text1" :type="type" :placeholder="translations.passwordPlaceholder"/>
+			  <div class="iconeye-wrapper">
+				<img class="iconeye" @click="changeInputType" alt="" src="/img/iconeye.svg">
+			  </div>
+			</div>
+		  </div>
+		  <button @click="handleLogin" class="buttonlogin" id="buttonloginContainer">{{ translations.loginnow }}</button>
+		  <div class="dont-have-an-account-parent">
+			<div class="dont-have-an">{{ translations.noAccount }}</div>
+			<div class="sign-up"><a class="sign-upcolor" href="/signup"> {{ translations.signup }}</a></div>
+		  </div>
+		</div>
+	  </div>
+    <ToastComponent v-if="error_msg !== ''" :msg="error_msg" @close_toast="closemsg"></ToastComponent>
   </div>
 </template>
 
 <script>
 import router from "../router/index";
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
 import User from "@/models/user";
 import ToastComponent from "@/components/ToastComponent.vue";
 export default{
@@ -55,7 +60,13 @@ export default{
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
-    }
+    },
+	translations() {
+      return this.$store.getters['language/currentTranslations'];
+    },
+    selectedLanguage() {
+      return this.$store.state.language.selectedLanguage;
+    },
   },
   created() {
     if (this.loggedIn) {
@@ -84,10 +95,13 @@ export default{
 		changeInputType(){
 			if(this.type==='password') this.type='text';
 			else this.type='password'
-		}
-  },
-	components:{
-		ToastComponent	
+		},
+		setLanguage(language) {
+      this.$store.dispatch('language/setLanguage', language);
+    	},
+  	},
+		components:{
+			ToastComponent	
 	}
 };
 
@@ -308,5 +322,17 @@ export default{
 .buttonlogin .textButton {
   font-size: 18px;
   font-family: Inika;
+}
+.language-selection {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.flag-icon {
+  cursor: pointer;
+  width: 30px;
+  height: 20px;
 }
 </style>

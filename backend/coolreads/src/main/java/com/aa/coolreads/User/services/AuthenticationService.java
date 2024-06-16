@@ -17,6 +17,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -58,13 +60,11 @@ public class AuthenticationService {
 
         this.mailService.sendAccountCreationMail(registerDTO.getEmail());
 
-        Customer customer = this.customerMapper.toCustomer(registerDTO);
-
-        for(DefaultBookshelf bookshelfNameType: DefaultBookshelf.values()){
-            this.bookshelfRepository.save(this.bookshelfMapper.toBookshelf(bookshelfNameType.name(), Privacy.PRIVATE, customer));
-        }
-
         registerDTO.setPassword(this.passwordEncoder.encode(registerDTO.getPassword()));
+        Customer customer = this.customerMapper.toCustomer(registerDTO);
+        for(DefaultBookshelf bookshelfNameType: DefaultBookshelf.values()){
+            customer.addBookshelf(this.bookshelfMapper.toBookshelf(bookshelfNameType.name(), Privacy.PRIVATE, customer));
+        }
         this.customerRepository.save(customer);
     }
 
@@ -77,5 +77,14 @@ public class AuthenticationService {
         String jwtToken = this.jwtService.generateToken(customer);
 
         return new LoginResponseDTO(jwtToken, jwtService.getExpirationTime());
+    }
+
+    @Transactional
+    public void changePassword(String newPassword) throws CustomerNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+
+        customer.setPassword(this.passwordEncoder.encode(newPassword));
+        this.customerRepository.save(customer);
     }
 }

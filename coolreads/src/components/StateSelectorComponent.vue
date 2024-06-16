@@ -7,7 +7,7 @@
           </div> 
                 <div>
                   <button class="state-book-row" @click="selectState(`Want To Read`)">
-                    Want to read
+                    Want To Read
                 </button>
                 </div>
                 <div>
@@ -16,8 +16,13 @@
                 </button>
                 </div>
                 <div>
-                  <button class="state-book-row" @click="selectState(`Read`)">
-                    Read
+                  <button class="state-book-row" @click="selectState(`Already Read`)">
+                    Already Read
+                </button>
+                </div>
+                <div>
+                  <button class="state-book-row" @click="selectState(`Did Not Finish`)">
+                    Did Not Finish
                 </button>
                 </div>
                 <img @click="closeSearchBox" class="menus-close-line" src="/img/close.svg" />
@@ -47,13 +52,16 @@ export default {
 .select-the-state {
   margin: 0;
 }
+
 .select-the-state-container {
-  position: absolute;
-  top: 15px;
-  left: 60px;
-  font-size: 24px;
-  color: #fff;
-} 
+    position: relative;
+    top: 15px;
+    right: 40px;
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 30px;
+}
+
 
 .state-card {
   display: flex;
@@ -66,7 +74,7 @@ export default {
   position: relative;
   z-index: 20;
   padding-left: 120px;
-  height: 300px;
+  height: 370px;
 }
 
 .state-card .state-book-row {

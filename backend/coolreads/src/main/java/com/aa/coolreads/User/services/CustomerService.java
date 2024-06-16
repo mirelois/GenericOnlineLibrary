@@ -10,11 +10,13 @@ import com.aa.coolreads.User.repositories.BookshelfRepository;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CustomerService {
@@ -59,6 +61,17 @@ public class CustomerService {
         }
 
         this.customerMapper.updateProfileDetails(customer.getProfileDetails(), simpleCustomerDTO);
+
+        this.customerRepository.save(customer);
+    }
+
+    @Transactional
+    public void removeFriend(String friend_username) throws CustomerNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer myCustomer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Customer customer = this.customerRepository.findById(friend_username).orElseThrow(() -> new CustomerNotFoundException(friend_username));
+
+        customer.removeFriend(myCustomer);
 
         this.customerRepository.save(customer);
     }

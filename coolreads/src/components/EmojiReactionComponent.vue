@@ -182,6 +182,7 @@ input:checked + .react i:after {
     height: 80px;
     padding-top: 5px;
     padding-right: 25px;
+    z-index: 1;
 }
 
 .nr-react {
