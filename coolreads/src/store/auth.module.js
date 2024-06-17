@@ -40,14 +40,14 @@ const auth = {
     },
     changePassword({ commit }, { oldPassword, newPassword }) {
       return AuthService.changePassword(oldPassword, newPassword).then(
-          response => {
-              commit('changePasswordSuccess');
-              return Promise.resolve(response.data);
-          },
-          error => {
-              commit('changePasswordFailure');
-              return Promise.reject(error);
-          }
+        response => {
+          commit('changePasswordSuccess');
+          return Promise.resolve(response.data);
+        },
+        error => {
+          commit('changePasswordFailure');
+          return Promise.reject(error);
+        }
       );
     }
   },
@@ -72,12 +72,14 @@ const auth = {
       state.status.loggedIn = false;
     },
     changePasswordSuccess(state) {
-      state.status.loggedIn = true;
+      state.passwordChangeMessage = "Success";
+      console.log("Success: Password changed");
     },
-  changePasswordFailure(state) {
-    state.status.loggedIn = true;
-    }
-  }
+    changePasswordFailure(state, error) {
+      state.passwordChangeMessage = "Pass not correct";
+      console.error("Error: Password change failed", error);
+    },
+  },
 };
 
 export default auth;
