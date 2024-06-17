@@ -1,6 +1,12 @@
 <template>
 	<div>
 		<div class="form">
+		<div class="titlenameWrapper">
+            <div class="titlename" @click="route('/')">
+              <div class="c">C</div>
+  			  <i class="coolreads1">oolReads</i>
+            </div>
+		</div>
 		<div class="title-wrapper">
 		  <div class="title">{{ translations.loginTitle }}</div>
 		  <div class="language-selection">
@@ -26,7 +32,7 @@
 			<div class="input">
 			  <input v-model="password" class="input-text1" :type="type" :placeholder="translations.passwordPlaceholder"/>
 			  <div class="iconeye-wrapper">
-				<img class="iconeye" @click="changeInputType" alt="" src="/img/iconeye.svg">
+				<img class="iconeye" @click="changeInputType" alt="" :src="eye_imgs[eye]">
 			  </div>
 			</div>
 		  </div>
@@ -54,7 +60,12 @@ export default{
 		password:'',
 		message:'',
 		error_msg:'',
-		type:'password'
+		type:'password',
+		eye_imgs: {
+			open:'/img/iconeye.svg',
+			closed:'/img/closed-eye-icon.svg'	
+		},
+		eye: 'open'
 	}
   },
   computed: {
@@ -74,9 +85,16 @@ export default{
     }
   },
   methods: {
+	route(route) {
+		this.$router.push(route);
+	},
     handleLogin() {
 		if(this.username==='' || this.password===''){
-			this.error_msg = "Existem campos vazios. Introduza o username e password.";
+			if (this.selectedLanguage == 'portuguese') {
+          		this.error_msg = "Existem campos vazios. Introduza email, o username e password.";
+			} else {
+				this.error_msg = "Some fields are empty. Introduce email, username and password.";
+			}
 			return;
 		}
         this.$store.dispatch('auth/login', new User(this.username,'',this.password)).then(
@@ -85,7 +103,11 @@ export default{
             	this.$router.push('/profile');
             },
             error => {
-              this.error_msg = "Username ou password inválidos. Tente novamente."
+				if (this.selectedLanguage == 'portuguese') {
+                	this.error_msg = "Username ou password inválidos. Tente novamente."
+				} else {
+					this.error_msg = "Invalid username or password. Try again."
+				}
             }
           );
         },
@@ -93,8 +115,14 @@ export default{
 			this.error_msg='';
 		},
 		changeInputType(){
-			if(this.type==='password') this.type='text';
-			else this.type='password'
+			if(this.type==='password') {
+				this.eye='open';
+				this.type='text';
+			}
+			else {
+				this.eye='closed';
+				this.type='password'
+			}
 		},
 		setLanguage(language) {
       this.$store.dispatch('language/setLanguage', language);
@@ -117,6 +145,7 @@ export default{
   	position: relative;
   	line-height: 100%;
   	font-weight: 600;
+	color: #000;
 }
 .textButton {
   	position: relative;
@@ -330,9 +359,31 @@ export default{
   top: 10px;
   right: 10px;
 }
+.c {
+  font-size: 60px;
+  font-family: Inika;
+  color: #c48930;
+}
+.titlenameWrapper {
+  overflow: hidden;
+}
 .flag-icon {
   cursor: pointer;
   width: 30px;
   height: 20px;
+}
+.coolreads1 {
+  position: relative;
+  top: 12px;
+  letter-spacing: 0.1em;
+  font-size: 48px;
+  font-weight: 550;
+  height: 120px;
+  color: #000;
+}
+.titlename {
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
 }
 </style>

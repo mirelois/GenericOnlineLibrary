@@ -65,8 +65,8 @@
         </div>
         </div>
         </div>
-        </div>
       <ToastComponent v-if="error_msg!==''" :msg="error_msg" @close_toast="closemsg"></ToastComponent>
+        </div>
 </template>
 
 <script>
@@ -154,7 +154,6 @@ export default {
   background: linear-gradient(#222831, #222831), #d9d9d9;
   width: 648px;
   height: 100%;
-  transform: scale(1);
 }
 .coolreads {
   position: absolute;
@@ -470,5 +469,11 @@ flex-shrink: 0;
   cursor: pointer;
   width: 30px;
   height: 20px;
+}
+.signupage{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  transform: scale(0.903);
 }
 </style>
