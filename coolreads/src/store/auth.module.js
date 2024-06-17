@@ -37,6 +37,18 @@ const auth = {
           return Promise.reject(error);
         }
       );
+    },
+    changePassword({ commit }, { oldPassword, newPassword }) {
+      return AuthService.changePassword(oldPassword, newPassword).then(
+          response => {
+              commit('changePasswordSuccess');
+              return Promise.resolve(response.data);
+          },
+          error => {
+              commit('changePasswordFailure');
+              return Promise.reject(error);
+          }
+      );
     }
   },
   mutations: {
@@ -58,6 +70,12 @@ const auth = {
     },
     registerFailure(state) {
       state.status.loggedIn = false;
+    },
+    changePasswordSuccess(state) {
+      state.status.loggedIn = true;
+    },
+  changePasswordFailure(state) {
+    state.status.loggedIn = true;
     }
   }
 };
