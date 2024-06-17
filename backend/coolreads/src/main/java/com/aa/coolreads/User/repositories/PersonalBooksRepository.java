@@ -4,6 +4,7 @@ import com.aa.coolreads.Book.dto.SliceInterfaceDTO;
 import com.aa.coolreads.Book.models.Book;
 import com.aa.coolreads.User.models.Bookshelf;
 import com.aa.coolreads.User.models.Customer;
+import com.aa.coolreads.User.models.ExclusivityClass;
 import com.aa.coolreads.User.models.PersonalBook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,9 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
 
     @Query("SELECT pb FROM PersonalBook pb WHERE pb.book = :book AND pb.customer = :customer")
     Optional<PersonalBook> getPersonalBookByBookAndCustomer(Book book, Customer customer);
+
+    @Query("SELECT COUNT(*) > 0 FROM PersonalBook pb JOIN pb.bookshelves pbbs WHERE pb.customer = :customer AND pb = :personalBook AND pbbs.exclusivityClass = :exclusivityClass")
+    boolean checkIfPersonalBookHasConflict(Customer customer, PersonalBook personalBook, ExclusivityClass exclusivityClass);
 
     @Modifying
     @Query("DELETE FROM PersonalBook pb WHERE pb.customer = :customer AND pb.book.isbn = :isbn")

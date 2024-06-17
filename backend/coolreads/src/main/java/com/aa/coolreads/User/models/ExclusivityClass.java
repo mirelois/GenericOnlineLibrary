@@ -19,12 +19,17 @@ public class ExclusivityClass {
     @JoinColumn(name="bookshelf_id", referencedColumnName="id")
     private Set<Bookshelf> bookshelves;
 
+    @ManyToOne
+    @JoinColumn(name="customer_username", referencedColumnName = "username", nullable = false)
+    private Customer customer;
+
     public ExclusivityClass() {
         this.bookshelves = new HashSet<>();
     }
 
-    public ExclusivityClass(String name) {
+    public ExclusivityClass(String name, Customer customer) {
         this.name = name;
+        this.customer = customer;
         this.bookshelves = new HashSet<>();
     }
 
@@ -55,5 +60,21 @@ public class ExclusivityClass {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, bookshelves);
+    }
+
+    public Set<Bookshelf> getBookshelves() {
+        return bookshelves;
+    }
+
+    public void setBookshelves(Set<Bookshelf> bookshelves) {
+        this.bookshelves = bookshelves;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

@@ -36,6 +36,9 @@ public class Customer implements UserDetails {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> posts;
 
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ExclusivityClass> exclusivityClasses;
+
     public Customer(){
         this.bookshelves = new HashSet<>();
         this.notifications = new HashSet<>();
@@ -43,6 +46,7 @@ public class Customer implements UserDetails {
         this.friends = new HashSet<>();
         this.profileDetails = new CustomerProfileDetails();
         this.personalBooks = new HashSet<>();
+        this.exclusivityClasses = new HashSet<>();
     }
 
     public Set<Notification> getNotifications() {
@@ -136,5 +140,13 @@ public class Customer implements UserDetails {
 
     public void setPersonalBooks(Set<PersonalBook> personalBooks) {
         this.personalBooks = personalBooks;
+    }
+
+    public Set<ExclusivityClass> getExclusivityClasses() {
+        return exclusivityClasses;
+    }
+
+    public void setExclusivityClasses(Set<ExclusivityClass> exclusivityClasses) {
+        this.exclusivityClasses = exclusivityClasses;
     }
 }

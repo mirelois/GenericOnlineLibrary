@@ -9,12 +9,13 @@
               <p class="welcomeToCoolreads">{{ translations.joinUs }}</p>
             </span>
           </div>
-          <div class="titlenameWrapper"></div>
-          <div class="titlename">
-            <div class="coolreadsWrapper">
-              <i class="coolreads1">oolReads</i>
+          <div class="titlenameWrapper">
+            <div class="titlename" @click="route('/')">
+              <div class="c">C</div>
+              <div class="coolreadsWrapper">
+                <i class="coolreads1">oolReads</i>
+              </div>
             </div>
-            <div class="c">C</div>
           </div>
         </div>
       </div>
@@ -62,10 +63,10 @@
             <a class="logIn" href="/login">{{ translations.login }}</a>
           </div>
         </div>
-      </div>
-    </div>
-    <ToastComponent v-if="error_msg!==''" :msg="error_msg" @close_toast="closemsg"></ToastComponent>
-  </div>
+        </div>
+        </div>
+        </div>
+      <ToastComponent v-if="error_msg!==''" :msg="error_msg" @close_toast="closemsg"></ToastComponent>
 </template>
 
 <script>
@@ -83,9 +84,16 @@ export default {
     }
   },
   methods: {
+    route(route) {
+      this.$router.push(route);
+    },
     createAccount() {
       if(this.username==='' || this.password==='' || this.email===''){
-        this.error_msg = "Existem campos vazios. Introduza o username e password.";
+        if (this.selectedLanguage == 'portuguese') {
+          this.error_msg = "Existem campos vazios. Introduza email, o username e password.";
+        } else {
+          this.error_msg = "Some fields are empty. Introduce email, username and password.";
+        }
         return;
 		  }
       this.$store.dispatch('auth/register', new User(this.username,this.email,this.password)).then(
@@ -94,7 +102,11 @@ export default {
             	router.push('/login');
             },
             error => {
-              this.error_msg = "Username ou password inválidos. Tente novamente."
+              if (this.selectedLanguage == 'portuguese') {
+                this.error_msg = "Username ou password inválidos. Tente novamente."
+              } else {
+                this.error_msg = "Invalid username or password. Try again."
+              }
             }
           );
     },
@@ -142,6 +154,7 @@ export default {
   background: linear-gradient(#222831, #222831), #d9d9d9;
   width: 648px;
   height: 100%;
+  transform: scale(1);
 }
 .coolreads {
   position: absolute;
@@ -187,18 +200,18 @@ flex-shrink: 0;
 
 .coolreads1 {
   position: absolute;
-  top: 9px;
+  top: 0px;
   left: 0px;
   letter-spacing: 0.1em;
   line-height: 100%;
-  font-size: 27px;
+  font-size: 48px;
   font-weight: 550;
   color: #fff;
 }
 .coolreadsWrapper {
   position: absolute;
-  top: 6px;
-  left: 29px;
+  top: 26px;
+  left: 38px;
   width: 138px;
   height: 25px;
 }
@@ -206,11 +219,12 @@ flex-shrink: 0;
   position: absolute;
   top: 0px;
   left: 0px;
-  font-size: 36px;
+  font-size: 60px;
   font-family: Inika;
   color: #c48930;
 }
 .titlename {
+  cursor: pointer;
   position: absolute;
   top: 43px;
   left: 43px;
@@ -224,7 +238,7 @@ flex-shrink: 0;
   width: 648px;
   height: 810px;
   overflow: hidden;
-  font-size: 25.2px;
+  font-size: 48px;
   font-family: Inika;
 }
 .bg {
