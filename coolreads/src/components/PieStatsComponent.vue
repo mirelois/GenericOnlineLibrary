@@ -6,6 +6,7 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 <template>
     <main>
         <div class="pie-container">
+            <div v-if="dados.labels.length==0">Change the search properties to show statistics.</div>
             <Pie :data="dados" :options="options" :key="updatekey" />
         </div>
     </main>
@@ -77,7 +78,6 @@ export default {
                 let newcateg = categ.toLowerCase(); 
                 let bookshf = mydefault;
                 let newbookshf = bookshf.toLowerCase().replaceAll(" ","_"); 
-                console.log("htp://localhost:8080/book/"+this.isbn+"/stats/pie/"+newcateg+"?defaultBookshelf="+newbookshf);
                 axios.get("http://localhost:8080/book/"+this.isbn+"/stats/pie/"+newcateg+"?defaultBookshelf="+newbookshf,config).then(resp=>{
                     this.dados.datasets = [{
                         backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],

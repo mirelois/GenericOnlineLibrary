@@ -73,8 +73,9 @@ import Rating from 'primevue/rating';
 	<div v-bind:style="{ 'color': statisticscolor, 'font-weight': statisticsfont }" @click="changeTabStyle(`Statistics`)" class="statistics-title">Statistics 
 			<div class="author-content" v-if="activeTab=='Statistics'">
 				<br><div class="stats-row"><CategorySelectorComponent @category_selected="setCategorySelected"></CategorySelectorComponent><DefaultSelectorComponent @default_bookshelf="setDefaultSelected"></DefaultSelectorComponent></div></br>
-				<br><div class="stats-row"><PieStatsComponent :categoria="categorySelected" :bookshelf="defaultSelected" :isbn="isbn"></PieStatsComponent><StateFrequencyComponent></StateFrequencyComponent></div></br>
-				<div class="stats-row"><LineGraphComponent></LineGraphComponent></div>
+				<br><div class="stats-row"><PieStatsComponent :categoria="categorySelected" :bookshelf="defaultSelected" :isbn="isbn"></PieStatsComponent><StateFrequencyComponent :isbn="isbn"></StateFrequencyComponent></div></br>
+				<br><TimeFrameComponent @time_frame="setTimeFrameSelected"></TimeFrameComponent></br>
+				<div class="stats-row"><LineGraphComponent :timeframe="timeframeSelected" :bookshelf="defaultSelected"></LineGraphComponent></div>
 			</div>
     		</div>
 	</div>
@@ -96,6 +97,7 @@ import StateFrequencyComponent from '@/components/StateFrequencyComponent.vue';
 import LineGraphComponent from '@/components/LineGraphComponent.vue';
 import CategorySelectorComponent from '@/components/CategorySelectorComponent.vue';
 import DefaultSelectorComponent from '@/components/DefaultSelectorComponent.vue';
+import TimeFrameComponent from '@/components/TimeFrameComponent.vue';
 export default {
 	data(){
 		return{
@@ -135,7 +137,8 @@ export default {
 			authorName:'',
 			authorImage:'',
 			categorySelected:'',
-			defaultSelected:''
+			defaultSelected:'',
+			timeframeSelected:''
 		}
 	},
 	components: {
@@ -149,7 +152,8 @@ export default {
 		PieStatsComponent,
 		LineGraphComponent,
 		CategorySelectorComponent,
-		DefaultSelectorComponent
+		DefaultSelectorComponent,
+		TimeFrameComponent
     },created(){
 		this.isbn = this.$route.params.bookisbn;
 		this.getBook(this.isbn);
@@ -303,6 +307,9 @@ export default {
 		},
 		setCategorySelected(categoryselected){
 			this.categorySelected = categoryselected;
+		},
+		setTimeFrameSelected(timeframeselected){
+			this.timeframeSelected = timeframeselected;
 		}
 	}
 

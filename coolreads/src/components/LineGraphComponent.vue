@@ -9,24 +9,40 @@ ChartJS.register(CategoryScale,LinearScale,PointElement,LineElement,Title,Toolti
 <template>
     <main>
         <div class="line-container">
-            <Line :data="data" :options="options" />
+            <div v-if="dados.labels.length==0">No data available for those properties.</div>
+            <Line :data="data" :options="options" :key="updatekey" />
         </div>
     </main>
 </template>
 <script>
+import axios from "axios";
+import authHeader from '@/services/auth.header';
 export default {
     components:{
         Line
     },
+    props:{
+        timeframe: {
+            type: String,
+            default: ''
+        },
+        bookshelf: {
+            type: String,
+            default: ''
+        }
+    },
     data(){
         return {
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            mytimeframe:'',
+            mydefault:'',
+            updatekey:0,
+            dados: {
+                labels: [],
                 datasets: [
                     {
                         label: 'Reading Over Time',
                         backgroundColor: '#f87979',
-                        data: [40, 39, 10, 40, 39, 80, 40],
+                        data: [],
                         borderColor: "rgb(80, 200, 120)",
                         pointBackgroundColor: "rgb(80, 200, 120)",
                     }
@@ -45,6 +61,45 @@ export default {
                     }
                 }
             }       
+        }
+    },
+    created(){
+        this.getData();
+    },
+    watch: {
+        timeframe(newVal, oldVal) {
+            this.mytimeframe = newVal;
+            this.getData(this.mytimeframe,this.mydefault);
+        },
+        bookshelf(newVal, oldVal) {
+            this.mydefault = newVal;
+            this.getData(this.mytimeframe,this.mydefault);
+        }
+        
+    },
+    methods:{
+        getData(){
+            let header = authHeader();
+            let config = {headers:header};
+            if(this.mytimeframe!="" && this.mydefault!=""){
+                axios.get("http://localhost:8080/book/"+this.isbn+"/stats/line?defaultBookshelf="+this.mydefault+"&timeFrame="+this.mytimeframe+"&pageNumber=0&pageSize=1",config)
+                .then(resp=>{
+                    this.dados.datasets = [
+                    {
+                        label: 'Reading Over Time',
+                        backgroundColor: '#f87979',
+                        data: resp.data.data,
+                        borderColor: "rgb(80, 200, 120)",
+                        pointBackgroundColor: "rgb(80, 200, 120)",
+                    }
+                    ]
+                    this.dados.labels = resp.data.labels;
+                    this.updatekey++;
+                }).catch(error=>{
+                    console.log(error);
+                })
+
+            }
         }
     }
 }

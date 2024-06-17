@@ -9,11 +9,37 @@
     </main>
 </template>
 <script>
+import axios from "axios";
+import authHeader from '@/services/auth.header';
+
 export default {
+    props:{
+        isbn:''
+    },
     data(){
         return {
-            labels: ['Currently Reading', 'Already Read', 'Did Not Finish', 'Want To Read'],
-            frequencies: [40, 20, 80, 10]      
+            labels: ["Already Read","Currenly Reading", "Did Not Finish", "Want To Read"],
+            frequencies: []      
+        }
+    },
+    created(){
+        this.getData();
+    },
+    methods:{
+        getData(){
+            console.log("ritaaa");
+            console.log(this.isbn);
+            let header = authHeader();
+            let config = {headers:header};
+            axios.get("http://localhost:8080/book/"+this.isbn+"/stats/numbers",config).then(resp=>{
+                    this.frequencies.push(resp.data.alreadyRead)
+                    this.frequencies.push(resp.data.currentlyReading)
+                    this.frequencies.push(resp.data.didNotFinish)
+                    this.frequencies.push(resp.data.wantToRead)
+                }).catch(error=>{
+                    console.log(error);
+                })
+    
         }
     }
 }
