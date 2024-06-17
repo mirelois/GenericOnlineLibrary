@@ -44,9 +44,9 @@ public class NotificationService {
     }
 
     @Transactional
-    public void sendFriendRequestNotification(String friend_username) throws CustomerNotFoundException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Customer myCustomer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+    public void sendFriendRequestNotification(String my_username, String friend_username) throws CustomerNotFoundException {
+
+        Customer myCustomer = this.customerRepository.findById(my_username).orElseThrow(() -> new CustomerNotFoundException(my_username));
         Customer customer = this.customerRepository.findById(friend_username).orElseThrow(() -> new CustomerNotFoundException(friend_username));
 
         this.notificationRepository.save(new Notification(customer, myCustomer, NotificationType.FRIEND_REQUEST_NOTIFICATION));
@@ -55,9 +55,9 @@ public class NotificationService {
     }
 
     @Transactional
-    public void addFriend(String friend_username) throws CustomerNotFoundException, NoFriendRequestFromRequestedCustomerException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Customer myCustomer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+    public void addFriend(String my_username, String friend_username) throws CustomerNotFoundException, NoFriendRequestFromRequestedCustomerException {
+
+        Customer myCustomer = this.customerRepository.findById(my_username).orElseThrow(() -> new CustomerNotFoundException(my_username));
         Customer customer = this.customerRepository.findById(friend_username).orElseThrow(() -> new CustomerNotFoundException(friend_username));
 
         if(this.notificationRepository.hasNotificationFromOtherCustomer(myCustomer, customer, NotificationType.FRIEND_REQUEST_NOTIFICATION.name()))

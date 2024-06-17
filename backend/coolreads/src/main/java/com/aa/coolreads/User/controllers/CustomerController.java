@@ -113,7 +113,8 @@ public class CustomerController {
     @PostMapping("/me/friends")
     public ResponseEntity<String> sendFriendRequest(@RequestParam String friendUsername){
         try{
-            this.notificationService.sendFriendRequestNotification(friendUsername);
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            this.notificationService.sendFriendRequestNotification(username, friendUsername);
             return ResponseEntity.ok().build();
         } catch (CustomerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -123,7 +124,8 @@ public class CustomerController {
     @PutMapping("/me/friends")
     public ResponseEntity<String> acceptFriendRequest(@RequestParam String friendUsername){
         try{
-            this.notificationService.addFriend(friendUsername);
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            this.notificationService.addFriend(username, friendUsername);
             return ResponseEntity.ok().build();
         } catch (CustomerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -135,7 +137,8 @@ public class CustomerController {
     @DeleteMapping("/me/friends")
     public ResponseEntity<String> removeFriend(@RequestParam String friendUsername){
         try{
-            this.customerService.removeFriend(friendUsername);
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            this.customerService.removeFriend(username, friendUsername);
             return ResponseEntity.ok().build();
         } catch (CustomerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

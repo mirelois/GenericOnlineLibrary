@@ -1,0 +1,11 @@
+---
+# Playbook to deploy laravel.io and its components
+
+- name: Deploy Laravelio
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - gke_namespace_create
+    - laravelioDB_deploy
+    - laravelioAPP_deploy
+    

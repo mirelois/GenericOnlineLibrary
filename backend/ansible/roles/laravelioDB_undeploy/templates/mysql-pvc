@@ -1,0 +1,7 @@
+---
+# Persistent Volume Claim for MySQL pod
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ claim_name }}
+  namespace: {{ ascn_namespace }}

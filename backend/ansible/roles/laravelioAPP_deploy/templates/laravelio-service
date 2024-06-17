@@ -1,0 +1,22 @@
+---
+# Service for exposing laravelio
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ app_service_name }}
+  namespace: {{ ascn_namespace }}
+  labels:
+    app: {{ app_name }}
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ app_name }}
+  ports:
+    - targetPort: {{ laravel_container_port }}
+      port: {{ app_port }}
+      protocol: {{ load_balancer_transport_protocol }}
+  #Conseguir que a sessão fique alocada ao utilizador, presao ao LoadBalancer, independente do Pod
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800

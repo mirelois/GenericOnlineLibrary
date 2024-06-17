@@ -69,9 +69,9 @@ public class CustomerService {
     }
 
     @Transactional
-    public void removeFriend(String friend_username) throws CustomerNotFoundException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Customer myCustomer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+    public void removeFriend(String my_username, String friend_username) throws CustomerNotFoundException {
+
+        Customer myCustomer = this.customerRepository.findById(my_username).orElseThrow(() -> new CustomerNotFoundException(my_username));
         Customer customer = this.customerRepository.findById(friend_username).orElseThrow(() -> new CustomerNotFoundException(friend_username));
 
         customer.removeFriend(myCustomer);

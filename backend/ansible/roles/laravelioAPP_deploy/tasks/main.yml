@@ -1,0 +1,31 @@
+---
+- name: Deploy Laravelio
+  kubernetes.core.k8s:
+    state: present
+    template: 'laravelio-deployment'
+    wait: yes
+    wait_timeout: 300
+
+- name: Deploy laravelio Service
+  kubernetes.core.k8s:
+    state: present
+    template: 'laravelio-service'
+    wait: yes
+ 
+- name: Wait till the laravelio Service has external IP created
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Service
+    name: "{{ app_service_name }}"
+    namespace: '{{ ascn_namespace }}'
+  register: laravelio_service
+  until: laravelio_service.resources[0].status.loadBalancer.ingress[0].ip is defined
+  retries: 6
+  delay: 15
+  
+- name: Replace older app_ip with new dynamically generated laravelio service ip
+  lineinfile:
+    dest: 'inventory/gcp.yml'
+    regexp: '^  app_ip: .*$'
+    line: '  app_ip: {{ laravelio_service.resources[0].status.loadBalancer.ingress[0].ip }}'
+    
