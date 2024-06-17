@@ -1,6 +1,7 @@
 package com.aa.coolreads.User.mappers;
 
 import com.aa.coolreads.User.dto.BookShelfDTO;
+import com.aa.coolreads.User.dto.ExclusivityClassDTO;
 import com.aa.coolreads.User.dto.PersonalBookDTO;
 import com.aa.coolreads.User.dto.SimpleBookShelfDTO;
 import com.aa.coolreads.User.models.*;
@@ -25,5 +26,9 @@ public class BookshelfMapper {
 
     public BookShelfDTO toBookShelfDTO(Bookshelf bookshelf){
         return new BookShelfDTO(bookshelf.getName(), bookshelf.getPrivacy().name(), bookshelf.getPersonalBooks().stream().map(this::toPersonalBookDTO).collect(Collectors.toSet()));
+    }
+
+    public ExclusivityClassDTO toExclusivityClassDTO(ExclusivityClass exclusivityClass){
+        return new ExclusivityClassDTO(exclusivityClass.getName(), exclusivityClass.getBookshelves().stream().map(Bookshelf::getName).collect(Collectors.toSet()));
     }
 }

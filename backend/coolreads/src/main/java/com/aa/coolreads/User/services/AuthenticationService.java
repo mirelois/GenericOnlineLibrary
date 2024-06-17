@@ -10,6 +10,7 @@ import com.aa.coolreads.User.mappers.BookshelfMapper;
 import com.aa.coolreads.User.mappers.CustomerMapper;
 import com.aa.coolreads.User.models.*;
 import com.aa.coolreads.User.repositories.CustomerRepository;
+import com.aa.coolreads.User.repositories.ExclusivityClassRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -54,9 +55,13 @@ public class AuthenticationService {
 
         registerDTO.setPassword(this.passwordEncoder.encode(registerDTO.getPassword()));
         Customer customer = this.customerMapper.toCustomer(registerDTO);
+        ExclusivityClass exclusivityClass = new ExclusivityClass("default", customer);
         for(DefaultBookshelf bookshelfNameType: DefaultBookshelf.values()){
-            customer.addBookshelf(this.bookshelfMapper.toBookshelf(bookshelfNameType.name(), Privacy.PRIVATE, customer));
+            Bookshelf bookshelf = this.bookshelfMapper.toBookshelf(bookshelfNameType.name(), Privacy.PUBLIC, customer);
+            bookshelf.setExclusivityClass(exclusivityClass);
+            customer.addBookshelf(bookshelf);
         }
+
         this.customerRepository.save(customer);
     }
 
