@@ -84,6 +84,28 @@ public class BookshelfController {
     }
 
     @PreAuthorize("#username == principal.username")
+    @PutMapping("/{name}/exclusivityClass")
+    public ResponseEntity<String> addExclusivityClassToBookshelf(@PathVariable String username, @PathVariable String name, @RequestParam String exclusivityClassName){
+        try{
+            this.bookshelfService.addBookshelfExclusivityClass(username, name, exclusivityClassName);
+            return ResponseEntity.ok().build();
+        } catch (BookshelfNotFoundException | CustomerNotFoundException | ExclusivityClassNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PreAuthorize("#username == principal.username")
+    @DeleteMapping("/{name}/exclusivityClass")
+    public ResponseEntity<String> removeExclusivityClassFromBookshelf(@PathVariable String username, @PathVariable String name){
+        try{
+            this.bookshelfService.removeBookshelfExclusivityClass(username, name);
+            return ResponseEntity.ok().build();
+        } catch (BookshelfNotFoundException | CustomerNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PreAuthorize("#username == principal.username")
     @GetMapping("/{name}/checkConflicts")
     public ResponseEntity<String> checkIfExclusivityClassAreConflictFree(@PathVariable String name, @PathVariable String username, @RequestParam String isbn){
         try{
@@ -133,7 +155,7 @@ public class BookshelfController {
 
     @PreAuthorize("#username == principal.username")
     @GetMapping("/exclusivityClass")
-    public ResponseEntity<?> getExclusivityClasses(@PathVariable String username, @RequestParam String name){
+    public ResponseEntity<?> getExclusivityClasses(@PathVariable String username){
         try{
             Set<ExclusivityClassDTO> exclusivityClassDTOS = this.bookshelfService.getExclusivityClasses(username);
             return ResponseEntity.ok().body(exclusivityClassDTOS);

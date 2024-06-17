@@ -233,12 +233,26 @@ public class BookshelfService {
     }
 
     @Transactional
-    public void addBookshelfExclusivityClass(String bookshelfName, String exclusivityClassName){
+    public void addBookshelfExclusivityClass(String username, String bookshelfName, String exclusivityClassName) throws CustomerNotFoundException, BookshelfNotFoundException, ExclusivityClassNotFoundException {
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
+        Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(bookshelfName, customer).orElseThrow(() -> new BookshelfNotFoundException(bookshelfName));
+
+        ExclusivityClass exclusivityClass = this.exclusivityClassRepository.getExclusivityClassByCustomerAndName(customer, exclusivityClassName).orElseThrow(() -> new ExclusivityClassNotFoundException(exclusivityClassName));
+
+        bookshelf.setExclusivityClass(exclusivityClass);
+
+        this.bookshelfRepository.save(bookshelf);
     }
 
     @Transactional
-    public void removeBookshelfExclusivityClass(String bookshelfName, String exclusivityClassName){
+    public void removeBookshelfExclusivityClass(String username, String bookshelfName) throws CustomerNotFoundException, BookshelfNotFoundException {
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
+        Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(bookshelfName, customer).orElseThrow(() -> new BookshelfNotFoundException(bookshelfName));
+
+        bookshelf.setExclusivityClass(null);
+
+        this.bookshelfRepository.save(bookshelf);
     }
 }
