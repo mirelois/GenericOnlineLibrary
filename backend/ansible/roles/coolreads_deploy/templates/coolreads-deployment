@@ -1,14 +1,14 @@
 ---
-# Deployment for deploying laravelio
+# Deployment for deploying coolreads
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ app_name }}
-  namespace: {{ ascn_namespace }}
+  namespace: {{ cool_namespace }}
   labels:
     app: {{ app_name }}
 spec:
-  replicas: {{ laravel_deploy_n_replicas }}
+  replicas: {{ coolreads_deploy_n_replicas }}
   selector:
     matchLabels:
       app: {{ app_name }}
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: {{ app_name }}
-        image: hiddenduck/laravel
+        image: hiddenduck/coolreads
         env:
         - name: DB_CONNECTION
           value: {{ db_connection_name }}
@@ -31,11 +31,5 @@ spec:
           value: {{ db_username }}
         - name: DB_PASSWORD
           value: "{{ db_password }}" # Use secret object in real usage
-        - name: MIGRATE
-          value: "{{ migrate }}"
-        - name: BUILD
-          value: "{{ build }}"
-        - name: SEED
-          value: "{{ seed_database | default("false") }}"
         ports:
-        - containerPort: {{ laravel_container_port }}
+        - containerPort: {{ coolreads_container_port }}

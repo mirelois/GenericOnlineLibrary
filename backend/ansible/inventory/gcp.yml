@@ -29,14 +29,12 @@ all:
 
   # Database variables
   db_username: postgres
-  db_password: postgres
+  db_password: "postgres"
 
 
   # Laravel Deploy variables
-  migrate: "true"
-  build: "true"
-  laravel_container_port: 8000
-  laravel_deploy_n_replicas: 1
+  coolreads_container_port: 8000
+  coolreads_deploy_n_replicas: 1
 
 
   # DB Deploy variables

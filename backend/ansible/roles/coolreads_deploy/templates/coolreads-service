@@ -1,10 +1,10 @@
 ---
-# Service for exposing laravelio
+# Service for exposing coolreads
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ app_service_name }}
-  namespace: {{ ascn_namespace }}
+  namespace: {{ cool_namespace }}
   labels:
     app: {{ app_name }}
 spec:
@@ -12,7 +12,7 @@ spec:
   selector:
     app: {{ app_name }}
   ports:
-    - targetPort: {{ laravel_container_port }}
+    - targetPort: {{ coolreads_container_port }}
       port: {{ app_port }}
       protocol: {{ load_balancer_transport_protocol }}
   #Conseguir que a sessão fique alocada ao utilizador, presao ao LoadBalancer, independente do Pod
