@@ -85,10 +85,10 @@ public class BookshelfController {
 
     @PreAuthorize("#username == principal.username")
     @GetMapping("/{name}/checkConflicts")
-    public ResponseEntity<?> checkIfHasNoExclusivityClassConflicts(@PathVariable String name, @PathVariable String username, @RequestParam String isbn){
+    public ResponseEntity<String> checkIfHasNoExclusivityClassConflicts(@PathVariable String name, @PathVariable String username, @RequestParam String isbn){
         try{
-            Boolean isConflictFree = this.bookshelfService.checkIfExclusivityClassesAreConflictFree(username, isbn, name);
-            return ResponseEntity.ok().body(isConflictFree);
+            boolean isConflictFree = this.bookshelfService.checkIfExclusivityClassesAreConflictFree(username, isbn, name);
+            return ResponseEntity.ok().body(Boolean.toString(isConflictFree));
         } catch (BookshelfNotFoundException | CustomerNotFoundException | BookNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

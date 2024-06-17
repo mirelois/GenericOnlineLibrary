@@ -2,6 +2,10 @@ package com.aa.coolreads.User.models;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 @Entity
 public class ExclusivityClass {
 
@@ -11,15 +15,17 @@ public class ExclusivityClass {
 
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="bookshelf_id", referencedColumnName="id")
-    private Bookshelf bookshelf;
+    private Set<Bookshelf> bookshelves;
 
-    public ExclusivityClass() {}
+    public ExclusivityClass() {
+        this.bookshelves = new HashSet<>();
+    }
 
-    public ExclusivityClass(String name, Bookshelf bookshelf) {
+    public ExclusivityClass(String name) {
         this.name = name;
-        this.bookshelf = bookshelf;
+        this.bookshelves = new HashSet<>();
     }
 
     public String getName() {
@@ -38,11 +44,16 @@ public class ExclusivityClass {
         this.id = id;
     }
 
-    public Bookshelf getBookshelf() {
-        return bookshelf;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExclusivityClass that = (ExclusivityClass) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(bookshelves, that.bookshelves);
     }
 
-    public void setBookshelf(Bookshelf bookshelf) {
-        this.bookshelf = bookshelf;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, bookshelves);
     }
 }

@@ -29,6 +29,9 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
     @Query("DELETE FROM PersonalBook pb WHERE pb.customer = :customer AND pb.book.isbn = :isbn")
     void deletePersonalBookByIsbnAndCustomer(String isbn, Customer customer);
 
+    @Query(value = "SELECT COUNT(*) FROM PersonalBook pb WHERE pb.customer = :customer")
+    Integer getBookSizeByCustomer(Customer customer);
+
     @Query(value = "SELECT COUNT(*) FROM PersonalBook pb JOIN pb.bookshelves bs WHERE bs = :bookshelf")
     Integer getBooksSize(Bookshelf bookshelf);
 
