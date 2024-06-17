@@ -2,10 +2,7 @@ package com.aa.coolreads.User.repositories;
 
 import com.aa.coolreads.Book.dto.SliceInterfaceDTO;
 import com.aa.coolreads.Book.models.Book;
-import com.aa.coolreads.User.models.Bookshelf;
-import com.aa.coolreads.User.models.Customer;
-import com.aa.coolreads.User.models.ExclusivityClass;
-import com.aa.coolreads.User.models.PersonalBook;
+import com.aa.coolreads.User.models.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,0 +1,31 @@
+---
+- name: Deploy Coolreads
+  kubernetes.core.k8s:
+    state: present
+    template: 'coolreads-deployment'
+    wait: yes
+    wait_timeout: 300
+
+- name: Deploy coolreads Service
+  kubernetes.core.k8s:
+    state: present
+    template: 'coolreads-service'
+    wait: yes
+ 
+- name: Wait till the coolreads Service has external IP created
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Service
+    name: "{{ app_service_name }}"
+    namespace: '{{ cool_namespace }}'
+  register: coolreads_service
+  until: coolreads.resources[0].status.loadBalancer.ingress[0].ip is defined
+  retries: 6
+  delay: 15
+  
+- name: Replace older app_ip with new dynamically generated coolreads service ip
+  lineinfile:
+    dest: 'inventory/gcp.yml'
+    regexp: '^  app_ip: .*$'
+    line: '  app_ip: {{ coolreads_service.resources[0].status.loadBalancer.ingress[0].ip }}'
+    

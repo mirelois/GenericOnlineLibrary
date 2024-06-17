@@ -1,22 +1,22 @@
 package com.aa.coolreads.User.controllers;
 
 import com.aa.coolreads.User.dto.*;
-import com.aa.coolreads.User.exception.BookshelfNotFoundException;
-import com.aa.coolreads.User.exception.CustomerAlreadyExistsException;
-import com.aa.coolreads.User.exception.CustomerNotFoundException;
-import com.aa.coolreads.User.exception.PasswordsDontMatchException;
+import com.aa.coolreads.User.exception.*;
 import com.aa.coolreads.User.services.AuthenticationService;
 import com.aa.coolreads.User.services.CustomerService;
+import com.aa.coolreads.User.services.NotificationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/customer")
@@ -26,10 +26,13 @@ public class CustomerController {
 
     private final AuthenticationService authenticationService;
 
+    private final NotificationService notificationService;
+
     @Autowired
-    public CustomerController(CustomerService customerService, AuthenticationService authenticationService) {
+    public CustomerController(CustomerService customerService, AuthenticationService authenticationService, NotificationService notificationService) {
         this.customerService = customerService;
         this.authenticationService = authenticationService;
+        this.notificationService = notificationService;
     }
 
     @PostMapping("/register")
@@ -97,5 +100,70 @@ public class CustomerController {
         }
     }
 
+    @GetMapping("/me/friends")
+    public ResponseEntity<?> getFriendsList(){
+        try{
+            Set<FriendDTO> friendDTOS = this.customerService.getFriendList();
+            return ResponseEntity.ok().body(friendDTOS);
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
+    @PostMapping("/me/friends")
+    public ResponseEntity<String> sendFriendRequest(@RequestParam String friendUsername){
+        try{
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            this.notificationService.sendFriendRequestNotification(username, friendUsername);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/me/friends")
+    public ResponseEntity<String> acceptFriendRequest(@RequestParam String friendUsername){
+        try{
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            this.notificationService.addFriend(username, friendUsername);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (NoFriendRequestFromRequestedCustomerException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/me/friends")
+    public ResponseEntity<String> removeFriend(@RequestParam String friendUsername){
+        try{
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            this.customerService.removeFriend(username, friendUsername);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/me/notifications")
+    public ResponseEntity<?> getNotifications(Integer page, Integer size){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        try {
+            Set<NotificationDTO> notificationDTOS = this.notificationService.getNotificationsByUserName(username, page, size);
+            return ResponseEntity.ok().body(notificationDTOS);
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/me/notifications")
+    public ResponseEntity<String> removeNotification(Long notificationId){
+        try{
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            this.notificationService.deleteNotification(username, notificationId);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }

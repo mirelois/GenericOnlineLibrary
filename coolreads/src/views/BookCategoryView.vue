@@ -1,5 +1,5 @@
 <template>
-    <div class="body">
+    <div class="bodyCategory">
       <NavComponent></NavComponent>
       <b class="category-fantasy">Genre - {{ category }}</b>
       <input v-model="searchInput" type="text" class="my-search-box" placeholder="Search for books..." />
@@ -30,11 +30,19 @@
         </div>
       </div>
       <div class="separator"></div>
-      <div class="overlap-group">
-        <div v-for="(row, index) in paginatedBooks" :key="index" class="book-row"> 
-          <BookComponent v-for="book in row" :key="book.isbn" :cover="book.coverImage" />
-        </div>
-      </div>
+          <div class="divm">
+                <div class="overlap">
+                    <div class="book-row">
+                        <div class="book">
+                            <div class="overlap-group">
+                            <div v-for="(row, index) in paginatedBooks" :key="index"> 
+                            <BookComponent v-for="book in row" :bookISBN="book.isbn" :cover="book.imageUrl" />
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
       <div class="pagination">
         <div class="pagination-child">
           <div class="parent">
@@ -177,15 +185,47 @@
   </script>
 
 
-<style scoped>
+<style>
 @import url('https://fonts.googleapis.com/css2?family=Inika:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap');
-.body {
+.bodyCategory {
 margin: 0; line-height: normal;
 }
-
+.bodyCategory .overlap {
+  position: relative;
+  flex-direction: row;
+  width: 1179px;
+  height: 1163px;
+  top: 190px;
+  left: -1050px;
+}
+.bodyCategory .divm:not(#searchbox) {
+    width: 600px;
+    height: 700px;
+    position: absolute;
+    flex-direction: row;
+} 
+.bodyCategory .book {
+    position: relative;
+    width: 40px;
+    height: 100px;
+    flex-direction: row;
+} 
+.bodyCategory .book-row {
+    display: flex;
+    width: 1060px;
+    align-items: flex-end;
+    flex-direction: row;
+    gap: 45px;
+    position: absolute;
+    top: 29px;
+    left: 80px;
+}
+.bodyCategory ~ .remove {
+  display: none
+}
 .separator {
   position: absolute;
   width: 865px;
@@ -228,13 +268,7 @@ margin: 0; line-height: normal;
   	justify-content: flex-start;
   	gap: 52.9px;
 }
-.book-row {
-  	display: flex;
-  	flex-direction: row;
-  	align-items: flex-end;
-  	justify-content: flex-start;
-  	gap: 56.7px;
-}
+
 .chevron-icon {
   	width: 34px;
   	position: relative;

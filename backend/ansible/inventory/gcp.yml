@@ -1,0 +1,50 @@
+---
+all:
+ vars:
+
+  # GKE cluster variables
+  gcp_project: abd-carlos              # ID of GCP Project
+  gcp_auth_kind: serviceaccount            # Do not change
+  gcp_cred_file: /home/carlos/Documents/key.json    # Path to service account keys (json file downloaded from GCP)
+
+  gcp_zone: us-central1-a
+  gcp_image_type: ubuntu_containerd
+  gcp_machine_type: e2-small          # Can be changed if necessary
+  gcp_disk_size_gb: 100                # Can be changed if necessary
+  gcp_initial_node_count: 2            # Number of nodes to create. Can be changed if necessary
+
+
+  # APP variables
+  app_ip: 127.0.0.1     # Needs to be updated
+  app_port: 80         # Needs to be updated
+
+
+  # General Name variables
+  app_name: coolreads
+  app_service_name: coolreads-service
+  db_database_name: cool
+  db_connection_name: psql
+  db_service_name: psql-service
+
+
+  # Database variables
+  db_username: postgres
+  db_password: "postgres"
+
+
+  # Laravel Deploy variables
+  coolreads_container_port: 8000
+  coolreads_deploy_n_replicas: 1
+
+
+  # DB Deploy variables
+  mysql_allow_empty_password: "true"
+  db_container_port: 3306
+  mount_path: /var/lib/mysql
+  claim_name: mysql-pv-claim
+  pvc_storage_size: 20Gi
+
+
+  # Additional variables
+  coolreads_namespace: cool
+  load_balancer_transport_protocol: TCP

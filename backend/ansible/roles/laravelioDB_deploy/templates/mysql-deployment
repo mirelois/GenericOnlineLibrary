@@ -1,0 +1,43 @@
+---
+# Deployment for MySQL
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  namespace: {{ ascn_namespace }}
+  labels:
+    app: {{ db_connection_name }}
+    tier: database
+spec:
+  selector:
+    matchLabels:
+      app: {{ db_connection_name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ db_connection_name }}
+        tier: database
+    spec:
+      containers:
+      - name: {{ db_connection_name }}
+        image: mysql:latest
+        env: # The variables below could be set on a ConfigMap object
+        - name: MYSQL_ALLOW_EMPTY_PASSWORD
+          value: "{{ mysql_allow_empty_password }}"
+        - name: MYSQL_DATABASE
+          value: {{ db_database_name }}
+        - name: MYSQL_USER
+          value: {{ db_username }}
+        - name: MYSQL_PASSWORD
+          value: "{{ db_password }}" # Use Secret object in real usage
+        ports:
+        - containerPort: {{ db_container_port }}
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: {{ mount_path }}
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: {{ claim_name }}

@@ -1,22 +1,25 @@
 package com.aa.coolreads.User.services;
 
+import com.aa.coolreads.User.dto.FriendDTO;
 import com.aa.coolreads.User.dto.SimpleCustomerDTO;
 import com.aa.coolreads.User.exception.BookshelfNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.mappers.CustomerMapper;
 import com.aa.coolreads.User.models.Bookshelf;
 import com.aa.coolreads.User.models.Customer;
+import com.aa.coolreads.User.models.Privacy;
 import com.aa.coolreads.User.repositories.BookshelfRepository;
 import com.aa.coolreads.User.repositories.CustomerRepository;
+import com.aa.coolreads.User.repositories.PersonalBooksRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -27,7 +30,7 @@ public class CustomerService {
     private final CustomerMapper customerMapper;
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository, BookshelfRepository bookshelfRepository, CustomerMapper customerMapper) {
+    public CustomerService(CustomerRepository customerRepository, BookshelfRepository bookshelfRepository, PersonalBooksRepository personalBooksRepository, CustomerMapper customerMapper) {
         this.customerRepository = customerRepository;
         this.bookshelfRepository = bookshelfRepository;
         this.customerMapper = customerMapper;
@@ -66,13 +69,23 @@ public class CustomerService {
     }
 
     @Transactional
-    public void removeFriend(String friend_username) throws CustomerNotFoundException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Customer myCustomer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+    public void removeFriend(String my_username, String friend_username) throws CustomerNotFoundException {
+
+        Customer myCustomer = this.customerRepository.findById(my_username).orElseThrow(() -> new CustomerNotFoundException(my_username));
         Customer customer = this.customerRepository.findById(friend_username).orElseThrow(() -> new CustomerNotFoundException(friend_username));
 
         customer.removeFriend(myCustomer);
 
         this.customerRepository.save(customer);
+    }
+
+    @Transactional
+    public Set<FriendDTO> getFriendList() throws CustomerNotFoundException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Customer myCustomer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+
+        return myCustomer.getFriends().stream()
+                .map(friend -> this.customerMapper.toFriendDTO(friend, friend.getFriends().size()))
+                .collect(Collectors.toSet());
     }
 }

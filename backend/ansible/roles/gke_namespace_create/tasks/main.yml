@@ -1,0 +1,8 @@
+---
+- name: Create k8s namespace
+  kubernetes.core.k8s:
+    state: present
+    template: 'cool-namespace'
+
+- name: Switch namespace to cool_namespace
+  shell: kubectl config set-context --current --namespace={{ cool_namespace }}

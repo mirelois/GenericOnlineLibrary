@@ -1,0 +1,10 @@
+---
+- name: Undeploy Laravelio
+  kubernetes.core.k8s:
+    state: absent
+    template: 'laravelio-deployment'
+
+- name: Undeploy laravelio Service
+  kubernetes.core.k8s:
+    state: absent
+    template: 'laravelio-service'

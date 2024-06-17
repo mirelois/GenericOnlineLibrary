@@ -195,7 +195,7 @@ class CoolreadsApplicationTests {
     }
 
     @Test
-    void testNotificationOperations(){
+    void testNotificationOperations() throws CustomerNotFoundException {
 
         NotificationCreationDTO notificationCreationDTO = new NotificationCreationDTO(NotificationType.FRIEND_REQUEST_NOTIFICATION);
 
@@ -210,13 +210,13 @@ class CoolreadsApplicationTests {
 //        assert notifications.size() == 1;
 
         for (NotificationDTO notificationDTO : notifications) {
-            notificationService.deleteNotification(notificationDTO.getId());
+            notificationService.deleteNotification("techguru", notificationDTO.getId());
         }
 
     }
 
     @Test
-    void testNotificationOperationsExeption(){
+    void testNotificationOperationsExeption() throws CustomerNotFoundException {
 
         NotificationCreationDTO notificationCreationDTO = new NotificationCreationDTO(NotificationType.FRIEND_REQUEST_NOTIFICATION);
 

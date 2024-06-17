@@ -1,0 +1,21 @@
+---
+- name: Create a Persistent Volume Claim (PVC)
+  kubernetes.core.k8s:
+    state: present
+    template: 'mysql-pvc'
+    wait: yes
+  
+- name: Deploy Laravelio DB
+  kubernetes.core.k8s:
+    state: present
+    template: 'mysql-deployment'
+    wait: yes
+    wait_timeout: 300
+
+- name: Deploy Laravelio DB Service
+  kubernetes.core.k8s:
+    state: present
+    template: 'mysql-service'
+    wait: yes
+  
+  
