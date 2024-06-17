@@ -15,6 +15,6 @@ public interface BookRepository extends JpaRepository<Book, String> {
     @Query("SELECT b FROM Book b where b.title LIKE CONCAT('%',:title,'%')")
     Page<Book> findBooksByTitle(@Param("title") String title, PageRequest pageable);
 
-    @Query("SELECT b FROM Book b JOIN b.genres g WHERE g = :genre")
+    @Query("SELECT b FROM Book b JOIN b.genres g WHERE g.genreType = :genre")
     Page<Book> findBooksByGenre(@Param("genre") String genre, PageRequest pageable);
 }
