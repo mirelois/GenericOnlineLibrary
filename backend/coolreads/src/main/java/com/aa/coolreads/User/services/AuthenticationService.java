@@ -45,7 +45,7 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public void signup(RegisterDTO registerDTO) throws CustomerAlreadyExistsException {
+    public void signup(RegisterDTO registerDTO, Boolean isAuthor) throws CustomerAlreadyExistsException {
 
         String username = registerDTO.getUsername();
         if(this.customerRepository.findById(username).isPresent())
@@ -54,7 +54,7 @@ public class AuthenticationService {
         this.mailService.sendAccountCreationMail(registerDTO.getEmail());
 
         registerDTO.setPassword(this.passwordEncoder.encode(registerDTO.getPassword()));
-        Customer customer = this.customerMapper.toCustomer(registerDTO);
+        Customer customer = isAuthor!=null && isAuthor ? this.customerMapper.toAuthor(registerDTO) : this.customerMapper.toCustomer(registerDTO);
         ExclusivityClass exclusivityClass = new ExclusivityClass("default", customer);
         for(DefaultBookshelf bookshelfNameType: DefaultBookshelf.values()){
             Bookshelf bookshelf = this.bookshelfMapper.toBookshelf(bookshelfNameType.name(), Privacy.PUBLIC, customer);

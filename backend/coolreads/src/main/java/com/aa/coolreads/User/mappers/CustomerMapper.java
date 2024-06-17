@@ -4,10 +4,7 @@ import com.aa.coolreads.User.builder.CustomerBuilder;
 import com.aa.coolreads.User.builder.SimpleDTOBuilder;
 import com.aa.coolreads.User.builder.UserBuilder;
 import com.aa.coolreads.User.dto.*;
-import com.aa.coolreads.User.models.Bookshelf;
-import com.aa.coolreads.User.models.Customer;
-import com.aa.coolreads.User.models.CustomerProfileDetails;
-import com.aa.coolreads.User.models.Gender;
+import com.aa.coolreads.User.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -59,6 +56,14 @@ public class CustomerMapper {
         return (Customer) this.userBuilder.setUsername(registerDTO.getUsername())
                 .setPassword(registerDTO.getPassword())
                 .setEmail(registerDTO.getEmail()).build();
+    }
+
+    public Author toAuthor(RegisterDTO registerDTO){
+        Author author = new Author();
+        author.setUsername(registerDTO.getUsername());
+        author.setPassword(registerDTO.getPassword());
+        author.setEmail(registerDTO.getEmail());
+        return author;
     }
 
     public void updateProfileDetails(CustomerProfileDetails profileDetails, SimpleCustomerDTO simpleCustomerDTO) throws IllegalArgumentException {

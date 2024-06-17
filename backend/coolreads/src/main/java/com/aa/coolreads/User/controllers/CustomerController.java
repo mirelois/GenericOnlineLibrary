@@ -33,9 +33,9 @@ public class CustomerController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody RegisterDTO registerDTO){
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterDTO registerDTO, @RequestParam(required = false) Boolean isAuthor){
         try {
-            this.authenticationService.signup(registerDTO);
+            this.authenticationService.signup(registerDTO, isAuthor);
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{username}")
                     .buildAndExpand(registerDTO.getUsername())
