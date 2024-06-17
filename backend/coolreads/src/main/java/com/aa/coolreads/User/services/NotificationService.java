@@ -6,6 +6,7 @@ import com.aa.coolreads.Book.repositories.BookRepository;
 import com.aa.coolreads.User.dto.NotificationCreationDTO;
 import com.aa.coolreads.User.dto.NotificationDTO;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
+import com.aa.coolreads.User.exception.NoFriendRequestFromRequestedCustomerException;
 import com.aa.coolreads.User.mappers.NotificationMapper;
 import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.models.Notification;
@@ -54,12 +55,15 @@ public class NotificationService {
     }
 
     @Transactional
-    public void addFriend(String friend_username) throws CustomerNotFoundException {
+    public void addFriend(String friend_username) throws CustomerNotFoundException, NoFriendRequestFromRequestedCustomerException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Customer myCustomer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
         Customer customer = this.customerRepository.findById(friend_username).orElseThrow(() -> new CustomerNotFoundException(friend_username));
 
-        customer.addFriend(myCustomer);
+        if(this.notificationRepository.hasNotificationFromOtherCustomer(myCustomer, customer, NotificationType.FRIEND_REQUEST_NOTIFICATION.name()))
+            customer.addFriend(myCustomer);
+        else
+            throw new NoFriendRequestFromRequestedCustomerException(friend_username);
 
         this.notificationRepository.save(new Notification(customer, myCustomer, NotificationType.FRIEND_REQUEST_ACCEPTED_NOTIFICATION));
 
