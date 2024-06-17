@@ -12,6 +12,7 @@ import com.aa.coolreads.User.exception.InvalidLikeTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -33,6 +34,7 @@ public class BookReviewController {
         return this.bookReviewService.getReviews(isbn, page, size);
     }
 
+    @PreAuthorize("#username == principal.username")
     @PostMapping
     public void insertReview(@PathVariable String isbn, @RequestParam String username, @RequestBody SimpleReviewDTO simpleReviewDTO){
         try{
@@ -42,6 +44,7 @@ public class BookReviewController {
         }
     }
 
+    @PreAuthorize("#username == principal.username")
     @PatchMapping
     public void updateReview(@PathVariable String isbn, @RequestParam String username, @RequestBody SimpleReviewDTO simpleReviewDTO){
         try{
@@ -53,6 +56,7 @@ public class BookReviewController {
         }
     }
 
+    @PreAuthorize("#username == principal.username")
     @DeleteMapping
     public void deleteReview(@PathVariable String isbn, @RequestParam String username){
         try{
