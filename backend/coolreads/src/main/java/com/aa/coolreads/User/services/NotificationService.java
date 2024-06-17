@@ -60,7 +60,7 @@ public class NotificationService {
         Customer myCustomer = this.customerRepository.findById(my_username).orElseThrow(() -> new CustomerNotFoundException(my_username));
         Customer customer = this.customerRepository.findById(friend_username).orElseThrow(() -> new CustomerNotFoundException(friend_username));
 
-        if(this.notificationRepository.hasNotificationFromOtherCustomer(myCustomer, customer, NotificationType.FRIEND_REQUEST_NOTIFICATION.name()))
+        if(this.notificationRepository.hasNotificationFromOtherCustomer(myCustomer, customer, NotificationType.FRIEND_REQUEST_NOTIFICATION))
             customer.addFriend(myCustomer);
         else
             throw new NoFriendRequestFromRequestedCustomerException(friend_username);
