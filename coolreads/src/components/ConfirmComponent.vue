@@ -89,7 +89,7 @@ export default {
 	color: #000;
 	font-family: Michroma;
 	z-index: 22;
-	margin-top: -400px;
-	margin-left: 800px;
+	margin-top: 400px;
+	margin-left: -1800px;
 }
 </style>

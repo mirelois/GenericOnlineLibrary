@@ -18,6 +18,7 @@ export default{
     },
     methods:{
         showConfirmDeletion(){
+            console.log("transmitting")
             this.$emit('removeBook',this.bookISBN);
         }
     }

@@ -11,7 +11,7 @@ import Rating from 'primevue/rating';
     		<img class="canva-brown-rusty-mystery-nove-icon" alt="" :src="imageurl">
         		<div class="frame-child"></div>
       	</div>
-	  	<div v-if="showConfirm==true">
+	  	<div class="confirm-position" v-if="showConfirm==true">
 				<ConfirmComponent @confirmation_response="book_management" :header_msg="confirm_msg"></ConfirmComponent>
 		</div>
 		<div class="bookpagecomponent-child"></div>
@@ -263,14 +263,10 @@ export default {
 	            let config = {headers:header}
     	        header['Content-Type']='application/json';
         	    let state = this.stateSelected.replaceAll(" ","_").toLowerCase();
-				const date = new Date();
-				const isoDateString = date.toISOString();
-				axios.post("http://localhost:8080/customer/"+this.username+"/bookshelf/"+state,
-				    {
-                      pagesRead:0,
-                      insertDate:isoDateString,
-                      bookISBN: this.isbn
-				    },
+				//const date = new Date();
+				//const isoDateString = date.toISOString();
+				axios.post("http://localhost:8080/customer/"+this.username+"/bookshelf/"+state+"?isbn="+this.isbn,
+				    {},
                     config 
             	).then(resp =>{
                     if(resp.status==200){
@@ -390,6 +386,19 @@ export default {
 	align-items: flex-start;
 	justify-content: flex-start;
 } 
+
+.confirm-bookshelfadd {
+  width: 100%;
+  position: absolute;
+  height: 539px;
+  text-align: center;
+  font-size: 30px;
+  color: #000;
+  font-family: Michroma;
+  z-index: 22;
+  margin-top: -500px;
+  margin-left: 1000px;
+}
 
 .capa-icon {
   	position: absolute;

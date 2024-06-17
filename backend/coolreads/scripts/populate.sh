@@ -102,18 +102,25 @@ INSERT INTO bookshelf (id, name, privacy, customer_username) VALUES
 (10, 'bookshelf1', 'PUBLIC', 'jkrowling');";
 
 docker exec -it postgres psql -U postgres -d cool -c "
-INSERT INTO personal_book (insert_date, pages_read, book_isbn, bookshelf_id)
+INSERT INTO personal_book (insert_date, pages_read, book_isbn, customer_username)
 values
-('2000-01-01', 100, '1', 1),
-('2000-02-01', 100, '1', 1),
-('2000-03-01', 100, '1', 1),
-('2000-04-01', 100, '1', 1),
-('2001-05-01', 100, '1', 2),
-('2001-01-01', 100, '1', 3),
-('2007-01-01', 100, '1', 5),
-('2010-01-01', 100, '1', 6),
-('2013-01-01', 100, '1', 7),
-('2017-01-01', 100, '1', 9),
-('2017-01-01', 100, '1', 10);";
+('2000-01-01', 100, '1', 'techguru'),
+('2000-02-01', 100, '2', 'techguru'),
+('2000-03-01', 100, '3', 'techguru'),
+('2000-04-01', 100, '4', 'techguru'),
+('2001-05-01', 100, '5', 'techguru'),
+('2001-01-01', 100, '6', 'techguru'),
+('2007-01-01', 100, '7', 'techguru');";
+
+docker exec -it postgres psql -U postgres -d cool -c "
+INSERT INTO bookshelf_personalbook ( personalbook_id, bookshelf_id)
+values
+('1','1'),
+('2','2'),
+('3','3'),
+('4','4'),
+('5','5'),
+('6','6'),
+('7','7');";
 
 
