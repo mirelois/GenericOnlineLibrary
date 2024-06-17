@@ -7,6 +7,7 @@ import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.exception.PasswordsDontMatchException;
 import com.aa.coolreads.User.services.AuthenticationService;
 import com.aa.coolreads.User.services.CustomerService;
+import com.aa.coolreads.User.services.NotificationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/customer")
@@ -26,10 +28,13 @@ public class CustomerController {
 
     private final AuthenticationService authenticationService;
 
+    private final NotificationService notificationService;
+
     @Autowired
-    public CustomerController(CustomerService customerService, AuthenticationService authenticationService) {
+    public CustomerController(CustomerService customerService, AuthenticationService authenticationService, NotificationService notificationService) {
         this.customerService = customerService;
         this.authenticationService = authenticationService;
+        this.notificationService = notificationService;
     }
 
     @PostMapping("/register")
@@ -97,5 +102,43 @@ public class CustomerController {
         }
     }
 
+    @GetMapping("/me/friends")
+    public ResponseEntity<?> getFriendsList(){
+        try{
+            Set<FriendDTO> friendDTOS = this.customerService.getFriendList();
+            return ResponseEntity.ok().body(friendDTOS);
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
+    @PostMapping("/me/friends")
+    public ResponseEntity<String> sendFriendRequest(@RequestParam String friendUsername){
+        try{
+            this.notificationService.sendFriendRequestNotification(friendUsername);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/me/friends")
+    public ResponseEntity<String> acceptFriendRequest(@RequestParam String friendUsername){
+        try{
+            this.notificationService.addFriend(friendUsername);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/me/friends")
+    public ResponseEntity<String> removeFriend(@RequestParam String friendUsername){
+        try{
+            this.customerService.removeFriend(friendUsername);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }

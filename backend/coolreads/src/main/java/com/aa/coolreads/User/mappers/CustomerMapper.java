@@ -52,6 +52,10 @@ public class CustomerMapper {
         return simpleCustomerDTO;
     }
 
+    public FriendDTO toFriendDTO(Customer customer, Integer friendCount){
+        return new FriendDTO(customer.getUsername(), customer.getProfileDetails().getProfileImageUrl(), friendCount);
+    }
+
     public Customer toCustomer(RegisterDTO registerDTO){
         return (Customer) this.userBuilder.setUsername(registerDTO.getUsername())
                 .setPassword(registerDTO.getPassword())
