@@ -95,7 +95,9 @@ public class NotificationService {
     }
 
     @Transactional
-    public Set<NotificationDTO> getNotificationsByUserName(String username, Integer pageNumber, Integer pageSize) {
+    public Set<NotificationDTO> getNotificationsByUserName(String username, Integer pageNumber, Integer pageSize) throws CustomerNotFoundException {
+
+        this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
         PageRequest pageable = PageRequest.of(pageNumber, pageSize);
         Page<Notification> notificationPage = this.notificationRepository.findByCustomerUsername(username, pageable);
@@ -105,8 +107,11 @@ public class NotificationService {
     }
 
     @Transactional
-    public void deleteNotification(Long notificationId) {
-        this.notificationRepository.deleteById(notificationId);
+    public void deleteNotification(String username, Long notificationId) throws CustomerNotFoundException {
+
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+
+        this.notificationRepository.deleteNotificationByIdAndCustomer(customer, notificationId);
     }
 
 }

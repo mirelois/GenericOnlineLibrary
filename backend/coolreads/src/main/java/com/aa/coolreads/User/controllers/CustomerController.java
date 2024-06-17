@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -135,6 +136,28 @@ public class CustomerController {
     public ResponseEntity<String> removeFriend(@RequestParam String friendUsername){
         try{
             this.customerService.removeFriend(friendUsername);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/me/notifications")
+    public ResponseEntity<?> getNotifications(Integer page, Integer size){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        try {
+            Set<NotificationDTO> notificationDTOS = this.notificationService.getNotificationsByUserName(username, page, size);
+            return ResponseEntity.ok().body(notificationDTOS);
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/me/notifications")
+    public ResponseEntity<String> removeNotification(Long notificationId){
+        try{
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            this.notificationService.deleteNotification(username, notificationId);
             return ResponseEntity.ok().build();
         } catch (CustomerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
