@@ -33,8 +33,7 @@ import authHeader from '@/services/auth.header';
 
 export default{
 	props:{
-		username:"",
-		profileImg:""
+		username:""
 	},
 	data(){
 		return {

@@ -1,83 +1,59 @@
 <script setup>
 import NavComponent from '../components/NavComponent.vue';
-import { useStore } from 'vuex';
-import { computed } from 'vue';
-import router from '../router/index';
-
-const store = useStore();
-const translations = computed(() => store.getters['language/currentTranslations']);
-
-function navigateToCategory(category) {
-    const categoryTranslations = {
-        Adventure: translations.value.adventure,
-        Mystery: translations.value.mystery,
-        Biography: translations.value.biography,
-        'Sci-Fi': translations.value.sciFi,
-        Fantasy: translations.value.fantasy,
-        Music: translations.value.music,
-        Sports: translations.value.sports,
-        Romance: translations.value.romance,
-        Horror: translations.value.horror,
-        Manga: translations.value.manga,
-    };
-    const translatedCategory = categoryTranslations[category] || category;
-    router.push({ name: 'bookCategoria', params: { category: translatedCategory } });
-}
 </script>
-
 <template>
     <main>
-        <b class="order-by">{{ translations.genres }}</b>
-        <b class="for-you">{{ translations.forYou }}</b>
+        <b class="order-by">Genres</b>
+        <b class="for-you">For You</b>
         <div class="allcategories">
-            <div class="image-4-parent" @click="navigateToCategory('Adventure')">
+            <div class="image-4-parent" @click="navigateToCategory('adventure')">
             <img class="image-4-icon" alt="" src="/img/aventura.png">
-            <b class="adventure">{{ translations.adventure }}</b>
+            <b class="adventure">Adventure</b>
             </div>
-            <div class="image-6-parent" @click="navigateToCategory('Mystery')">
+            <div class="image-6-parent" @click="navigateToCategory('mystery')">
             <img class="image-4-icon" alt="" src="/img/misterio.png">
-            <b class="mystery">{{ translations.mystery }}</b>
+            <b class="mystery">Mystery</b>
             </div>
-            <div class="image-5-parent" @click="navigateToCategory('Biography')">
+            <div class="image-5-parent" @click="navigateToCategory('biography')">
             <img class="image-4-icon" alt="" src="/img/biografia.png">
-            <b class="biography">{{ translations.biography }}</b>
+            <b class="biography">Biography</b>
             </div>
-            <div class="image-2-parent" @click="navigateToCategory('Sci-Fi')">
+            <div class="image-2-parent" @click="navigateToCategory('sciFi')">
             <img class="image-4-icon" alt="" src="/img/ficcao.png">
-            <b class="sci-fi">{{ translations.sciFi }}</b>
+            <b class="scifi">Sci-Fi</b>
             </div>
-            <div class="image-3-parent" @click="navigateToCategory('Fantasy')">
+            <div class="image-3-parent" @click="navigateToCategory('fantasy')">
             <img class="image-4-icon" alt="" src="/img/fantasia.png">
-            <b class="fantasy">{{ translations.fantasy }}</b>
+            <b class="fantasy">Fantasy</b>
             </div>
-            <div class="image-9-parent" @click="navigateToCategory('Music')">
+            <div class="image-9-parent" @click="navigateToCategory('music')">
             <img class="image-4-icon" alt="" src="/img/musica.png">
-            <b class="music">{{ translations.music }}</b>
+            <b class="music">Music</b>
             </div>
-            <div class="rectangle-parent" @click="navigateToCategory('Sports')">
+            <div class="rectangle-parent" @click="navigateToCategory('sports')">
             <div class="group-child">
             </div>
             <img class="image-4-icon" alt="" src="/img/desporto.png">
-            <b class="sports">{{ translations.sports }}</b>
+            <b class="sports">Sports</b>
             </div>
-            <div class="rectangle-group" @click="navigateToCategory('Romance')">
+            <div class="rectangle-group" @click="navigateToCategory('romance')">
             <div class="group-item">
             </div>
             <img class="image-4-icon" alt="" src="/img/romance.png">
-            <b class="music">{{ translations.romance }}</b>
+            <b class="music">Romance</b>
             </div>
-            <div class="rectangle-container" @click="navigateToCategory('Horror')">
+            <div class="rectangle-container" @click="navigateToCategory('horror')">
             <div class="group-item">
             </div>
             <img class="image-12-icon" alt="" src="/img/terror.png">
-            <b class="horror">{{ translations.horror }}</b>
+            <b class="horror">Horror</b>
             </div>
-            <div class="image-7-parent" @click="navigateToCategory('Manga')">
+            <div class="image-7-parent" @click="navigateToCategory('manga')">
             <img class="image-7-icon" alt="" src="/img/manga.png">
-            <b class="manga">{{ translations.manga }}</b>
+            <b class="manga">Manga</b>
             </div>
         </div>
-        <NavComponent :username="username"></NavComponent>
+        <NavComponent></NavComponent>
     </main> 
 </template>
 
@@ -114,7 +90,6 @@ export default {
     }
   },
 }
-
 </script>
 
 
@@ -241,7 +216,7 @@ export default {
     height: 200px;
     cursor: pointer;
 }
-.sci-fi {
+.scifi {
     position: absolute;
     top: 153px;
     left: 8px;

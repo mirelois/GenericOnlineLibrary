@@ -2,6 +2,8 @@
 import NavComponent from '../components/NavComponent.vue'
 import BookComponent from '../components/BookCoverComponent.vue'
 import FooterComponent from '../components/FooterComponent.vue';
+import ShelfSideBarComponent from '../components/ShelfSideBarComponent.vue';
+
 import { useStore } from 'vuex';
 import { computed } from 'vue';
 
@@ -16,10 +18,10 @@ if (localStorage.getItem('selectedLanguage')) {
 }
 </script>
 <template>
-    <ShelfSideBarComponent v-if="username!==''" :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
-  	<div class="line-div">
-    </div> 
     <div class="books-page">
+        <div class="line-div">
+        </div> 
+        <ShelfSideBarComponent v-if="username!==''" :username="username"></ShelfSideBarComponent>
         <div class="text-wrapper-4">{{ translations.bookshelf }}: {{ bookshelfname }}</div> 
         <input v-model="search_input" class="search-bookshelf" type="text" placeholder="Filter by book name"/> 
         <div class="sort-component">
@@ -92,13 +94,11 @@ import axios from "axios";
 import ConfirmComponent from '@/components/ConfirmComponent.vue';
 import router from '@/router';
 import authHeader from '@/services/auth.header';
-import ShelfSideBarComponent from '@/components/ShelfSideBarComponent.vue';
 export default {
     components: {
         NavComponent,
         BookComponent,
-        ConfirmComponent,
-        ShelfSideBarComponent
+        ConfirmComponent
     },
     data(){
         return {
@@ -178,7 +178,7 @@ export default {
                 let header = authHeader();
                 let config = {headers:header}
                 header['Content-Type']='application/json';
-                axios.delete('http://localhost:8080/customer/'+this.username+'/bookshelf/'+this.bookshelfname+'?isbn='+this.removeBook,config).then(resp=>{
+                axios.delete('http://localhost:8080/customer/'+this.username+'/bookshelf/personalBook?isbn='+this.removeBook,config).then(resp=>{
                     this.bookshelf = this.bookshelf.filter(b=> b.bookISBN!=this.removeBook)
                     this.showConfirmDel = false;
                 }).catch(error=>{
@@ -188,6 +188,7 @@ export default {
             console.log(resp)
         },
         showConfirmDeletion(book){
+            console.log("showing")
             this.removeBook = book;
             this.showConfirmDel=true;
         },
@@ -266,7 +267,7 @@ export default {
   border-right: 1px solid #dccfcf;
   box-sizing: border-box;
   height: 3176.1px;
-  left:-250px;
+  left:-2240px;
 } 
 
 .books-page .book-row {

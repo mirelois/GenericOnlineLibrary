@@ -6,7 +6,7 @@ import FooterComponent from '../components/FooterComponent.vue';
 <template>
   <main>
     <NavComponent :username="username"></NavComponent>
-    <ShelfSideBarComponent v-if="username!==''" :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
+    <ShelfSideBarComponent v-if="username!==''" :username="username"></ShelfSideBarComponent>
   	<div class="line-div">
     </div> 
   </main>
@@ -16,8 +16,7 @@ import router from '@/router';
 export default {
   data(){
     return{
-      username:'',
-			profileImg: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+      username:''
     }
   },
 	created() {

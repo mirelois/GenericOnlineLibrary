@@ -13,7 +13,6 @@ import com.aa.coolreads.User.repositories.BookshelfRepository;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import com.aa.coolreads.User.repositories.PersonalBooksRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -42,10 +41,10 @@ public class BookshelfService {
 
     @Transactional
     public Set<SimpleBookShelfDTO> getBookshelf(String username) throws CustomerNotFoundException {
-
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
-
-        return this.bookshelfRepository.findBookshelvesByCustomer(customer).stream().map(bookshelf -> this.bookshelfMapper.toSimpleBookShelfDTO(bookshelf, this.personalBooksRepository.getBooksSize(bookshelf))).collect(Collectors.toSet());
+        Set<SimpleBookShelfDTO> simpleBookShelfDTOS = this.bookshelfRepository.findBookshelvesByCustomer(customer).stream().map(bookshelf -> this.bookshelfMapper.toSimpleBookShelfDTO(bookshelf, this.personalBooksRepository.getBooksSize(bookshelf))).collect(Collectors.toSet());
+        simpleBookShelfDTOS.add(new SimpleBookShelfDTO("all", Privacy.PUBLIC.name(), this.personalBooksRepository.getBookSizeByCustomer(customer)));
+        return simpleBookShelfDTOS;
     }
 
     @Transactional
@@ -53,7 +52,7 @@ public class BookshelfService {
         Privacy privacy = Privacy.valueOf(bookShelfCreationDTO.getPrivacy().toUpperCase());
 
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
-        if(this.bookshelfRepository.findBookshelfByNameAndCustomer(bookShelfCreationDTO.getName(), customer).isPresent())
+        if(Objects.equals(bookShelfCreationDTO.getName(), "all") || this.bookshelfRepository.findBookshelfByNameAndCustomer(bookShelfCreationDTO.getName(), customer).isPresent())
             throw new BookshelfAlreadyExists(bookShelfCreationDTO.getName());
 
         this.bookshelfRepository.save(this.bookshelfMapper.toBookshelf(bookShelfCreationDTO.getName(), privacy, customer));
@@ -80,6 +79,9 @@ public class BookshelfService {
     @Transactional
     public void deleteBookshelf(String username, String name) throws CustomerNotFoundException, InvalidBookshelfDeletionException {
 
+        if(Objects.equals(name, "all"))
+            throw new InvalidBookshelfDeletionException(name);
+
         for(DefaultBookshelf defaultBookshelfType : DefaultBookshelf.values()){
             if(defaultBookshelfType.name().equals(name))
                 throw new InvalidBookshelfDeletionException(name);
@@ -104,7 +106,7 @@ public class BookshelfService {
         Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(newBookshelfName, customer)
                 .orElseThrow(() -> new BookshelfNotFoundException(newBookshelfName));
 
-        String newExclusivityClassName = bookshelf.getExclusivityClass().getName();
+        ExclusivityClass newExclusivityClass = bookshelf.getExclusivityClass();
 
         Book book = this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
 
@@ -120,7 +122,7 @@ public class BookshelfService {
         Bookshelf bookshelfTemp;
         while(iterator.hasNext() && isConflictFree){
             bookshelfTemp = iterator.next();
-            if(!Objects.equals(bookshelfTemp.getName(), newExclusivityClassName)){
+            if(!Objects.equals(bookshelfTemp.getName(), bookshelf.getName()) && Objects.equals(bookshelfTemp.getExclusivityClass(), newExclusivityClass)){
                 isConflictFree = false;
             }
         }
@@ -136,14 +138,23 @@ public class BookshelfService {
 
         Book book = this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
 
-        PersonalBook personalBook = this.personalBooksRepository
-                .getPersonalBookByBookAndCustomer(book, customer).orElseGet(() -> new PersonalBook(0, book, customer));
+        Optional<PersonalBook> optionalPersonalBook = this.personalBooksRepository.getPersonalBookByBookAndCustomer(book, customer);
+        PersonalBook personalBook;
+        if(optionalPersonalBook.isEmpty()){
+            personalBook = new PersonalBook(0, book, customer);
+        } else{
+            personalBook = optionalPersonalBook.get();
+            if(personalBook.getBookshelves().contains(bookshelf))
+                throw new PersonalBookAlreadyExistsException(isbn);
+        }
 
         for(Bookshelf personalBookBookshelf: personalBook.getBookshelves()){
-            if(!Objects.equals(personalBookBookshelf.getExclusivityClass().getName(), bookshelf.getName())){
-                personalBook.removeBookshelf(bookshelf);
+            if(Objects.equals(personalBookBookshelf.getExclusivityClass(), bookshelf.getExclusivityClass())){
+                personalBook.removeBookshelf(personalBookBookshelf);
             }
         }
+
+        personalBook.addBookshelf(bookshelf);
 
         this.personalBooksRepository.save(personalBook);
     }
