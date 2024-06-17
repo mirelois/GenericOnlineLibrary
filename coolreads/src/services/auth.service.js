@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
+import authHeader from './auth.header';
 
 const API_URL = 'http://localhost:8080/customer/';
 
@@ -32,6 +33,17 @@ class AuthService {
       email: user.email
     });
   }
+  changePassword(oldPassword, newPassword) {
+    const user = JSON.parse(localStorage.getItem('user'));
+    return axios.put(API_URL + 'me/password', {
+        oldPassword: oldPassword,
+        newPassword: newPassword
+    }, {
+        headers: {
+            Authorization: 'Bearer ' + user.accessToken
+        }
+    });
+}
 }
 
 export default new AuthService();

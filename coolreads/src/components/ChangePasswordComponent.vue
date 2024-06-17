@@ -1,7 +1,7 @@
 <script setup>
+import { ref } from 'vue';
 import { useStore } from 'vuex';
 import { computed } from 'vue';
-
 const store = useStore();
 
 const translations = computed(() => store.getters['language/currentTranslations']);
@@ -11,49 +11,81 @@ const selectedLanguage = computed(() => store.state.language.selectedLanguage);
 if (localStorage.getItem('selectedLanguage')) {
     setLanguage(localStorage.getItem('selectedLanguage'));
 }
+const currentPassword = ref('');
+const newPassword = ref('');
+const errorMessage = ref('');
+
+
+const confirmChange = async () => {
+    try {
+        await store.dispatch('auth/changePassword', { oldPassword: currentPassword.value, newPassword: newPassword.value });
+        errorMessage.value = translations.value.passwordChangeSuccess;
+    } catch (error) {
+        errorMessage.value = translations.value.passwordChangeError;
+    }
+};
 </script>
 
 <template>
-    <div class="popup-overlay" @click.self="closePopup">
-      <div class="change-password-popup">
-        <div class="header">
-          <img @click="closePopup" class="close-icon" src="/img/close.svg" alt="Close" />
+  <div class="popup-overlay" @click.self="closePopup">
+    <div class="change-password-popup">
+      <div class="header">
+        <img @click="closePopup" class="close-icon" src="/img/close.svg" alt="Close" />
+      </div>
+      <div class="content">
+        <div class="input-group">
+          <label for="current-password">{{ translations.currentPassword }}</label>
+          <input v-model="currentPassword" type="password" id="current-password" />
         </div>
-        <div class="content">
-          <div class="input-group">
-            <label for="current-password">{{ translations.currentPassword }}</label>
-            <input v-model="currentPassword" type="password" id="current-password" />
-          </div>
-          <div class="input-group">
-            <label for="new-password">{{ translations.newPassword }}</label>
-            <input v-model="newPassword" type="password" id="new-password" />
-          </div>
-          <button class="confirm-button" @click="confirmChange">{{ translations.confirm }}</button>
+        <div class="input-group">
+          <label for="new-password">{{ translations.newPassword }}</label>
+          <input v-model="newPassword" type="password" id="new-password" />
         </div>
+        <button class="confirm-button" @click="confirmChange">{{ translations.confirm }}</button>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        currentPassword: '',
-        newPassword: ''
-      };
+    <ToastComponent v-if="errorMessage" :msg="errorMessage" @close_toast="errorMessage = ''" />
+  </div>
+</template>
+<script>
+import { mapActions } from 'vuex';
+import ToastComponent from './ToastComponent.vue';
+
+export default {
+  name: 'ChangePasswordComponent',
+  components: {
+    ToastComponent
+  },
+  data() {
+    return {
+      oldPassword: '',
+      newPassword: '',
+      showToast: false,
+      toastMessage: ''
+    };
+  },
+  methods: {
+    ...mapActions('auth', ['changePassword']),
+    confirmChange() {
+      this.changePassword({ oldPassword: this.oldPassword, newPassword: this.newPassword })
+        .then(() => {
+          this.toastMessage = 'Password changed successfully';
+          this.showToast = true;
+        })
+        .catch(() => {
+          this.toastMessage = 'Error changing password';
+          this.showToast = true;
+        });
     },
-    methods: {
-      closePopup() {
+    closeToast() {
+      this.showToast = false;
+    },
+    closePopup() {
         this.$emit('close');
       },
-      confirmChange() {
-        console.log('Current Password:', this.currentPassword);
-        console.log('New Password:', this.newPassword);
-        this.closePopup();
-      }
-    }
-  };
-  </script>
+  }
+};
+</script>
   
   <style scoped>
   .popup-overlay {
