@@ -1,5 +1,8 @@
 package com.aa.coolreads.User.services;
 
+import com.aa.coolreads.Book.exception.BookNotFoundException;
+import com.aa.coolreads.Book.models.Book;
+import com.aa.coolreads.Book.repositories.BookRepository;
 import com.aa.coolreads.User.dto.NotificationCreationDTO;
 import com.aa.coolreads.User.dto.NotificationDTO;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
@@ -27,12 +30,15 @@ public class NotificationService {
 
     private final NotificationMapper notificationMapper;
 
+    private final BookRepository bookRepository;
+
     private final MailService mailService;
 
-    public NotificationService(NotificationRepository notificationRepository, CustomerRepository customerRepository, NotificationMapper notificationMapper, MailService mailService) {
+    public NotificationService(NotificationRepository notificationRepository, CustomerRepository customerRepository, NotificationMapper notificationMapper, BookRepository bookRepository, MailService mailService) {
         this.notificationRepository = notificationRepository;
         this.customerRepository = customerRepository;
         this.notificationMapper = notificationMapper;
+        this.bookRepository = bookRepository;
         this.mailService = mailService;
     }
 
@@ -68,6 +74,19 @@ public class NotificationService {
         for(Customer friend: customer.getFriends()){
             this.notificationRepository.save(this.notificationMapper.toNotification(notificationCreationDTO, customer, friend));
             this.mailService.sendNotificationMail(friend.getEmail(), notificationCreationDTO.getNotificationType().name());
+        }
+    }
+
+    @Transactional
+    public void insertBookRelatedNotification(NotificationType notificationType, String isbn, String userName) throws CustomerNotFoundException, BookNotFoundException {
+
+        Customer customer = this.customerRepository.findById(userName).orElseThrow(() -> new CustomerNotFoundException(userName));
+
+        Book book = this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
+
+        for(Customer friend: customer.getFriends()){
+            this.notificationRepository.save(this.notificationMapper.toNotification(notificationType, book, friend, customer));
+            this.mailService.sendNotificationMail(friend.getEmail(), notificationType.name());
         }
     }
 
