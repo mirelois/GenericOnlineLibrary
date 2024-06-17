@@ -19,7 +19,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     Page<Notification> findByCustomerUsername(@Param("username") String username, PageRequest pageable);
 
     @Query("SELECT COUNT(*) > 0 FROM Notification n WHERE n.customer = :myCustomer AND n.customerCreator = :otherCustomer AND n.notificationType = :notificationType")
-    Boolean hasNotificationFromOtherCustomer(Customer myCustomer, Customer otherCustomer, String notificationType);
+    Boolean hasNotificationFromOtherCustomer(Customer myCustomer, Customer otherCustomer, NotificationType notificationType);
 
     @Modifying
     @Query("DELETE FROM Notification n WHERE n.customer = :customer AND n.id = :id")

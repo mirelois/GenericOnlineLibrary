@@ -7,6 +7,7 @@ import com.aa.coolreads.Book.models.Genre;
 import com.aa.coolreads.Book.services.BookService;
 import com.aa.coolreads.Book.services.PublisherService;
 import com.aa.coolreads.User.dto.BookShelfCreationDTO;
+import com.aa.coolreads.User.dto.NotificationCreationDTO;
 import com.aa.coolreads.User.dto.RegisterDTO;
 import com.aa.coolreads.User.exception.*;
 import com.aa.coolreads.User.mappers.BookshelfMapper;
@@ -16,10 +17,12 @@ import com.aa.coolreads.User.repositories.CustomerRepository;
 import com.aa.coolreads.User.services.AuthenticationService;
 import com.aa.coolreads.User.services.BookshelfService;
 import com.aa.coolreads.User.services.CustomerService;
+import com.aa.coolreads.User.services.NotificationService;
 import jakarta.transaction.Transactional;
 import org.apache.commons.validator.routines.ISBNValidator;
 import org.apache.commons.validator.routines.checkdigit.CheckDigitException;
 import org.apache.commons.validator.routines.checkdigit.ISBNCheckDigit;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -37,12 +40,14 @@ public class Seeder implements CommandLineRunner {
     private final BookService bookService;
     private final PublisherService publisherService;
     private final AuthenticationService authenticationService;
+    private final NotificationService notificationService;
 
-    public Seeder(BookshelfService bookshelfService, BookService bookService, PublisherService publisherService, AuthenticationService authenticationService) {
+    public Seeder(BookshelfService bookshelfService, BookService bookService, PublisherService publisherService, AuthenticationService authenticationService, NotificationService notificationService) {
         this.bookshelfService = bookshelfService;
         this.bookService = bookService;
         this.publisherService = publisherService;
         this.authenticationService = authenticationService;
+        this.notificationService = notificationService;
     }
 
 
@@ -99,6 +104,8 @@ public class Seeder implements CommandLineRunner {
         loadCustomerData();
         loadBookshelfData();
         loadPersonalBookData(isbns);
+        addFriends();
+        loadNotifications();
     }
 
     private void loadPersonalBookData(ArrayList<String> isbns) {
@@ -224,6 +231,26 @@ public class Seeder implements CommandLineRunner {
 
     }
 
+    private void addFriends() {
+
+        Random rand = new Random();
+        rand.setSeed(2024);
+
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 10; j++) {
+                String friend = "user" + rand.nextInt(100);
+                try {
+                    notificationService.sendFriendRequestNotification("user" + i,  friend);
+                    notificationService.addFriend(friend, "user" + i);
+                } catch (CustomerNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (NoFriendRequestFromRequestedCustomerException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
     private void loadBookshelfData() {
 
         for (int i = 0; i < 100; i++) {
@@ -237,6 +264,25 @@ public class Seeder implements CommandLineRunner {
             }
 
         }
+    }
+
+    public void loadNotifications() {
+
+        for (int i = 0; i < 100; i++) {
+
+            for (int j = 0; j < 50; j++) {
+
+                NotificationCreationDTO notificationCreationDTO = new NotificationCreationDTO(NotificationType.values()[j % NotificationType.values().length]);
+
+                try {
+                    notificationService.insertNotification(notificationCreationDTO, "user" + i);
+                } catch (CustomerNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+        }
+
     }
 
 }
