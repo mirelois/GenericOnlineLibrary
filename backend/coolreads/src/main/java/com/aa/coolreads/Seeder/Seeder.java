@@ -22,6 +22,7 @@ import org.apache.commons.validator.routines.checkdigit.CheckDigitException;
 import org.apache.commons.validator.routines.checkdigit.ISBNCheckDigit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
+@Profile("test")
 public class Seeder implements CommandLineRunner {
 
     private final BookshelfService bookshelfService;
