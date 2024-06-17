@@ -13,13 +13,9 @@ import com.aa.coolreads.User.repositories.BookshelfRepository;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import com.aa.coolreads.User.repositories.PersonalBooksRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -133,7 +129,7 @@ public class BookshelfService {
     }
 
     @Transactional
-    public void insertBook(String name, String username, String isbn) throws CustomerNotFoundException, BookshelfNotFoundException, BookNotFoundException, PersonalBookAlreadyExists {
+    public void insertBook(String name, String username, String isbn) throws CustomerNotFoundException, BookshelfNotFoundException, BookNotFoundException, PersonalBookAlreadyExistsException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
         Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(name, customer).orElseThrow(() -> new BookshelfNotFoundException(name));
@@ -150,6 +146,20 @@ public class BookshelfService {
         }
 
         this.personalBooksRepository.save(personalBook);
+    }
+
+    @Transactional
+    public void updateBook(String username, String isbn, Integer pagesRead) throws CustomerNotFoundException, PersonalBookNotFoundException, BookNotFoundException, InvalidPageReadException {
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+        Book book = this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
+
+        if(pagesRead < 0 || book.getTotalPageNumbers() < pagesRead)
+            throw new InvalidPageReadException(pagesRead);
+
+        PersonalBook personalBook = this.personalBooksRepository
+                .getPersonalBookByBookAndCustomer(book, customer).orElseThrow(() -> new PersonalBookNotFoundException(isbn));
+
+        personalBook.setPagesRead(pagesRead);
     }
 
     @Transactional

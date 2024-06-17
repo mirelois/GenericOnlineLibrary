@@ -102,14 +102,27 @@ public class BookshelfController {
             return ResponseEntity.ok().build();
         } catch (BookshelfNotFoundException | BookNotFoundException | CustomerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (PersonalBookAlreadyExists e) {
+        } catch (PersonalBookAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 
     @PreAuthorize("#username == principal.username")
+    @PutMapping("/personalBook")
+    public ResponseEntity<String> updateBook(@PathVariable String username, @RequestParam String isbn, @RequestParam Integer pagesRead){
+        try{
+            this.bookshelfService.updateBook(username, isbn, pagesRead);
+            return ResponseEntity.ok().build();
+        } catch (BookNotFoundException | CustomerNotFoundException | PersonalBookNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (InvalidPageReadException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PreAuthorize("#username == principal.username")
     @DeleteMapping("/personalBook")
-    public ResponseEntity<Void> deleteBook(@PathVariable String username, @RequestParam String isbn){
+    public ResponseEntity<String> deleteBook(@PathVariable String username, @RequestParam String isbn){
         try{
             this.bookshelfService.deleteBook(username, isbn);
             return ResponseEntity.ok().build();
