@@ -73,7 +73,7 @@ public class AuthenticationService {
 
         String jwtToken = this.jwtService.generateToken(customer);
 
-        return new LoginResponseDTO(jwtToken, jwtService.getExpirationTime());
+        return new LoginResponseDTO(customer.getEmail(), jwtToken, jwtService.getExpirationTime());
     }
 
     @Transactional
