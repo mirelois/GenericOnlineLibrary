@@ -242,6 +242,11 @@ public class BookshelfService {
 
         bookshelf.setExclusivityClass(exclusivityClass);
 
+        Set<PersonalBook> personalBooks = bookshelf.getPersonalBooks();
+        personalBooks.removeIf(personalBook -> this.personalBooksRepository.checkIfPersonalBookHasConflict(customer, personalBook, exclusivityClass));
+
+        bookshelf.setPersonalBooks(personalBooks);
+
         this.bookshelfRepository.save(bookshelf);
     }
 
