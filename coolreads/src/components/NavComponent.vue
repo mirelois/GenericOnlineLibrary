@@ -143,7 +143,7 @@ export default {
         handle_logout(){
             this.$store.dispatch('auth/logout').then(
             () => {
-                router.push('/bookmenu')
+                router.push('/login')
             },
             error => {
               this.message =
