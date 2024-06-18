@@ -57,7 +57,7 @@ public class CustomerService {
     public void updateMyCustomerProfile(SimpleCustomerDTO simpleCustomerDTO, String username) throws CustomerNotFoundException, IllegalArgumentException, BookshelfNotFoundException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
-        if(simpleCustomerDTO.getHighlightedBookshelf()!=null || simpleCustomerDTO.getHighlightedBookshelf().getName()!=null){
+        if(simpleCustomerDTO.getHighlightedBookshelf()!=null && simpleCustomerDTO.getHighlightedBookshelf().getName()!=null){
             this.bookshelfRepository.findBookshelfByNameAndCustomer(simpleCustomerDTO.getHighlightedBookshelf().getName(), customer)
                     .orElseThrow(() -> new BookshelfNotFoundException(simpleCustomerDTO.getHighlightedBookshelf().getName()));
         }
