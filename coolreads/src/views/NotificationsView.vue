@@ -2,6 +2,7 @@
 import { useStore } from 'vuex';
 import { computed, ref, onMounted } from 'vue';
 import NavComponent from '@/components/NavComponent.vue';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
 const store = useStore();
 const notifications = computed(() => store.state.notifications.notifications);
@@ -36,8 +37,8 @@ const nextPage = () => {
     activate.value[page.value] = false;
     page.value += 1;
     activate.value[page.value] = true;
+    fetchNotifications();
   }
-  fetchNotifications();
 };
 
 const backPage = () => {
@@ -45,8 +46,8 @@ const backPage = () => {
     activate.value[page.value] = false;
     page.value -= 1;
     activate.value[page.value] = true;
+    fetchNotifications();
   }
-  fetchNotifications();
 };
 
 const goToPage = (pageIndex) => {
@@ -68,6 +69,11 @@ const paginatedNotifications = computed(() => {
   const end = start + maxPerPage.value;
   return notifications.value.slice(start, end);
 });
+
+const timeMachine = (dateString) => {
+  const date = parseISO(dateString);
+  return formatDistanceToNow(date, { addSuffix: true });
+};
 
 onMounted(() => {
   const token = localStorage.getItem('user');
@@ -94,16 +100,16 @@ onMounted(() => {
     <div class="notification2all">
       <div v-for="notification in paginatedNotifications" :key="notification.id" class="notification">
         <img class="clock-icon" alt="" src="/img/clock.svg">
-        <b class="time">{{ notification.time }}</b>
-        <b class="message">{{ notification.message }}</b>
-        <div class="deletebutton"><button @click="handleDelete(notification.id)">{{ translations.delete }}</button></div>
+        <b class="time">{{ timeMachine(notification.createdAt) }}</b>
+        <b class="message">{{ notification.notificationType }} from {{ notification.username }}</b>
+        <div class="deletebutton"><button @click="handleDelete(notification.id)">{{ translations.value.delete }}</button></div>
       </div>
     </div>
     <div class="pagination">
       <div class="pagination-child">
         <div class="parent">
           <img class="vector-icon" @click="backPage" alt="" src="/img/back.svg">
-          <div v-for="(n, index) in nrPages" :key="index" class="div3" :class="{ 'child': activate[n - 1] }" @click="goToPage(n - 1)">{{ n }}</div>
+          <div v-for="(n, index) in nrPages" :key="index" class="div3" :class="{ 'child': activate.value[index] }" @click="goToPage(index)">{{ n + 1 }}</div>
           <img class="vector-icon1" @click="nextPage" alt="" src="/img/front.svg">
         </div>
       </div>
