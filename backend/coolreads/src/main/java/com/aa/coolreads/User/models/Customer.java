@@ -1,6 +1,5 @@
 package com.aa.coolreads.User.models;
 
-import com.aa.coolreads.Book.models.Genre;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,52 +18,51 @@ public class Customer implements UserDetails {
 
     private String email;
 
-    private String name;
-
-    private String gender;
-
-    private String pronouns;
-
-    private Date birthDate;
-
-    private String country;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @Column(columnDefinition = "TEXT")
-    private String interests;
-
-    private String profileImageUrl;
-
-    private String profileBannerUrl;
+    @Embedded
+    private CustomerProfileDetails profileDetails;
 
     @ManyToMany
-    private Set<Genre> favoriteGenres;
+    private Set<Customer> friends;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Bookshelf> bookshelves;
 
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PersonalBook> personalBooks;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Notification> notifications;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Post> posts;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ExclusivityClass> exclusivityClasses;
+
     public Customer(){
-        this.favoriteGenres = new HashSet<>();
         this.bookshelves = new HashSet<>();
+        this.notifications = new HashSet<>();
+        this.posts = new HashSet<>();
+        this.friends = new HashSet<>();
+        this.profileDetails = new CustomerProfileDetails();
+        this.personalBooks = new HashSet<>();
+        this.exclusivityClasses = new HashSet<>();
     }
 
-    public Customer(String username, String password, String email, String name, String gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, Set<Genre> favoriteGenres, Set<Bookshelf> bookshelves) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.name = name;
-        this.gender = gender;
-        this.pronouns = pronouns;
-        this.birthDate = birthDate;
-        this.country = country;
-        this.description = description;
-        this.interests = interests;
-        this.profileImageUrl = profileImageUrl;
-        this.profileBannerUrl = profileBannerUrl;
-        this.favoriteGenres = favoriteGenres;
-        this.bookshelves = bookshelves;
+    public Set<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Set<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
     }
 
     public String getUsername() {
@@ -91,86 +89,6 @@ public class Customer implements UserDetails {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getPronouns() {
-        return pronouns;
-    }
-
-    public void setPronouns(String pronouns) {
-        this.pronouns = pronouns;
-    }
-
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getInterests() {
-        return interests;
-    }
-
-    public void setInterests(String interests) {
-        this.interests = interests;
-    }
-
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
-    }
-
-    public String getProfileBannerUrl() {
-        return profileBannerUrl;
-    }
-
-    public void setProfileBannerUrl(String profileBannerUrl) {
-        this.profileBannerUrl = profileBannerUrl;
-    }
-
-    public Set<Genre> getFavoriteGenres() {
-        return favoriteGenres;
-    }
-
-    public void setFavoriteGenres(Set<Genre> favoriteGenres) {
-        this.favoriteGenres = favoriteGenres;
-    }
-
     public Set<Bookshelf> getBookshelves() {
         return bookshelves;
     }
@@ -182,5 +100,69 @@ public class Customer implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
+    }
+
+    public CustomerProfileDetails getProfileDetails() {
+        return profileDetails;
+    }
+
+    public void setProfileDetails(CustomerProfileDetails profileDetails) {
+        this.profileDetails = profileDetails;
+    }
+
+    public Set<Customer> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(Set<Customer> friends) {
+        this.friends = friends;
+    }
+
+    public void addFriend(Customer customer){
+        this.friends.add(customer);
+    }
+
+    public void removeFriend(Customer customer){
+        this.friends.remove(customer);
+    }
+
+    public void addNotification(Notification notification){
+        this.notifications.add(notification);
+    }
+
+    public void addBookshelf(Bookshelf bookshelf){
+        this.bookshelves.add(bookshelf);
+    }
+
+    public Set<PersonalBook> getPersonalBooks() {
+        return personalBooks;
+    }
+
+    public void setPersonalBooks(Set<PersonalBook> personalBooks) {
+        this.personalBooks = personalBooks;
+    }
+
+    public Set<ExclusivityClass> getExclusivityClasses() {
+        return exclusivityClasses;
+    }
+
+    public void setExclusivityClasses(Set<ExclusivityClass> exclusivityClasses) {
+        this.exclusivityClasses = exclusivityClasses;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", profileDetails=" + profileDetails +
+                ", friends=" + friends +
+                ", bookshelves=" + bookshelves +
+                ", personalBooks=" + personalBooks +
+                ", notifications=" + notifications +
+                ", posts=" + posts +
+                ", exclusivityClasses=" + exclusivityClasses +
+                '}';
     }
 }

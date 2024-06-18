@@ -5,23 +5,60 @@ import FooterComponent from '../components/FooterComponent.vue';
 </script>
 <template>
   <main>
-    <NavComponent></NavComponent>
-    <ShelfSideBarComponent :username="username" :profileImg="profileImg"></ShelfSideBarComponent>
+    <NavComponent :username="username"></NavComponent>
+    <ShelfSideBarComponent v-if="username!==''" :username="username"></ShelfSideBarComponent>
+  	<div class="line-div">
+    </div> 
   </main>
 </template>
 <script>
+import router from '@/router';
 export default {
   data(){
     return{
-      username:'techguru',
-			profileImg: 'https://randomuser.me/api/portraits/men/1.jpg'
+      username:''
     }
-  }
+  },
+	created() {
+    const token = localStorage.getItem('user');
+    if (!token || this.$store.state.auth.status.loggedIn===false) {
+      return;
+    }
+
+    try {
+      const decodedToken = JSON.parse(token);
+      if(decodedToken.info.exp<Date.now()/1000) {
+        this.handle_logout();
+      }
+      this.setUsername(decodedToken.info.sub);
+    } catch (error) {
+      console.error('Error parsing user token:', error);
+    }
+  },
+	methods:{
+		setUsername(username){
+			this.username=username;
+		},
+    handle_logout(){
+            this.$store.dispatch('auth/logout').then(
+            () => {
+                router.go()
+            },
+            error => {
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+            }
+      );
+    } 
+
+	}
 }
 
 
 </script>
-<style>
+<style scoped>
 @media (min-width: 1024px) {
     #app {
         padding: 0;
@@ -35,4 +72,13 @@ export default {
     margin-top: 0px;
     margin-left: -1400px;
 }
+.line-div {
+  width: 100%;
+  position: relative;
+  border-right: 1px solid #dccfcf;
+  box-sizing: border-box;
+  height: 3176.1px;
+  left: -800px;
+}
+
 </style>

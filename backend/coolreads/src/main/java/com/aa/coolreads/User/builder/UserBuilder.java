@@ -35,7 +35,5 @@ public interface UserBuilder {
 
     UserBuilder setProfileBannerUrl(String profileBannerUrl);
 
-    UserBuilder setFavoriteGenres(Set<Genre> favoriteGenres);
-
     UserBuilder setBookshelves(Set<Bookshelf> bookshelves);
 }

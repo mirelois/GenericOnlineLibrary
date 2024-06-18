@@ -4,79 +4,99 @@ import NavComponent from '../components/NavComponent.vue';
 <template>
     <main>
         <b class="order-by">Genres</b>
-        <b class="for-you">For You</b>
         <div class="allcategories">
-            <div class="image-4-parent" @click="navigateToCategory('Adventure')">
+            <div class="image-4-parent" @click="navigateToCategory('adventure')">
             <img class="image-4-icon" alt="" src="/img/aventura.png">
             <b class="adventure">Adventure</b>
             </div>
-            <div class="image-6-parent" @click="navigateToCategory('Mystery')">
+            <div class="image-6-parent" @click="navigateToCategory('mystery')">
             <img class="image-4-icon" alt="" src="/img/misterio.png">
             <b class="mystery">Mystery</b>
             </div>
-            <div class="image-5-parent" @click="navigateToCategory('Biography')">
+            <div class="image-5-parent" @click="navigateToCategory('biography')">
             <img class="image-4-icon" alt="" src="/img/biografia.png">
             <b class="biography">Biography</b>
             </div>
-            <div class="image-2-parent" @click="navigateToCategory('Sci-Fi')">
+            <div class="image-2-parent" @click="navigateToCategory('sciFi')">
             <img class="image-4-icon" alt="" src="/img/ficcao.png">
-            <b class="sci-fi">Sci-Fi</b>
+            <b class="scifi">Sci-Fi</b>
             </div>
-            <div class="image-3-parent" @click="navigateToCategory('Fantasy')">
+            <div class="image-3-parent" @click="navigateToCategory('fantasy')">
             <img class="image-4-icon" alt="" src="/img/fantasia.png">
             <b class="fantasy">Fantasy</b>
             </div>
-            <div class="image-9-parent" @click="navigateToCategory('Music')">
+            <div class="image-9-parent" @click="navigateToCategory('music')">
             <img class="image-4-icon" alt="" src="/img/musica.png">
             <b class="music">Music</b>
             </div>
-            <div class="rectangle-parent" @click="navigateToCategory('Sports')">
+            <div class="rectangle-parent" @click="navigateToCategory('sports')">
             <div class="group-child">
             </div>
             <img class="image-4-icon" alt="" src="/img/desporto.png">
             <b class="sports">Sports</b>
             </div>
-            <div class="rectangle-group" @click="navigateToCategory('Romance')">
+            <div class="rectangle-group" @click="navigateToCategory('romance')">
             <div class="group-item">
             </div>
             <img class="image-4-icon" alt="" src="/img/romance.png">
             <b class="music">Romance</b>
             </div>
-            <div class="rectangle-container" @click="navigateToCategory('Horror')">
+            <div class="rectangle-container" @click="navigateToCategory('horror')">
             <div class="group-item">
             </div>
             <img class="image-12-icon" alt="" src="/img/terror.png">
             <b class="horror">Horror</b>
             </div>
-            <div class="image-7-parent" @click="navigateToCategory('Manga')">
+            <div class="image-7-parent" @click="navigateToCategory('manga')">
             <img class="image-7-icon" alt="" src="/img/manga.png">
             <b class="manga">Manga</b>
             </div>
         </div>
-        <NavComponent></NavComponent>
+        <NavComponent :username="username"></NavComponent>
     </main> 
 </template>
 
 <script>
-import { defineComponent } from 'vue'
 import router from '../router/index'
 
-export default defineComponent({
-  name: 'BooksMenuView',
-  methods: {
-    navigateToCategory(category) {
-      router.push({ name: 'bookCategoria', params: { category } });
+export default {
+    data(){
+        return{
+            username:''
+        }
+    },
+    methods: {
+        navigateToCategory(category) {
+        router.push({ name: 'bookCategoria', params: { category } });
+        }
+    ,
+    setUsername(username){
+		this.username=username;
     }
-  }
-})
+  },
+  created() {
+    const token = localStorage.getItem('user');
+    if (!token) {
+      console.warn('User token not found in localStorage');
+      return;
+    }
+
+    try {
+      const decodedToken = JSON.parse(token);
+      this.setUsername(decodedToken.info.sub);
+    } catch (error) {
+      console.error('Error parsing user token:', error);
+    }
+  },
+}
 </script>
 
 
-<style>
+<style scoped>
 
 .order-by {
     position: absolute;
-    top: 60%;
+    top: 20%;
     color: white;
     font-size: 33px;
     font-family: Inika;
@@ -151,7 +171,7 @@ export default defineComponent({
 }
 .image-4-parent {
     position: absolute;
-    top: 913px;
+    top: 40%;
     left: 756px;
     width: 200px;
     height: 200px;
@@ -170,7 +190,7 @@ export default defineComponent({
 }
 .image-6-parent {
     position: absolute;
-    top: 913px;
+    top: 40%;
     left: 1010px;
     width: 200px;
     height: 200px;
@@ -189,13 +209,13 @@ export default defineComponent({
 }
 .image-5-parent {
     position: absolute;
-    top: 913px;
+    top: 40%;
     left: 1263px;
     width: 200px;
     height: 200px;
     cursor: pointer;
 }
-.sci-fi {
+.scifi {
     position: absolute;
     top: 153px;
     left: 8px;
@@ -208,7 +228,7 @@ export default defineComponent({
 }
 .image-2-parent {
     position: absolute;
-    top: 913px;
+    top: 40%;
     left: 248px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     width: 200px;
@@ -230,7 +250,7 @@ export default defineComponent({
 
 .image-3-parent {
     position: absolute;
-    top: 913px;
+    top: 40%;
     left: 502px;
     width: 200px;
     height: 200px;
@@ -251,7 +271,7 @@ export default defineComponent({
 
 .image-9-parent {
     position: absolute;
-    top: 1166px;
+    top: 70%;
     left: 502px;
     width: 200px;
     height: 200px;
@@ -280,7 +300,7 @@ export default defineComponent({
 
 .rectangle-parent {
     position: absolute;
-    top: 1166px;
+    top: 70%;
     left: 756px;
     width: 200px;
     height: 200px;
@@ -296,7 +316,7 @@ export default defineComponent({
 }
 .rectangle-group {
     position: absolute;
-    top: 1166px;
+    top: 70%;
     left: 1010px;
     width: 200px;
     height: 200px;
@@ -324,7 +344,7 @@ export default defineComponent({
 }
 .rectangle-container {
     position: absolute;
-    top: 1166px;
+    top: 70%;
     left: 1263px;
     width: 201px;
     height: 200px;
@@ -351,7 +371,7 @@ export default defineComponent({
 }
 .image-7-parent {
     position: absolute;
-    top: 1166px;
+    top: 70%;
     left: 250px;
     width: 199px;
     height: 200px;

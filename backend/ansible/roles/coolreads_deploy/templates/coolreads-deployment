@@ -1,0 +1,35 @@
+---
+# Deployment for deploying coolreads
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ app_name }}
+  namespace: {{ cool_namespace }}
+  labels:
+    app: {{ app_name }}
+spec:
+  replicas: {{ coolreads_deploy_n_replicas }}
+  selector:
+    matchLabels:
+      app: {{ app_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ app_name }}
+    spec:
+      containers:
+      - name: {{ app_name }}
+        image: hiddenduck/coolreads
+        env:
+        - name: DB_CONNECTION
+          value: {{ db_connection_name }}
+        - name: DB_HOST
+          value: {{ db_service_name }}
+        - name: DB_DATABASE
+          value: {{ db_database_name }}
+        - name: DB_USERNAME
+          value: {{ db_username }}
+        - name: DB_PASSWORD
+          value: "{{ db_password }}" # Use secret object in real usage
+        ports:
+        - containerPort: {{ coolreads_container_port }}

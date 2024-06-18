@@ -1,6 +1,5 @@
 package com.aa.coolreads.User.models;
 
-import com.aa.coolreads.Book.models.Book;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -10,7 +9,7 @@ import java.util.Set;
 @Entity
 public class Bookshelf implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(length = 50)
@@ -19,12 +18,20 @@ public class Bookshelf implements Serializable {
     @Enumerated(EnumType.STRING)
     private Privacy privacy;
 
-    @OneToMany(mappedBy = "bookshelf", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "bookshelf_personalbook",
+            joinColumns = @JoinColumn(name = "bookshelf_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "personalbook_id", referencedColumnName = "id")
+    )
     private Set<PersonalBook> personalBooks;
 
     @ManyToOne
     @JoinColumn(name="customer_username", referencedColumnName="username")
     private Customer customer;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    private ExclusivityClass exclusivityClass;
 
     public Bookshelf(){
         this.personalBooks = new HashSet<>();
@@ -75,5 +82,13 @@ public class Bookshelf implements Serializable {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public ExclusivityClass getExclusivityClass() {
+        return exclusivityClass;
+    }
+
+    public void setExclusivityClass(ExclusivityClass exclusivityClass) {
+        this.exclusivityClass = exclusivityClass;
     }
 }

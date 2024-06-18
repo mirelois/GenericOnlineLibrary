@@ -1,0 +1,9 @@
+---
+# Service for exposing laravelio
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ app_service_name }}
+  namespace: {{ ascn_namespace }}
+  labels:
+    app: {{ app_name }}

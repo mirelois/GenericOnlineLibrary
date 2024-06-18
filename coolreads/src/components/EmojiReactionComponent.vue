@@ -5,43 +5,50 @@
     </head>    
     <div class="reaction-bar">
     <input type="checkbox" class="hide-input" :id="emojiIds[0]" :checked="emojiActivated[emojiIds[0]]" @click="changeEmoji(emojiIds[0])">
-    <label :for="emojiIds[0]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Like }}</div>
+    <label @click="updateLikes(`like`)" :for="emojiIds[0]" class="react" style="--r:35px"><div class="nr-react">{{ likes.like }}</div>
     <i class="fas fa-thumbs-up" style="color:blue"></i>
     </label>
     
     <input type="checkbox"  class="hide-input" :id="emojiIds[1]" :checked="emojiActivated[emojiIds[1]]" @click="changeEmoji(emojiIds[1])">
-    <label :for="emojiIds[1]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Haha }}</div>
+    <label @click="updateLikes(`haha`)" :for="emojiIds[1]" class="react" style="--r:35px"><div class="nr-react">{{ likes.haha }}</div>
       <i class="fas fa-laugh-squint" style="color:gold"></i>
     </label>
     <input type="checkbox" class="hide-input" :id="emojiIds[2]" :checked="emojiActivated[emojiIds[2]]" @click="changeEmoji(emojiIds[2])">
-    <label :for="emojiIds[2]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Wow }}</div>
+    <label @click="updateLikes(`wow`)" :for="emojiIds[2]" class="react" style="--r:35px"><div class="nr-react">{{ likes.wow }}</div>
         <i class="fas fa-sad-tear" style="color:gold"></i>
     </label>
     
     <input type="checkbox"  class="hide-input" :id="emojiIds[3]" :checked="emojiActivated[emojiIds[3]]" @click="changeEmoji(emojiIds[3])">
-    <label :for="emojiIds[3]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Sad }}</div>
+    <label @click="updateLikes(`sad`)" :for="emojiIds[3]" class="react" style="--r:35px"><div class="nr-react">{{ likes.sad }}</div>
         <i class="fas fa-surprise" style="color:gold"></i>
     </label>
 
     <input type="checkbox" :id="emojiIds[4]" class="hide-input" :checked="emojiActivated[emojiIds[4]]" @click="changeEmoji(emojiIds[4])">
-    <label :for="emojiIds[4]" class="react" style="--r:35px"><div class="nr-react">{{ likes.Clown }}</div>
+    <label @click="updateLikes(`clown`)" :for="emojiIds[4]" class="react" style="--r:35px"><div class="nr-react">{{ likes.clown }}</div>
     <i data-icon="🤡"></i>
     </label>
     </div>
 </main>
 </template>
 <script>
+import axios from "axios";
+import authHeader from '@/services/auth.header';
+
 export default{
   props:{
     emojiIds: {
       type: Array,
       default: () => [0, 1, 2, 3, 4]
     },
-    likes:{}
+    likes:{},
+    isbn:'',
+    reviewer:''
   },
   data(){
     return {
-      emojiActivated:{}
+      emojiActivated:{},
+      emojiMap:{0:'like',1:"haha",2:"wow",3:"sad",4:"clown"},
+      emojiidMap:{}
     }
   },
   created(){
@@ -49,15 +56,32 @@ export default{
   },methods:{
     changeEmoji(id){
       for(let i=0; i<this.emojiIds.length;i++){
+        this.emojiidMap[this.emojiMap[i]]= this.emojiIds[i]
         this.emojiActivated[this.emojiIds[i]]=false;
+        if(this.likes[this.emojiMap[i]]>0) this.likes[this.emojiMap[i]] = this.likes[this.emojiMap[i]] - 1;
       }
       this.emojiActivated[id]=true;
-      console.log(this.emojiActivated)
     },
     setup(){
       this.emojiIds.forEach(id => {
         this.emojiActivated[id]=false;
       });
+      for(let i=0; i<this.emojiIds.length;i++){
+        this.emojiidMap[this.emojiMap[i]]= this.emojiIds[i]
+      }
+    },
+    updateLikes(type){
+      if(this.emojiActivated[this.emojiidMap[type]]==true && this.likes[type]>=1) this.likes[type] = this.likes[type] - 1;
+      else{
+        this.likes[type] = this.likes[type] + 2;
+        let header = authHeader();
+        let config = {headers:header};
+        console.log(type);
+        header['Content-Type']='application/json';
+        axios.post("http://localhost:8080/book/"+this.isbn+"/review/"+this.reviewer+"/like?likeType="+type,{},config)
+        .then(resp=>{console.log(resp)})
+        .catch(error=>{console.log(error)})
+      }
     }
   }
 }
@@ -182,6 +206,7 @@ input:checked + .react i:after {
     height: 80px;
     padding-top: 5px;
     padding-right: 25px;
+    z-index: 1;
 }
 
 .nr-react {

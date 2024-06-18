@@ -9,8 +9,453 @@
 		{
 			"name": "GetBookByISBN",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/book/978-3-16-148410-0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"book",
+						"978-3-16-148410-0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InsertBook",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBIiwiaWF0IjoxNzE4MzkwNzMwLCJleHAiOjE3MTgzOTQzMzB9.50KU7nlx4hkozp4WtRjtzXuz2HjwFCWNL4iGXMO2Jyk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/book/1/review/techguru/comment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"book",
+						"1",
+						"review",
+						"techguru",
+						"comment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreatePublisher",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"DuckPub\",\n    \"email\": \"duckpub@gmail.com\",\n    \"siteUrl\": \"http://duck.com/\",\n    \"logoUrl\": \"http://example.com/logo.png\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/publisher",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"publisher"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/book/1/rate?username=techguru&rating=2.0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"book",
+						"1",
+						"rate"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "techguru"
+						},
+						{
+							"key": "rating",
+							"value": "2.0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/book/1/review?page=0&size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"book",
+						"1",
+						"review"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"mybookshelf\",\n  \"privacy\": \"public\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/customer/techguru/bookshelf",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customer",
+						"techguru",
+						"bookshelf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBIiwiaWF0IjoxNzE4Mzc2NjQ5LCJleHAiOjE3MTgzODAyNDl9.NjnjgEAMbyrw4xsdOD1fqsO0LQjyo07G3VQITQIJYfo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/customer/A/bookshelf",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customer",
+						"A",
+						"bookshelf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXJsb3MiLCJpYXQiOjE3MTg0NjQxMzcsImV4cCI6MTcxODQ2NzczN30.74rG0fRjUps-hM2SkY_YP1Gxnv5gZW3WE7J5OqgG7No",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"pagesRead\": 20,\n    \"insertDate\": \"2024-01-01T00:00:00Z\",\n    \"bookISBN\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/customer/carlos/bookshelf/want_to_read",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customer",
+						"carlos",
+						"bookshelf",
+						"want_to_read"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"carlos\",\n    \"password\": \"ola\",\n    \"email\": \"carlos@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/customer/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customer",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/me",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXJsb3MiLCJpYXQiOjE3MTg0NjM2ODQsImV4cCI6MTcxODQ2NzI4NH0.MRObOIewebiWmgRloZehN2OkvID9JSlWXmHIVPsnfK0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "multipartFile",
+							"type": "file",
+							"src": "/home/carlos/Downloads/wallpaperflare.com_wallpaper5.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/customer/me/image",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customer",
+						"me",
+						"image"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXJsbyIsImlhdCI6MTcxODQ1NjAyMCwiZXhwIjoxNzE4NDU5NjIwfQ.AzvUqMu4cc9im3kKt5Kbfw3y6Hl-ijxPf2KgiB4r5js",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\"comentários\"",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/book/1/review/techguru/comment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"book",
+						"1",
+						"review",
+						"techguru",
+						"comment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXJsbyIsImlhdCI6MTcxODQ1NzIwNSwiZXhwIjoxNzE4NDYwODA1fQ.YMNbsgoNzXCFkN8_eHw_cZuAfriAQQrkHRPqECZ68v4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/book/1/review/techguru/comment?page=0&size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"book",
+						"1",
+						"review",
+						"techguru",
+						"comment"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYXJsb3MiLCJpYXQiOjE3MTg1NjY3NTEsImV4cCI6MTcxODU3MDM1MX0.aQ6ZKrv8yLm9UkbnPZOI1yxgaQ_NgkEKBvLzFqXq-Yw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/book/1/review/techguru/like?likeType=clown",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"book",
+						"1",
+						"review",
+						"techguru",
+						"like"
+					],
+					"query": [
+						{
+							"key": "likeType",
+							"value": "clown"
+						}
+					]
+				}
 			},
 			"response": []
 		}

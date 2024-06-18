@@ -2,16 +2,33 @@
 import NavComponent from '../components/NavComponent.vue'
 import BookComponent from '../components/BookCoverComponent.vue'
 import FooterComponent from '../components/FooterComponent.vue';
+import ShelfSideBarComponent from '../components/ShelfSideBarComponent.vue';
+
+import { useStore } from 'vuex';
+import { computed } from 'vue';
+
+const store = useStore();
+
+const translations = computed(() => store.getters['language/currentTranslations']);
+const setLanguage = (language) => store.dispatch('language/setLanguage', language);
+const selectedLanguage = computed(() => store.state.language.selectedLanguage);
+
+if (localStorage.getItem('selectedLanguage')) {
+    setLanguage(localStorage.getItem('selectedLanguage'));
+}
 </script>
 <template>
     <div class="books-page">
-        <div class="text-wrapper-4">My Bookshelf</div> 
-        <input v-model="search_input" class="search-bookshelf" type="text" placeholder="Filter by book name"/> 
-        <div class="sort-component">
+        <div class="line-div">
+        </div> 
+        <ShelfSideBarComponent v-if="username!==''" :username="username"></ShelfSideBarComponent>
+        <div class="text-wrapper-4">{{ translations.bookshelf }}: {{ bookshelfname }}</div> 
+        <input v-model="search_input" class="my-search-bookshelf" type="text" placeholder="Filter by book name"/> 
+        <div class="my-sort-component">
         <div class="listbox-title">
-            <img v-if="showDropdownMenu==true" class="chevron-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
-            <img v-if="showDropdownMenu==false" class="chevron-icon-d" @click='showMenu' alt="" src="/img/updroplist.svg">
-            <div class="order-by-title">Order By</div>
+            <img v-if="showDropdownMenu==true" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
+            <img v-if="showDropdownMenu==false" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/updroplist.svg">
+            <div class="order-by-title">{{ translations.orderBy }}</div>
             </div>
             <div class="listbox-main">
             <div class="listboxbg">
@@ -21,15 +38,15 @@ import FooterComponent from '../components/FooterComponent.vue';
         </div>
         </div>
         <div v-show="showDropdownMenu==true" class="clip-list">
-            <div class="dropdown-list">
+            <div class="my-dropdown-list">
             <div class="item-option-d" @click="sortBooks(`Date`)">
-            <div class="item-content">Date</div>
+            <div class="item-content">{{ translations.date }}</div>
             </div>
             <div class="item-option-d" @click="sortBooks(`Title`)">
-            <div class="item-content">Title</div>
+            <div class="item-content">{{ translations.title }}</div>
             </div>
             <div class="item-option-d" @click="sortBooks(`Rate`)">
-            <div class="item-content">Rate</div>
+            <div class="item-content">{{ translations.rate }}</div>
             </div>
             </div>
             <div class="clip-list-child">
@@ -44,7 +61,7 @@ import FooterComponent from '../components/FooterComponent.vue';
                         <div class="book">
                             <div class="overlap-group">
                                 <div v-for="book in displayBooksPerPage" v-if="!book">
-                                    <BookComponent @removeBook="showConfirmDeletion" :cover="book.coverImage" :bookISBN="book.bookISBN" ></BookComponent>
+                                    <BookComponent :categories_page="false" @removeBook="showConfirmDeletion" :cover="book.coverImage" :bookISBN="book.bookISBN" ></BookComponent>
                                 </div>
                             </div>
                         </div>
@@ -58,11 +75,11 @@ import FooterComponent from '../components/FooterComponent.vue';
         <div class="pagination">
             <div class="pagination-child">
             </div>
-            <div class="div">
+            <div>
             <div class="parent">
-            <img class="vector-icon" @click="backPage()" alt="" src="/img/back.svg">
-            <div v-for="(n,index) in nrpages" class="div3" :class="activate[n -1]==true? 'child':''">{{n}}</div>
-            <img class="vector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
+            <img class="myvector-icon" @click="backPage()" alt="" src="/img/back.svg">
+            <div v-for="(n,index) in nrpages" class="mydiv3" :class="activate[n -1]==true? 'mychild':''">{{n}}</div>
+            <img class="myvector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
             </div>
             </div>
             <div class="newfooter">
@@ -70,11 +87,13 @@ import FooterComponent from '../components/FooterComponent.vue';
             </div>
         </div>
     </div>
-    <NavComponent></NavComponent>
+    <NavComponent :username="username"></NavComponent>
 </template>
 <script>
 import axios from "axios";
 import ConfirmComponent from '@/components/ConfirmComponent.vue';
+import router from '@/router';
+import authHeader from '@/services/auth.header';
 export default {
     components: {
         NavComponent,
@@ -83,7 +102,7 @@ export default {
     },
     data(){
         return {
-            bookshelf:[],  //{ titulo:"biografia", rate:2.3,launchDate:"2011-10-11", cover: "/img/biografia.png", id: 1 },
+            bookshelf:[],  //{ titulo:"biografia", rate:2.3,launchDate:"2011-10-11", coverImage: "https://m.media-amazon.com/images/I/81q77Q39nEL._AC_UF1000,1000_QL80_.jpg", id: 1 },
             activate : [],
             showDropdownMenu:false,
             page: 0,
@@ -93,8 +112,8 @@ export default {
             filtered: [],
             selectedOption: 'Select Sorting Operation',
             bookshelfname:'',
-            username:'techguru',
             showConfirmDel:false,
+            username:'',
             confirm_msg:'Are you sure you want to remove the book?',
             removeBook:''
         }
@@ -141,8 +160,11 @@ export default {
             this.activate[0] = true;
         },
         getBooks(){
+            let header = authHeader();
+            let config = {headers:header}
+            header['Content-Type']='application/json';
             this.bookshelfname = this.$route.params.bookshelfname;
-            axios.get('http://localhost:8080/customer/'+this.username+'/bookshelf/'+this.bookshelfname).then(books=>{
+            axios.get('http://localhost:8080/customer/'+this.username+'/bookshelf/'+this.bookshelfname,config).then(books=>{
                 this.bookshelf = books.data;
                 console.log("allbooks");
                 console.log(books.data);
@@ -153,8 +175,10 @@ export default {
         confirmdeleteBook(resp){
             if(resp=="no") this.showConfirmDel= false;
             else{
-                axios.delete('http://localhost:8080/customer/'+this.username+'/bookshelf/'+this.bookshelfname+'?isbn='+this.removeBook).then(resp=>{
-                    //how to update the lists in memory??
+                let header = authHeader();
+                let config = {headers:header}
+                header['Content-Type']='application/json';
+                axios.delete('http://localhost:8080/customer/'+this.username+'/bookshelf/personalBook?isbn='+this.removeBook,config).then(resp=>{
                     this.bookshelf = this.bookshelf.filter(b=> b.bookISBN!=this.removeBook)
                     this.showConfirmDel = false;
                 }).catch(error=>{
@@ -164,11 +188,31 @@ export default {
             console.log(resp)
         },
         showConfirmDeletion(book){
+            console.log("showing")
             this.removeBook = book;
             this.showConfirmDel=true;
-        }
+        },
+        setUsername(username){
+			this.username=username;
+		}
     },
     created(){
+        const token = localStorage.getItem('user');
+        if (!token || this.$store.state.auth.status.loggedIn===false) {
+            router.push({path:'/login'})
+            return;
+        }
+
+        try {
+            const decodedToken = JSON.parse(token);
+            if(decodedToken.info.exp<Date.now()/1000) {
+                router.push({path:'/login'})
+            }
+            this.setUsername(decodedToken.info.sub);
+        } catch (error) {
+            console.error('Error parsing user token:', error);
+        }
+
         this.getBooks();
         this.nrpages = Math.ceil(this.filtered.length / this.maxPerPage);
         this.initializeActivate();
@@ -176,7 +220,7 @@ export default {
     computed: {
         displayBooksPerPage(){
             if (this.search_input !== '') {
-                this.filtered = this.bookshelf.filter(b => b.title.toLowerCase().includes(this.search_input))
+                this.filtered = this.bookshelf.filter(b => b.title.toLowerCase().includes(this.search_input.toLowerCase()))
             }else{
                 this.filtered = this.bookshelf
             }
@@ -207,13 +251,27 @@ export default {
     margin-top: 500px;
     margin-left: -800px;
 }
-.books-page .overlap {
-    position: relative;
-    width: 1379px;
-    height: 1763px;
-    top: -12px;
-    left: -277px;
+::placeholder {
+  color: black;
 }
+
+.books-page .overlap {
+  position: relative;
+  width: 1379px;
+  height: 1763px;
+  top: 550px;
+  left: 100px;
+}
+
+.line-div {
+  width: 100%;
+  position: relative;
+  border-right: 1px solid #dccfcf;
+  box-sizing: border-box;
+  height: 3176.1px;
+  left:-2240px;
+} 
+
 .books-page .book-row {
     display: flex;
     width: 1060px;
@@ -245,15 +303,16 @@ export default {
 	flex-direction: row;
 }
 .books-page .div:not(#searchbox) {
-    width: 1300px;
-    height: 800px;
-    position: absolute;
-} 
+  width: 1300px;
+  height: 800px;
+  position: absolute;
+  left: 500px;
+}
 
 .books-page .text-wrapper-4 {
   position: absolute;
   top: 300px;
-  left: 100px;
+  left: 600px;
   font-family: "Inika-Regular", Helvetica;
   font-weight: 400;
   color: #e9e9e9;
@@ -343,6 +402,48 @@ export default {
     top: 0;
     left: 0;
 }
+.my-search-bookshelf{
+    position: relative;
+    width: 739px;
+    height: 57px;
+    padding-left: 35px;
+    background: url("/img/Search.svg") no-repeat left;
+    background-color: #e6e6e66e;
+    border-radius: 25px;
+    font-size: 22px;
+}
+
+.my-search-bookshelf {
+    position: relative;
+    width: 739px;
+    height: 57px;
+    padding-left: 35px;
+    background: url("/img/Search.svg") no-repeat left;
+    background-color: #e6e6e66e;
+    border-radius: 25px;
+    font-size: 22px;
+}
+
+.my-search-bookshelf .search {
+    position: absolute;
+    width: 33px;
+    height: 34px;
+    top: 11px;
+    left: 16px;
+}
+.my-search-bookshelf .text-wrapper {
+    position: absolute;
+    height: 26px;
+    top: 14px;
+    left: 61px;
+    font-family: "Inika-Regular", Helvetica;
+    font-weight: 400;
+    color: #4e4e4e;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+} 
 
 
 .search-bookshelf {
@@ -437,9 +538,20 @@ export default {
     width: 739px;
     height: 57px;
     top: 444px;
-    left: 115px;
+    left: 615px;
     background-color: #e6e6e66e;
     border-radius: 25px;
+}
+
+.books-page .my-search-bookshelf {
+  position: absolute;
+  width: 739px;
+  height: 57px;
+  top: 444px;
+  left: 615px;
+  background-color: #e6e6e66e;
+  border-radius: 25px;
+  z-index: 22;
 }
 
 .books-page .search-2 {
@@ -473,6 +585,28 @@ export default {
     width: 542px;
     height: 68.4px;
 }
+
+.myvector-icon {
+    width: 26px;
+    position: absolute;
+    height: 26px;
+    left: -60px;
+    top: -5px;
+}
+.myvector-icon:hover {
+    cursor:pointer;
+}
+.myvector-icon1 {
+    width: 26px;
+    position: absolute;
+    height: 26px;
+    left: 630px;
+    top: -5px;
+}
+.myvector-icon1:hover {
+    cursor:pointer;
+}
+
 .vector-icon {
     position: absolute;
     width: 30px;
@@ -502,6 +636,14 @@ export default {
     width: 62px;
     height: 62px;
 }
+
+.mychild {
+  position: absolute;
+  border-radius: 50%;
+  background-color: #8798d4;
+  width: 42px;
+  height: 42px;
+}
 .div3 {
     width: 32px;
     position: relative;
@@ -511,6 +653,17 @@ export default {
     justify-content: center;
     height: auto;
     flex-shrink: 0;
+}
+
+.mydiv3 {
+  width: 30px;
+  position: relative;
+  font-weight: 600;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 30px;
+  flex-shrink: 0;
 }
 .parent {
     position: absolute;
@@ -543,11 +696,12 @@ export default {
     grid-row-gap:70px;
 } 
 .order-by-title {
-  	position: absolute;
-  	top: 0%;
-  	left: 0%;
-  	font-weight: 500;
+  position: absolute;
+  top: 22px;
+  left: 0%;
+  font-weight: 500;
 }
+
 .listbox-title {
   position: absolute;
   font-family: "Inika-Regular", Helvetica;
@@ -572,19 +726,25 @@ export default {
     background-color: #c2c2c2;
 }
 .chevron-icon-d {
-    position: absolute;
-    height: 30px;
-    width: 30px;
-    top: 330%;
-    right: 7.86%;
-    bottom: 45%;
-    left: 88.57%;
-    max-width: 100%;
-    max-height: 100%;
-    z-index:11;
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  z-index: 11;
+  margin-top: 88px;
+  margin-left: 320px;
 }
-
 .chevron-icon-d:hover {
+    cursor:pointer;
+}
+.my-chevron-icon-d {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  z-index: 11;
+  margin-top: 77px;
+  margin-left: 320px;
+}
+.my-chevron-icon-d:hover {
     cursor:pointer;
 }
 
@@ -612,6 +772,7 @@ export default {
   	bottom: 69.55%;
   	left: 4.55%;
   	color: #666;
+    height: 70px;
 }
 .item-content {
   	position: absolute;
@@ -627,21 +788,39 @@ export default {
   	flex-shrink: 0;
 }
 .dropdown-list {
-    position: absolute;
-    width: auto;
-    top: 1px;
-    right: 7%;
-    left: 0%;
-    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    height: 1px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 250px;
-    z-index:10;
+  position: absolute;
+  width: auto;
+  top: 60px;
+  right: 7%;
+  left: 0%;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  height: 1px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 130px;
+  z-index: 10;
+}
+
+.my-dropdown-list {
+  position: absolute;
+  width: auto;
+  top: 50px;
+  right: 7%;
+  left: 0%;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  height: 1px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  z-index: 10;
 }
 .clip-list-child {
   	position: absolute;
@@ -651,22 +830,34 @@ export default {
   	height: 100px;
   	overflow: hidden;
 }
-
 .sort-component {
   width: 400px;
-  position: absolute;
-  height: 300px;
+  top: 370px;
+  left: 1400px;
+  margin: 20px auto;
   text-align: left;
   font-size: 16px;
   color: #fff;
   font-family: Montserrat;
-  left: 900px;
-  top: 410px;
+  position: absolute;
+  height: 450px;
 }
 
+.my-sort-component {
+  width: 400px;
+  top: 380px;
+  left: 1400px;
+  margin: 20px auto;
+  text-align: left;
+  font-size: 16px;
+  color: #fff;
+  font-family: Montserrat;
+  position: absolute;
+  height:400px;
+}
 body {
 	margin-left: -80px !important;
-  background-color: #222831;
+    background-color: #222831;
 }
 
 

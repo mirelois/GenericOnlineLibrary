@@ -1,0 +1,10 @@
+---
+# Deployment for MySQL
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  namespace: {{ ascn_namespace }}
+  labels:
+    app: {{ db_connection_name }}
+    tier: database

@@ -5,84 +5,148 @@
         <div class="coolreads">
           <div class="welcomeToCoolreadsContainer">
             <span class="welcomeToCoolreadsContainer1">
-              <p class="welcomeToCoolreads">Welcome to CoolReads! 📚 </p>
-              <p class="welcomeToCoolreads">Join us in our book loving community today!</p>
+              <p class="welcomeToCoolreads">{{ translations.welcomeToCoolreads }} 📚 </p>
+              <p class="welcomeToCoolreads">{{ translations.joinUs }}</p>
             </span>
           </div>
-          <div class="titlenameWrapper"></div>
-          <div class="titlename">
-            <div class="coolreadsWrapper">
-              <i class="coolreads1">oolReads</i>
+          <div class="titlenameWrapper">
+            <div class="titlename" @click="route('/bookmenu')">
+              <div class="c">C</div>
+              <div class="coolreadsWrapper">
+                <i class="coolreads1">oolReads</i>
+              </div>
             </div>
-            <div class="c">C</div>
           </div>
         </div>
       </div>
       <div class="form">
         <div class="titleWrapper">
-          <div class="title">Create an account</div>
+          <div class="title">{{ translations.createAccountTitle }}</div>
+          <div class="language-selection">
+				      <img class="flag-icon" alt="Português" src="/img/PT.svg" @click="setLanguage('portuguese')"/>
+				      <img class="flag-icon" alt="English"   src="/img/US.svg" @click="setLanguage('english')"   />
+        	</div>
         </div>
         <div class="frameParent">
           <div class="frameGroup">
             <div class="emailWrapper">
-              <div class="email">Email</div>
+              <div class="email">{{ translations.email }}</div>
             </div>
             <div class="inputTextWrapper">
-              <div class="inputText">
-                <div class="context">example@example.com</div>
-                <div class="inputTextChild"></div>
-              </div>
+              <input v-model="email" class="inputText"  placeholder="example@example.com"/>
             </div>
           </div>
           <div class="frameGroup">
             <div class="emailWrapper">
-              <div class="email">Password</div>
+              <div class="email">{{ translations.username }}</div>
             </div>
             <div class="input">
-              <div class="inputText1">
-                <div class="context">Enter your password</div>
+              <input v-model="username" class="inputText1" :placeholder="translations.passwordPlaceholder"/>
+            </div>
+          </div>
+          <div class="frameGroup">
+            <div class="emailWrapper">
+              <div class="email">{{ translations.password }}</div>
+            </div>
+            <div class="input">
+              <input v-model="password" class="inputText1" :type="type" :placeholder="translations.passwordPlaceholder"/>
                 <div class="iconeye-wrapper">
-							    <img class="iconeye" alt="" src="/img/iconeye.svg">
-						    </div>
+                  <img class="iconeye" alt="" @click="changeType" src="/img/iconeye.svg">
               </div>
             </div>
           </div>
         </div>
         <div class="buttonParent">
-          <div class="button">
-            <div class="textButton">Create account</div>
-          </div>
-          <div class="button1">
-            <img class="icongoogle-original" alt="" src="/img/GoogleLogo.svg">
-            <div class="textButton">Continue with Google</div>
-          </div>
+            <button class="createbutton" @click="createAccount">{{ translations.createAccountButton }}</button>
           <div class="alreadyHaveAnAccountParent">
-            <div class="alreadyHaveAn">Already have an account?</div>
-            <div class="logIn" @click="onLogInTextClick">Log in</div>
+            <div class="alreadyHaveAn">{{ translations.alreadyHaveAccount }}</div>
+            <a class="logIn" href="/login">{{ translations.login }}</a>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
+        </div>
+        </div>
+        </div>
+      <ToastComponent v-if="error_msg!==''" :msg="error_msg" @close_toast="closemsg"></ToastComponent>
 </template>
+
 <script>
-import { defineComponent } from 'vue'
-import router from "../router/index"
-export default defineComponent({
-  name: "SignupPage",
-  methods: {
-    onLogInTextClick() {
-      router.push({ path: '/login' })
+import router from "../router/index";
+import User from "@/models/user";
+import ToastComponent from "@/components/ToastComponent.vue";
+export default {
+  data(){
+    return{
+        email:'',
+        username:'',
+        password:'',
+        error_msg:'',
+        type:'password'
     }
+  },
+  methods: {
+    route(route) {
+      this.$router.push(route);
+    },
+    createAccount() {
+      if(this.username==='' || this.password==='' || this.email===''){
+        if (this.selectedLanguage == 'portuguese') {
+          this.error_msg = "Existem campos vazios. Introduza email, o username e password.";
+        } else {
+          this.error_msg = "Some fields are empty. Introduce email, username and password.";
+        }
+        return;
+		  }
+      this.$store.dispatch('auth/register', new User(this.username,this.email,this.password)).then(
+            data => {
+              console.log(data);
+            	router.push('/login');
+            },
+            error => {
+              if (this.selectedLanguage == 'portuguese') {
+                this.error_msg = "Username ou password inválidos. Tente novamente."
+              } else {
+                this.error_msg = "Invalid username or password. Try again."
+              }
+            }
+          );
+    },
+    closemsg(){
+			this.error_msg='';
+		},
+    changeType(){
+      if(this.type==='password') this.type='text';
+      else this.type='password';
+    },
+    setLanguage(language) {
+      		this.$store.dispatch('language/setLanguage', language);
+    }
+  },computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    },
+    translations() {
+      return this.$store.getters['language/currentTranslations'];
+    },
+    selectedLanguage() {
+      return this.$store.state.language.selectedLanguage;
+    },
+  },
+  created() {
+    if (this.loggedIn) {
+      this.$router.push('/profile');
+    }
+  },
+  components:{
+    ToastComponent
   }
-})
+};
 </script>
 
 <style scoped>
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,700&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inika:wght@400&display=swap');
-
+*/
 .bgChild {
   position: absolute;
   top: 0px;
@@ -135,18 +199,18 @@ flex-shrink: 0;
 
 .coolreads1 {
   position: absolute;
-  top: 9px;
+  top: 0px;
   left: 0px;
   letter-spacing: 0.1em;
   line-height: 100%;
-  font-size: 27px;
+  font-size: 48px;
   font-weight: 550;
   color: #fff;
 }
 .coolreadsWrapper {
   position: absolute;
-  top: 6px;
-  left: 29px;
+  top: 26px;
+  left: 38px;
   width: 138px;
   height: 25px;
 }
@@ -154,11 +218,12 @@ flex-shrink: 0;
   position: absolute;
   top: 0px;
   left: 0px;
-  font-size: 36px;
+  font-size: 60px;
   font-family: Inika;
   color: #c48930;
 }
 .titlename {
+  cursor: pointer;
   position: absolute;
   top: 43px;
   left: 43px;
@@ -172,7 +237,7 @@ flex-shrink: 0;
   width: 648px;
   height: 810px;
   overflow: hidden;
-  font-size: 25.2px;
+  font-size: 48px;
   font-family: Inika;
 }
 .bg {
@@ -188,6 +253,8 @@ flex-shrink: 0;
   text-align: center;
   font-weight: 600;
   margin-bottom: 21.6px;
+  margin-top: 0;
+  padding-top: 0;
 }
 .textButton {
   position: relative;
@@ -196,11 +263,21 @@ flex-shrink: 0;
   font-weight: 600;
 }
 .titleWrapper {
+  align-self: stretch;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+.alreadyHaveAnAccountParent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 7.2px;
+  font-size: 12.6px;
+  color: #98a2b3;
 }
 .email {
   flex: 1;
@@ -255,11 +332,14 @@ flex-shrink: 0;
   gap: 10.8px;
 }
 .iconeye {
+  top: -25px;
   width: 18.6px;
   position: relative;
   height: 18.6px;
-  top: 3px;
+  left:240px;
+  cursor:pointer;
 }
+
 .iconeyeWrapper {
   display: flex;
   flex-direction: row;
@@ -267,24 +347,13 @@ flex-shrink: 0;
   justify-content: flex-end;
 }
 .inputText1 {
-  align-self: center;
-  flex: none;
   border-radius: 7.2px;
   border: 0.9px solid #d0d5dd;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 7.2px 10.8px; 
+  padding: 7.2px 10.8px;
   width: 270px;
-  gap: 4.5px;
 }
 .input {
-  align-self: center;
-  display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
   height: auto;
   font-size: 12.6px;
   color: #98a2b3;
@@ -297,7 +366,7 @@ flex-shrink: 0;
   gap: 21.6px;
   color: #344054;
 }
-.button {
+.createbutton {
   align-self: center;
   border-radius: 7.2px;
   background-color: #2f3134;
@@ -306,9 +375,11 @@ flex-shrink: 0;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  color:white;
   width: 270px;
   padding: 14.4px;
   box-sizing: border-box;
+  cursor:pointer;
 }
 .icongoogleOriginal {
   width: 18px;
@@ -345,15 +416,7 @@ flex-shrink: 0;
   color: #1570ef;
   cursor: pointer;
 }
-.alreadyHaveAnAccountParent {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 7.2px;
-  font-size: 12.6px;
-  color: #98a2b3;
-}
+
 .buttonParent {
   align-self: stretch;
   display: flex;
@@ -369,7 +432,7 @@ flex-shrink: 0;
   left: 765px;
   background-color: #fff;
   width: 917px;
-  height: 1080px;
+  height: 1280px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -394,5 +457,23 @@ flex-shrink: 0;
 .button1 .textButton {
   font-size: 14.4px;
   font-family: Inika;
+}
+.language-selection {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  top: 300px;
+  right: 120px;
+}
+.flag-icon {
+  cursor: pointer;
+  width: 30px;
+  height: 20px;
+}
+.signupage{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  transform: scale(0.903);
 }
 </style>

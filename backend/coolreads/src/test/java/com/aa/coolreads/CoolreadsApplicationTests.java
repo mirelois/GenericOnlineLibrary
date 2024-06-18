@@ -1,19 +1,26 @@
 package com.aa.coolreads;
 
-import com.aa.coolreads.Book.dto.BookDTO;
-import com.aa.coolreads.Book.dto.FullBookDTO;
-import com.aa.coolreads.Book.dto.SimpleReviewDTO;
+import com.aa.coolreads.Book.dto.*;
 import com.aa.coolreads.Book.exception.*;
+import com.aa.coolreads.Book.models.TimeFrame;
+import com.aa.coolreads.Book.services.BookReviewService;
 import com.aa.coolreads.Book.services.BookService;
+import com.aa.coolreads.Book.services.StatisticService;
+import com.aa.coolreads.User.dto.NotificationCreationDTO;
+import com.aa.coolreads.User.dto.NotificationDTO;
+import com.aa.coolreads.User.dto.PostCreationDTO;
+import com.aa.coolreads.User.dto.PostDTO;
 import com.aa.coolreads.User.exception.AuthorNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
+import com.aa.coolreads.User.models.DefaultBookshelf;
+import com.aa.coolreads.User.models.NotificationType;
+import com.aa.coolreads.User.services.NotificationService;
+import com.aa.coolreads.User.services.PostService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
 
 @SpringBootTest
 class CoolreadsApplicationTests {
@@ -21,7 +28,16 @@ class CoolreadsApplicationTests {
     @Autowired
     private BookService bookService;
 
-	@Test
+    @Autowired
+    private BookReviewService bookReviewService;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private StatisticService statisticService;
+
+    @Test
 	void contextLoads() {
 	}
 
@@ -121,7 +137,7 @@ class CoolreadsApplicationTests {
         );
 
         try {
-            bookService.insertReview(
+            bookReviewService.insertReview(
                     "978-3-16-148410-0",
                     "techguru",
                     reviewDTO
@@ -132,5 +148,118 @@ class CoolreadsApplicationTests {
             throw new RuntimeException(e);
         }
     }
+
+    //---------Post Tests---------
+
+    @Autowired
+    private PostService postService;
+
+    @Test
+    void testPostOperations(){
+
+        PostCreationDTO postDTO = new PostCreationDTO("This is a post", "This is the content of the post");
+
+        try {
+            postService.insertPost(postDTO, "techguru");
+        } catch (CustomerNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        Set<PostDTO> posts =  postService.getPostsByUsername("techguru", 0, 10);
+
+        assert posts.size() == 1;
+
+        for (PostDTO post : posts) {
+            postService.deletePost(post.getId());
+        }
+
+
+    }
+
+    @Test
+    void testPostOperationsExeption(){
+
+        PostCreationDTO postDTO = new PostCreationDTO("This is a post", "This is the content of the post");
+
+        try {
+            postService.insertPost(postDTO, "techguru_that_dont_exist");
+            assert false;
+        } catch (CustomerNotFoundException e) {
+            //throw new RuntimeException(e);
+        }
+
+        Set<PostDTO> posts =  postService.getPostsByUsername("techguru", 0, 10);
+
+        assert posts.isEmpty();
+
+    }
+
+    @Test
+    void testNotificationOperations() throws CustomerNotFoundException {
+
+        NotificationCreationDTO notificationCreationDTO = new NotificationCreationDTO(NotificationType.FRIEND_REQUEST_NOTIFICATION);
+
+        try {
+            notificationService.insertNotification(notificationCreationDTO, "techguru");
+        } catch (CustomerNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        Set<NotificationDTO> notifications = notificationService.getNotificationsByUserName("techguru", 0, 10);
+
+//        assert notifications.size() == 1;
+
+        for (NotificationDTO notificationDTO : notifications) {
+            notificationService.deleteNotification("techguru", notificationDTO.getId());
+        }
+
+    }
+
+    @Test
+    void testNotificationOperationsExeption() throws CustomerNotFoundException {
+
+        NotificationCreationDTO notificationCreationDTO = new NotificationCreationDTO(NotificationType.FRIEND_REQUEST_NOTIFICATION);
+
+        try {
+            notificationService.insertNotification(notificationCreationDTO, "techguru_that_dont_exist");
+            assert false;
+        } catch (CustomerNotFoundException e) {
+            //throw new RuntimeException(e);
+        }
+
+        Set<NotificationDTO> notifications = notificationService.getNotificationsByUserName("techguru", 0, 10);
+
+        assert notifications.isEmpty();
+
+    }
+
+    //-----------------Statistics tests----------------------
+
+    @Test
+    void testStatisticsNumber(){
+
+        StatisticsNumberDTO numbers = statisticService.getStatisticsNumbers("1");
+
+        System.out.println(numbers.getAlreadyRead());
+        System.out.println(numbers.getCurrentlyReading());
+        System.out.println(numbers.getDidNotFinish());
+        System.out.println(numbers.getWantToRead());
+
+    }
+
+    @Test
+    void testStatisticsSlice(){
+
+        StatisticsChartDTO pieCountry = statisticService.getStatisticsCountryPieChart(DefaultBookshelf.already_read, "1");
+
+        StatisticsChartDTO pieAge = statisticService.getStatisticsAgePieChart(DefaultBookshelf.already_read, "1");
+
+    }
+
+    @Test
+    void testLineChart(){
+        StatisticsChartDTO line = statisticService.getTimeLineChart(DefaultBookshelf.already_read, "1", TimeFrame.month, 0, 10);
+    }
+
 }
 

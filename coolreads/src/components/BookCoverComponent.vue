@@ -3,8 +3,8 @@
         <div class="book">
             <div class="property-minorbook">
                 <div class="overlap-group">
-                    <a :href="`/books/${bookISBN}`"><img class="book-2" :src="cover"/></a>
-                    <img class="remove" @click="showConfirmDeletion" src="/img/minus-circle.svg"/>
+                    <a :href="`/book/${bookISBN}`"><img class="book-2" :src="cover"/></a>
+                    <div v-if="categories_page==false" ><img class="remove" @click="showConfirmDeletion" src="/img/minus-circle.svg"/></div>
                 </div>
             </div>
         </div>
@@ -14,10 +14,12 @@
 export default{
     props: {
         cover: String,
-        bookISBN: String
+        bookISBN: String,
+        categories_page: Boolean
     },
     methods:{
         showConfirmDeletion(){
+            console.log("transmitting")
             this.$emit('removeBook',this.bookISBN);
         }
     }
