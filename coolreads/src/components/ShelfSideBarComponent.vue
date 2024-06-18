@@ -7,8 +7,8 @@
 			<img class="transfer-icon" alt="" src="/img/transfer.svg">
 		</div>
 		<div v-for="(bookshelf,index) in mybookshelves" :key="index" class="children-shelves-parent">
-			<div class="shelves1">{{ bookshelf.bookCount }}</div>
 			<a class="prateleiralink" :href="`/bookshelves/${bookshelf.name}`">{{ bookshelf.name }}</a>
+			<div class="shelves1">{{ bookshelf.bookCount }}</div>
 		</div>
 	</div>
 	<div v-show="showPopup==true">
@@ -139,7 +139,7 @@ export default{
 .shelves1 {
   	position: absolute;
   	top: 0px;
-  	left: 243px;
+  	left: 280px;
   	display: inline-block;
 	margin-bottom:20px;
   	width: 19px;
@@ -157,10 +157,12 @@ export default{
 }
 .children-shelves-parent {
 	position:relative;
+	padding: 0px 50px;
+	left:-10px;
 	top: 150px;
-	left: 36px;
 	height:40px;
-	margin-bottom:5px;
+	width:400px;
+	background: #000;
 }
 
 .shelves3 {
@@ -302,7 +304,6 @@ export default{
 	position: absolute;
 	border-radius: 5px;
 	background: #000;
-	height: 100%;
 	text-align: left;
 	font-size: 20px;
 	color: #fff;

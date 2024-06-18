@@ -18,39 +18,38 @@ if (localStorage.getItem('selectedLanguage')) {
 }
 </script>
 <template>
-    <div class="books-page">
-        <div class="line-div">
-        </div> 
-        <ShelfSideBarComponent v-if="username!==''" :username="username"></ShelfSideBarComponent>
-        <div class="text-wrapper-4">{{ translations.bookshelf }}: {{ bookshelfname }}</div> 
+    <main>
+        <div class="books-page">
+            <ShelfSideBarComponent v-if="username!==''" :username="username"></ShelfSideBarComponent>
+            <div class="text-wrapper-4">{{ translations.bookshelf }}: {{ bookshelfname }}</div> 
         <input v-model="search_input" class="search-bookshelf" type="text" placeholder="Filter by book name"/> 
         <div class="my-sort-component">
-        <div class="listbox-title">
-            <img v-if="showDropdownMenu==true" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
-            <img v-if="showDropdownMenu==false" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/updroplist.svg">
+            <div class="listbox-title">
+                <img v-if="showDropdownMenu==true" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
+                <img v-if="showDropdownMenu==false" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/updroplist.svg">
             <div class="order-by-title">{{ translations.orderBy }}</div>
-            </div>
-            <div class="listbox-main">
+        </div>
+        <div class="listbox-main">
             <div class="listboxbg">
             </div>
-        <div class="placeholder-text">
-            <div class="order-by-placeholder">{{selectedOption}}</div>
-        </div>
+            <div class="placeholder-text">
+                <div class="order-by-placeholder">{{selectedOption}}</div>
+            </div>
         </div>
         <div v-show="showDropdownMenu==true" class="clip-list">
             <div class="dropdown-list">
-            <div class="item-option-d" @click="sortBooks(`Date`)">
-            <div class="item-content">{{ translations.date }}</div>
-            </div>
-            <div class="item-option-d" @click="sortBooks(`Title`)">
+                <div class="item-option-d" @click="sortBooks(`Date`)">
+                    <div class="item-content">{{ translations.date }}</div>
+                </div>
+                <div class="item-option-d" @click="sortBooks(`Title`)">
             <div class="item-content">{{ translations.title }}</div>
             </div>
             <div class="item-option-d" @click="sortBooks(`Rate`)">
             <div class="item-content">{{ translations.rate }}</div>
-            </div>
-            </div>
-            <div class="clip-list-child">
-            </div>
+        </div>
+    </div>
+    <div class="clip-list-child">
+    </div>
         </div>     
     </div>
         <div class="div">
@@ -70,17 +69,17 @@ if (localStorage.getItem('selectedLanguage')) {
             </div>
         </div>
         <div v-if="showConfirmDel==true">
-           <ConfirmComponent @confirmation_response="confirmdeleteBook" :header_msg="confirm_msg"></ConfirmComponent>
+            <ConfirmComponent @confirmation_response="confirmdeleteBook" :header_msg="confirm_msg"></ConfirmComponent>
         </div>
         <div class="pagination">
             <div class="pagination-child">
             </div>
             <div class="div">
-            <div class="parent">
-            <img class="vector-icon" @click="backPage()" alt="" src="/img/back.svg">
-            <div v-for="(n,index) in nrpages" class="div3" :class="activate[n -1]==true? 'child':''">{{n}}</div>
-            <img class="vector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
-            </div>
+                <div class="parent">
+                    <img class="vector-icon" @click="backPage()" alt="" src="/img/back.svg">
+                    <div v-for="(n,index) in nrpages" class="div3" :class="activate[n -1]==true? 'child':''">{{n}}</div>
+                    <img class="vector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
+                </div>
             </div>
             <div class="newfooter">
                 <FooterComponent></FooterComponent>
@@ -88,6 +87,7 @@ if (localStorage.getItem('selectedLanguage')) {
         </div>
     </div>
     <NavComponent :username="username"></NavComponent>
+</main>
 </template>
 <script>
 import axios from "axios";
@@ -257,7 +257,7 @@ export default {
 
 .books-page .overlap {
   position: relative;
-  width: 1379px;
+  width: 1000px;
   height: 1763px;
   top: 550px;
   left: 100px;
@@ -746,7 +746,5 @@ body {
 	margin-left: -80px !important;
     background-color: #222831;
 }
-
-
 
 </style>
