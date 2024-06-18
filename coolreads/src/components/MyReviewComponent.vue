@@ -58,6 +58,7 @@ export default{
 			this.bookrate=0;
 		},
 		publishRating(){
+			if(this.canInteract===false) this.handle_logout();
 			let rating = this.bookrate.toFixed(1);
 			const headers = {
         		'Content-Type': 'application/json',
