@@ -305,6 +305,7 @@ export default {
 					this.showConfirm=false;
 					console.log(resp)
                     }).catch(err=>{
+						this.$toast.error(err.response.data);
                       console.log(err)
                     })
 			}
