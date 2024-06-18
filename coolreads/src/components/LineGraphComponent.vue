@@ -10,7 +10,7 @@ ChartJS.register(CategoryScale,LinearScale,PointElement,LineElement,Title,Toolti
     <main>
         <div class="line-container">
             <div v-if="dados.labels.length==0">No data available for those properties.</div>
-            <Line :data="data" :options="options" :key="updatekey" />
+            <Line :data="dados" :options="options" :key="updatekey" />
         </div>
     </main>
 </template>

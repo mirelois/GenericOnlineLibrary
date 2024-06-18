@@ -32,7 +32,9 @@ public class CustomerProfileDetails {
 
     private String highlightedBookshelfName;
 
-    public CustomerProfileDetails(){}
+    public CustomerProfileDetails(){
+        this.name = "";
+    }
 
     public CustomerProfileDetails(String name, Gender gender, String pronouns, Date birthDate, String country, String description, String interests, String profileImageUrl, String profileBannerUrl, String highlightedBookshelfName) {
         this.name = name;

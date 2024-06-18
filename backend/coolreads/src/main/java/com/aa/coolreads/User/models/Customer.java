@@ -149,4 +149,20 @@ public class Customer implements UserDetails {
     public void setExclusivityClasses(Set<ExclusivityClass> exclusivityClasses) {
         this.exclusivityClasses = exclusivityClasses;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", profileDetails=" + profileDetails +
+                ", friends=" + friends +
+                ", bookshelves=" + bookshelves +
+                ", personalBooks=" + personalBooks +
+                ", notifications=" + notifications +
+                ", posts=" + posts +
+                ", exclusivityClasses=" + exclusivityClasses +
+                '}';
+    }
 }
