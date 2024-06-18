@@ -73,6 +73,8 @@
 import router from "../router/index";
 import User from "@/models/user";
 import ToastComponent from "@/components/ToastComponent.vue";
+import {useToast} from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css'
 export default {
   data(){
     return{
@@ -102,10 +104,11 @@ export default {
             	router.push('/login');
             },
             error => {
+              const $toast = useToast();
               if (this.selectedLanguage == 'portuguese') {
-                this.error_msg = "Username ou password inválidos. Tente novamente."
+                $toast.error('Username ou password inválidos. Tente novamente.');
               } else {
-                this.error_msg = "Invalid username or password. Try again."
+               $toast.error('Invalid username or password. Try again.');
               }
             }
           );
