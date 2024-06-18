@@ -1,6 +1,7 @@
 <script setup>
 import NavComponent from '../components/NavComponent.vue';
 import FooterComponent from '../components/FooterComponent.vue';
+import BookshelfDropdownComponent from '@/components/BookshelfDropdownComponent.vue';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { useStore } from 'vuex';
@@ -106,9 +107,12 @@ if (localStorage.getItem('selectedLanguage')) {
     </div>
   </div>
   <div class="highlighted-bookshelf-my-top-parent">
-    <div class="highlighted-bookshelf-my">{{translations.highlighted}}</div>
-    <div v-for="book in highlightedBookshelf" v-if="!book" class="book-row">
-      <img class="book-icon" alt="" :src="book.cover">
+    <div class="highlighted-bookshelf-my">Highlight: {{highlightedBookshelf.name}}</div>
+    <div v-for="book in highlightedBookshelf.personalBooks" v-if="!book" class="book-row">
+      <img class="book-icon" alt="" :src="book.coverImage">
+    </div>
+    <div v-if="edit_activated==true">
+      <BookshelfDropdownComponent @bookshelf_highlighted="setHighlighted" :username="username"></BookshelfDropdownComponent>
     </div>
 	<div class="posFoot"><FooterComponent></FooterComponent></div>
   </div>
@@ -140,7 +144,8 @@ export default {
       countries:[],
       fileName: "",
       preview: null,
-      formData: null
+      formData: null,
+      selectedHighlighted:null
 		}
 	},
 	created() {
@@ -183,6 +188,7 @@ export default {
         this.selected_country = me.data.country;
         this.selected_gender = me.data.gender;
         this.selected_pronoun = me.data.pronouns;
+        console.log(me.data)
       }).catch(error=>{
         console.log(error);
       })
@@ -212,9 +218,9 @@ export default {
 					country: this.selected_country,
 					description: this.description,
 					interests: this.interests,
-          profileImageUrl:'',
+          profileImageUrl:this.profileImageUrl,
           profileBannerUrl:'',
-          highlightedBookshelf:null
+          highlightedBookshelf:this.selectedHighlighted
 				},
 				config
       ).then((resp)=>{
@@ -233,6 +239,9 @@ export default {
     },
     handleFileChange(event) {
       console.log(event);
+    },
+    setHighlighted(selected){
+      this.selectedHighlighted=selected;
     },
     handle_logout(){
             this.$store.dispatch('auth/logout').then(

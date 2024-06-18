@@ -52,7 +52,7 @@ import Rating from 'primevue/rating';
 			<div v-if="activeTab=='Reviews'">
 			<MyReviewComponent :canInteract="can_interact" @newpost="getReviews(this.isbn,1)" :username="username" :profileImg="profileImg" :isbn="isbn"></MyReviewComponent>
 			<div class="review-div" v-for="review in reviews" v-if="!review">
-					<ReviewComponent :canInteract="can_interact" :isbn="isbn" :marginReviewBottom="marginReviewBottom" @expandHeight="increaseHeight" :likesCount="review.likes" :emojiIds="review.emojiIds" :reviewRate="review.rating" :reviewDescription="review.description"
+					<ReviewComponent @review_deletion="getReviews(this.isbn,1)" :options="review.myown" :canInteract="can_interact" :isbn="isbn" :marginReviewBottom="marginReviewBottom" @expandHeight="increaseHeight" :likesCount="review.likes" :emojiIds="review.emojiIds" :reviewRate="review.rating" :reviewDescription="review.description"
 					:imageReviewer="review.customerUrl" :usernameReviewer="review.customerUsername"></ReviewComponent>					
 			</div>
 			<div v-show="showLoading==true">
@@ -187,6 +187,13 @@ export default {
 				console.log(err)
 			})
 		},
+		checkMyOwnReview(){
+			for(let i=0;i<this.reviews.length;i++){
+				if(this.reviews[i].customerUsername==this.username){
+					this.reviews[i]["myown"]= true;
+				}else this.reviews[i]["myown"]= false;
+			}
+		},
 		getReviews(isbn,update){
 			if(update==1) this.nrpageReview=0;
 			axios.get("http://localhost:8080/book/"+isbn+"/review?page="+this.nrpageReview+"&size=1").then(review =>{
@@ -200,6 +207,9 @@ export default {
 					console.log("pssst");
 					console.log(review.data);
 				} 
+				console.log("checkar");
+				this.checkMyOwnReview();
+				console.log(this.reviews);
 				let descreview = this.reviews.filter(b=> b.description!="");
 				this.nrreviews = descreview.length;
 				this.nrratings = this.reviews.length;
