@@ -2,12 +2,14 @@ package com.aa.coolreads.User.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MailService {
+@Profile("!test")
+public class MailService { // Prod
     private final JavaMailSender mailSender;
 
     @Value("${coolreads.mail}")
@@ -17,7 +19,6 @@ public class MailService {
     public MailService(JavaMailSender mailSender){
         this.mailSender = mailSender;
     }
-
 
     public void sendEmail(String from, String to, String subject, String body){
         SimpleMailMessage message = new SimpleMailMessage();

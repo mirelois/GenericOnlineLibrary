@@ -35,6 +35,7 @@ public class Notification implements Serializable {
     private NotificationType notificationType;
 
     @ManyToOne
+    @JoinColumn(name="book_isbn", referencedColumnName = "isbn")
     private Book relatedBook;
 
     public Notification() {}

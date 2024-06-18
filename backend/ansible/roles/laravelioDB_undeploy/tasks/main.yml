@@ -1,0 +1,16 @@
+---
+- name: Delete a Persistent Volume Claim (PVC)
+  kubernetes.core.k8s:
+    state: absent
+    template: 'mysql-pvc'
+  when: delete_data is defined and delete_data == 'true'
+  
+- name: Undeploy Laravelio DB
+  kubernetes.core.k8s:
+    state: absent
+    template: 'mysql-deployment'
+
+- name: Undeploy Laravelio DB Service
+  kubernetes.core.k8s:
+    state: absent
+    template: 'mysql-service'

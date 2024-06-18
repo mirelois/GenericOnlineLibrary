@@ -3,6 +3,8 @@ package com.aa.coolreads.Book.services;
 import com.aa.coolreads.Book.dto.BookReviewCommentDTO;
 import com.aa.coolreads.Book.dto.BookReviewDTO;
 import com.aa.coolreads.Book.dto.SimpleReviewDTO;
+import com.aa.coolreads.Book.events.ReviewEvent;
+import com.aa.coolreads.Book.events.ReviewMessage;
 import com.aa.coolreads.Book.exception.BookNotFoundException;
 import com.aa.coolreads.Book.exception.InsufficientReviewParametersException;
 import com.aa.coolreads.Book.exception.ReviewNotFoundException;
@@ -87,6 +89,8 @@ public class BookReviewService {
     public void insertReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException {
         Book book = this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+
+        this.eventPublisher.publishEvent(new ReviewEvent(this, new ReviewMessage(username, isbn)));
 
         this.bookReviewRepository.save(this.bookMapper.toReview(simpleReviewDTO, customer, book));
     }

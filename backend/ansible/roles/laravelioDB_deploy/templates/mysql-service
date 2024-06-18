@@ -1,0 +1,17 @@
+---
+# Service for exposing MySQL
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ db_service_name }} # logical name of the service, which will also become the DNS name of the service when it is created.
+  namespace: {{ ascn_namespace }}
+  labels:
+    app: {{ db_connection_name }}
+    tier: database
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ db_connection_name }}
+  ports:
+    - targetPort: {{ db_container_port }} # port that containers are listening on
+      port: {{ db_container_port }} # port number exposed internally in the cluster
