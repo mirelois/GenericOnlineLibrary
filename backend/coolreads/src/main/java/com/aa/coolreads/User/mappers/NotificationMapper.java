@@ -14,7 +14,12 @@ public class NotificationMapper {
     public NotificationDTO toNotificationDTO(Notification notification) {
         Book book = notification.getRelatedBook();
         Customer customer = notification.getCustomerCreator();
-        return new NotificationDTO(notification.getNotificationType(), notification.getId(), customer.getUsername(), book.getTitle(), book.getAuthor().getUsername(), notification.getCreatedAt());
+
+        if (book != null) {
+            return new NotificationDTO(notification.getNotificationType(), notification.getId(), customer.getUsername(), book.getTitle(), book.getAuthor().getUsername(), notification.getCreatedAt());
+        }else{
+            return new NotificationDTO(notification.getNotificationType(), notification.getId(), customer.getUsername(), notification.getCreatedAt());
+        }
     }
 
     public Notification toNotification(NotificationCreationDTO notificationCreationDTO, Customer customerCreator, Customer customer) {

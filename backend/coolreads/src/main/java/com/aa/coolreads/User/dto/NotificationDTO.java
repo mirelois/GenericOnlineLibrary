@@ -16,6 +16,13 @@ public class NotificationDTO extends NotificationCreationDTO{
 
     private Date createdAt;
 
+    public NotificationDTO(NotificationType notificationType, Long id, String username, Date createdAt) {
+        super(notificationType);
+        this.id = id;
+        this.username = username;
+        this.createdAt = createdAt;
+    }
+
     public NotificationDTO(NotificationType notificationType, Long id, String username, String title, String author, Date createdAt) {
 
         super(notificationType);
