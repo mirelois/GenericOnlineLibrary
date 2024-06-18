@@ -20,7 +20,7 @@
 			  <div class="email">{{ translations.emailOrUsername }}</div>
 			</div>
 			<div class="input-text-wrapper">
-			  <input v-model="username" class="input-text" placeholder="example"/>
+			  <input v-model="username" class="input-text" placeholder="Username"/>
 			  <div class="input-text-child"></div>
 			</div>
 		  </div>
