@@ -46,9 +46,9 @@
       <div class="pagination">
         <div class="pagination-child">
           <div class="parent">
-            <img class="vector-icon" @click="backPage" alt="" src="/img/back.svg">
-            <div v-for="(n, index) in nrPages" :key="index" class="div3" :class="{ 'child': activate[n - 1] }" @click="goToPage(n - 1)">{{ n }}</div>
-            <img class="vector-icon1" @click="nextPage" alt="" src="/img/front.svg">
+            <img class="my-vector-icon" @click="backPage" alt="" src="/img/back.svg">
+            <div v-for="(n, index) in nrPages" :key="index" class="mydiv3" :class="{ 'mychild': activate[n - 1] }" @click="goToPage(n - 1)">{{ n }}</div>
+            <img class="my-vector-icon1" @click="nextPage" alt="" src="/img/front.svg">
           </div>
         </div>
       </div>

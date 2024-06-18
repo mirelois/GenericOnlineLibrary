@@ -75,11 +75,11 @@ if (localStorage.getItem('selectedLanguage')) {
         <div class="pagination">
             <div class="pagination-child">
             </div>
-            <div class="div">
+            <div>
             <div class="parent">
-            <img class="vector-icon" @click="backPage()" alt="" src="/img/back.svg">
-            <div v-for="(n,index) in nrpages" class="div3" :class="activate[n -1]==true? 'child':''">{{n}}</div>
-            <img class="vector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
+            <img class="myvector-icon" @click="backPage()" alt="" src="/img/back.svg">
+            <div v-for="(n,index) in nrpages" class="mydiv3" :class="activate[n -1]==true? 'mychild':''">{{n}}</div>
+            <img class="myvector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
             </div>
             </div>
             <div class="newfooter">
@@ -102,7 +102,7 @@ export default {
     },
     data(){
         return {
-            bookshelf:[],  //{ titulo:"biografia", rate:2.3,launchDate:"2011-10-11", cover: "/img/biografia.png", id: 1 },
+            bookshelf:[],  //{ titulo:"biografia", rate:2.3,launchDate:"2011-10-11", coverImage: "https://m.media-amazon.com/images/I/81q77Q39nEL._AC_UF1000,1000_QL80_.jpg", id: 1 },
             activate : [],
             showDropdownMenu:false,
             page: 0,
@@ -585,6 +585,28 @@ export default {
     width: 542px;
     height: 68.4px;
 }
+
+.myvector-icon {
+    width: 26px;
+    position: absolute;
+    height: 26px;
+    left: -60px;
+    top: -5px;
+}
+.myvector-icon:hover {
+    cursor:pointer;
+}
+.myvector-icon1 {
+    width: 26px;
+    position: absolute;
+    height: 26px;
+    left: 630px;
+    top: -5px;
+}
+.myvector-icon1:hover {
+    cursor:pointer;
+}
+
 .vector-icon {
     position: absolute;
     width: 30px;
@@ -614,6 +636,14 @@ export default {
     width: 62px;
     height: 62px;
 }
+
+.mychild {
+  position: absolute;
+  border-radius: 50%;
+  background-color: #8798d4;
+  width: 42px;
+  height: 42px;
+}
 .div3 {
     width: 32px;
     position: relative;
@@ -623,6 +653,17 @@ export default {
     justify-content: center;
     height: auto;
     flex-shrink: 0;
+}
+
+.mydiv3 {
+  width: 30px;
+  position: relative;
+  font-weight: 600;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 30px;
+  flex-shrink: 0;
 }
 .parent {
     position: absolute;
@@ -731,6 +772,7 @@ export default {
   	bottom: 69.55%;
   	left: 4.55%;
   	color: #666;
+    height: 70px;
 }
 .item-content {
   	position: absolute;

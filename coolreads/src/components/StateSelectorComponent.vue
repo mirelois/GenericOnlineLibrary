@@ -48,7 +48,7 @@ export default {
     }
   }
 </script>
-<style>
+<style scoped>
 .select-the-state {
   margin: 0;
 }
@@ -60,6 +60,7 @@ export default {
     font-size: 24px;
     color: #fff;
     margin-bottom: 30px;
+    height:300px;
 }
 
 
