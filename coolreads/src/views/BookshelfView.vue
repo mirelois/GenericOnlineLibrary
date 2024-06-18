@@ -254,13 +254,15 @@ export default {
 ::placeholder {
   color: black;
 }
+
 .books-page .overlap {
   position: relative;
   width: 1379px;
   height: 1763px;
   top: 550px;
-  left: -150px;
+  left: 100px;
 }
+
 .line-div {
   width: 100%;
   position: relative;
@@ -301,10 +303,11 @@ export default {
 	flex-direction: row;
 }
 .books-page .div:not(#searchbox) {
-    width: 1300px;
-    height: 800px;
-    position: absolute;
-} 
+  width: 1300px;
+  height: 800px;
+  position: absolute;
+  left: 500px;
+}
 
 .books-page .text-wrapper-4 {
   position: absolute;
@@ -683,21 +686,21 @@ export default {
   	flex-shrink: 0;
 }
 .dropdown-list {
-    position: absolute;
-    width: auto;
-    top: 1px;
-    right: 7%;
-    left: 0%;
-    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    height: 1px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 250px;
-    z-index:10;
+  position: absolute;
+  width: auto;
+  top: 60px;
+  right: 7%;
+  left: 0%;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  height: 1px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 130px;
+  z-index: 10;
 }
 .clip-list-child {
   	position: absolute;
@@ -707,17 +710,17 @@ export default {
   	height: 100px;
   	overflow: hidden;
 }
-
 .sort-component {
   width: 400px;
-  position: absolute;
-  height: 300px;
+  top: 380px;
+  left: 1400px;
+  margin: 20px auto;
   text-align: left;
   font-size: 16px;
   color: #fff;
   font-family: Montserrat;
-  left: 1400px;
-  top: 410px;
+  position: absolute;
+  height: 400px;
 }
 
 body {
