@@ -69,12 +69,12 @@ if (localStorage.getItem('selectedLanguage')) {
       <b class="label">{{translations.gender}}</b>
       <div v-if="edit_activated==false" class="value">{{gender}}</div>
       <select v-model="selected_gender" v-if="edit_activated==true" class="value-aux" name="gender" id="gender">
-        <option value="Female">Female</option>
-        <option value="Male">Male</option>
-        <option value="Non-binary">Non-binary</option>
-        <option value="nd_gender">-</option>
+        <option value="female">Female</option>
+        <option value="male">Male</option>
+        <option value="non_binary">Non-binary</option>
+        <option value="other">Other</option>
+        <option value="rather_not_say">Rather Not Say</option>
       </select>
-
 
     </div>
     <button class="edit-profile-wrapper" @click="edit_activated=true">{{translations.editprofile}}</button>
@@ -107,9 +107,9 @@ if (localStorage.getItem('selectedLanguage')) {
     </div>
   </div>
   <div class="highlighted-bookshelf-my-top-parent">
-    <div class="highlighted-bookshelf-my">Highlight: {{highlightedBookshelf.name}}</div>
+    <div class="highlighted-bookshelf-my" v-if="highlightedBookshelf.name!=null" @click="navigateHighlighted">Highlight: {{highlightedBookshelf.name}}</div>
     <div class="book-row">
-      <img v-for="(value,index) in highlightedBookshelf.personalBooks" :v-if="!value && index<4" class="book-icon" :alt="index" :src="value.coverImage"/>
+      <img v-for="(value,index) in highlightedBookshelf.personalBooks" @click="bookNavigate(value)" :v-if="!value && index<4" class="book-icon" :alt="index" :src="value.coverImage"/>
     </div>
     <div v-if="edit_activated==true">
       <BookshelfDropdownComponent @bookshelf_highlighted="setHighlighted" :username="username"></BookshelfDropdownComponent>
@@ -212,8 +212,11 @@ export default {
     handle_edit(){
       let header = authHeader();
       let config = {headers:header};
+      let genre = null;
       console.log(this.name);
-      let genre = this.selected_gender.replaceAll('-','_').toLowerCase();
+      if (this.selected_gender) {
+        genre = this.selected_gender.replaceAll('-','_').toLowerCase();
+      }
       console.log(genre);
       console.log(this.description);
       console.log(this.interests);
@@ -238,12 +241,12 @@ export default {
         console.log(resp)
         if(resp.status==200) {
           this.name=this.name,
-					this.gender= genre,
-					this.pronouns = this.selected_pronoun.replaceAll('_','-').toLowerCase(),
+					this.gender= genre;
+					this.pronouns = this.selected_pronoun ? this.selected_pronoun.replaceAll('_','-').toLowerCase() : null;
 					this.country= this.selected_country,
 					this.description= this.description,
 					this.interests= this.interests,
-          this.highlightedBookshelf = this.selectedHighlighted;
+          this.highlightedBookshelf = this.selectedHighlighted ? this.selectedHighlighted : {name:'-'};
           console.log("debug");
           console.log(this.highlightedBookshelf)
           this.edit_activated=false;
@@ -265,19 +268,24 @@ export default {
       this.selectedHighlighted=selected;
     },
     handle_logout(){
-            this.$store.dispatch('auth/logout').then(
-            () => {
-                router.go()
-            },
-            error => {
-              this.message =
-                (error.response && error.response.data && error.response.data.message) ||
-                error.message ||
-                error.toString();
-            }
-          );
-        } 
-
+        this.$store.dispatch('auth/logout').then(
+        () => {
+            router.go()
+        },
+        error => {
+          this.message =
+            (error.response && error.response.data && error.response.data.message) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
+    bookNavigate(value) {
+      this.$router.push('/book/'+value.bookISBN);
+    },
+    navigateHighlighted() {
+      this.$router.push('/bookshelves/'+this.highlightedBookshelf.name);
+    },
 	}
 }
 </script>
@@ -332,6 +340,7 @@ export default {
 .theres-nothing-i {
   margin-block-start: 0;
   margin-block-end: 20px;
+  word-wrap: break-word;
 }
 
 .theres-nothing-i-aux {
@@ -345,6 +354,7 @@ export default {
   width: 1400px;
   font-size: 20px;
   margin-left: -200px;
+  word-wrap: break-word;
 }
 .discoveries-with-fellow {
   margin: 0;
@@ -506,8 +516,10 @@ export default {
   align-items: center;
   width: 482px;
   height: 48px;
+  cursor: pointer;
 }
 .book-icon {
+  cursor: pointer;
   width: 125.9px;
   position: relative;
   height: 188.8px;
