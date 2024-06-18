@@ -81,6 +81,20 @@ public class CustomerController {
         }
     }
 
+    @DeleteMapping("/me")
+    public ResponseEntity<String> deleteCurrentCustomerProfileDetails(@RequestBody DeleteProfileDetailsDTO deleteProfileDetailsDTO){
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        try{
+            this.customerService.deleteSettingOnMyCustomerProfile(deleteProfileDetailsDTO, username);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Genre");
+        }
+    }
+
     @PutMapping("/me/password")
     public ResponseEntity<String> changePassword(@RequestParam String oldPassword, @RequestParam String newPassword){
         try{

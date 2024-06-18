@@ -1,5 +1,6 @@
 package com.aa.coolreads.User.services;
 
+import com.aa.coolreads.User.dto.DeleteProfileDetailsDTO;
 import com.aa.coolreads.User.dto.FriendDTO;
 import com.aa.coolreads.User.dto.SimpleCustomerDTO;
 import com.aa.coolreads.User.exception.BookshelfNotFoundException;
@@ -63,6 +64,15 @@ public class CustomerService {
         }
 
         this.customerMapper.updateProfileDetails(customer.getProfileDetails(), simpleCustomerDTO);
+
+        this.customerRepository.save(customer);
+    }
+
+    @Transactional
+    public void deleteSettingOnMyCustomerProfile(DeleteProfileDetailsDTO deleteProfileDetailsDTO, String username) throws CustomerNotFoundException {
+        Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+
+        this.customerMapper.deleteProfileDetails(customer.getProfileDetails(), deleteProfileDetailsDTO);
 
         this.customerRepository.save(customer);
     }

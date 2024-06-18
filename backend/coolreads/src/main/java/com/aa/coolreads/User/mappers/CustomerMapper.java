@@ -85,4 +85,37 @@ public class CustomerMapper {
                 .ifPresent(profileDetails::setHighlightedBookshelfName);
     }
 
+    public void deleteProfileDetails(CustomerProfileDetails profileDetails, DeleteProfileDetailsDTO deleteProfileDetailsDTO) {
+        if (deleteProfileDetailsDTO.getDeleteName()!=null) {
+            profileDetails.setName("");
+        }
+        if (deleteProfileDetailsDTO.getDeleteGender() != null) {
+            profileDetails.setGender(null);
+        }
+        if (deleteProfileDetailsDTO.getDeletePronouns()!= null) {
+            profileDetails.setPronouns("");
+        }
+        if (deleteProfileDetailsDTO.getDeleteBirthDate() != null) {
+            profileDetails.setBirthDate(null);
+        }
+        if (deleteProfileDetailsDTO.getDeleteCountry() != null) {
+            profileDetails.setCountry("");
+        }
+        if (deleteProfileDetailsDTO.getDeleteDescription() != null) {
+            profileDetails.setDescription("");
+        }
+        if (deleteProfileDetailsDTO.getDeleteInterests() != null) {
+            profileDetails.setInterests("");
+        }
+        if (deleteProfileDetailsDTO.getDeleteProfileImageUrl() != null) {
+            profileDetails.setProfileImageUrl("");
+        }
+        if (deleteProfileDetailsDTO.getDeleteProfileBannerUrl() != null) {
+            profileDetails.setProfileBannerUrl("");
+        }
+        if (deleteProfileDetailsDTO.getDeleteHighlightedBookshelf() != null) {
+            profileDetails.setHighlightedBookshelfName(null);
+        }
+    }
+
 }
