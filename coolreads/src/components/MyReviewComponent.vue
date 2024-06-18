@@ -75,7 +75,7 @@ export default{
 			}
 			let rating = this.bookrate.toFixed(1);
 			if(rating!=0){
-				axios.post("http://localhost:8080/api/book/"+this.isbn+"/rate?username="+this.username+"&rating="+rating,
+				axios.post("http://localhost:8080/api/book/"+this.isbn+"/rate?username="+this.username+"&rating="+rating,{},
 				config
 				).then(resp =>{
 					console.log(resp)
