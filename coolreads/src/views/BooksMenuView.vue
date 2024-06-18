@@ -4,7 +4,6 @@ import NavComponent from '../components/NavComponent.vue';
 <template>
     <main>
         <b class="order-by">Genres</b>
-        <b v-if="username!==''" class="for-you">For You</b>
         <div class="allcategories">
             <div class="image-4-parent" @click="navigateToCategory('adventure')">
             <img class="image-4-icon" alt="" src="/img/aventura.png">
@@ -97,7 +96,7 @@ export default {
 
 .order-by {
     position: absolute;
-    top: 60%;
+    top: 20%;
     color: white;
     font-size: 33px;
     font-family: Inika;
@@ -172,7 +171,7 @@ export default {
 }
 .image-4-parent {
     position: absolute;
-    top: 913px;
+    top: 40%;
     left: 756px;
     width: 200px;
     height: 200px;
@@ -191,7 +190,7 @@ export default {
 }
 .image-6-parent {
     position: absolute;
-    top: 913px;
+    top: 40%;
     left: 1010px;
     width: 200px;
     height: 200px;
@@ -210,7 +209,7 @@ export default {
 }
 .image-5-parent {
     position: absolute;
-    top: 913px;
+    top: 40%;
     left: 1263px;
     width: 200px;
     height: 200px;
@@ -229,7 +228,7 @@ export default {
 }
 .image-2-parent {
     position: absolute;
-    top: 913px;
+    top: 40%;
     left: 248px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     width: 200px;
@@ -251,7 +250,7 @@ export default {
 
 .image-3-parent {
     position: absolute;
-    top: 913px;
+    top: 40%;
     left: 502px;
     width: 200px;
     height: 200px;
@@ -272,7 +271,7 @@ export default {
 
 .image-9-parent {
     position: absolute;
-    top: 1166px;
+    top: 70%;
     left: 502px;
     width: 200px;
     height: 200px;
@@ -301,7 +300,7 @@ export default {
 
 .rectangle-parent {
     position: absolute;
-    top: 1166px;
+    top: 70%;
     left: 756px;
     width: 200px;
     height: 200px;
@@ -317,7 +316,7 @@ export default {
 }
 .rectangle-group {
     position: absolute;
-    top: 1166px;
+    top: 70%;
     left: 1010px;
     width: 200px;
     height: 200px;
@@ -345,7 +344,7 @@ export default {
 }
 .rectangle-container {
     position: absolute;
-    top: 1166px;
+    top: 70%;
     left: 1263px;
     width: 201px;
     height: 200px;
@@ -372,7 +371,7 @@ export default {
 }
 .image-7-parent {
     position: absolute;
-    top: 1166px;
+    top: 70%;
     left: 250px;
     width: 199px;
     height: 200px;

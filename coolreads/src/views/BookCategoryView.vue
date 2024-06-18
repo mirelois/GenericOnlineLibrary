@@ -1,6 +1,6 @@
 <template>
     <div class="bodyCategory">
-      <NavComponent></NavComponent>
+      <NavComponent :username="this.$store.state.auth.user.info.sub"></NavComponent>
       <b class="category-fantasy">Genre - {{ category }}</b>
       <input v-model="searchInput" type="text" class="my-search-box" placeholder="Search for books..." />
       <div class="sort-component">
@@ -252,7 +252,7 @@ margin: 0; line-height: normal;
   border-bottom-width: 3px;
   border-left-width: 3px;
   background-color: #6b6b6b;
-  z-index: 32;
+  z-index: 20;
   border-style: solid;
   border-color: black;
 }

@@ -65,7 +65,7 @@ export default {
     }
 }
 #app {
-    max-width: 3000px;
+    max-width: 1440px;
     font-weight: normal;
 }
 .newfooter {
@@ -79,10 +79,6 @@ export default {
   box-sizing: border-box;
   height: 3176.1px;
   left: -800px;
-}
-
-main {
-  width: 100vw;
 }
 
 </style>
