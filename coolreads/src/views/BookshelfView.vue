@@ -164,7 +164,7 @@ export default {
             let config = {headers:header}
             header['Content-Type']='application/json';
             this.bookshelfname = this.$route.params.bookshelfname;
-            axios.get('http://localhost:8080/customer/'+this.username+'/bookshelf/'+this.bookshelfname,config).then(books=>{
+            axios.get('http://localhost:8080/api/customer/'+this.username+'/bookshelf/'+this.bookshelfname,config).then(books=>{
                 this.bookshelf = books.data;
                 console.log("allbooks");
                 console.log(books.data);
@@ -178,7 +178,7 @@ export default {
                 let header = authHeader();
                 let config = {headers:header}
                 header['Content-Type']='application/json';
-                axios.delete('http://localhost:8080/customer/'+this.username+'/bookshelf/personalBook?isbn='+this.removeBook,config).then(resp=>{
+                axios.delete('http://localhost:8080/api/customer/'+this.username+'/bookshelf/personalBook?isbn='+this.removeBook,config).then(resp=>{
                     this.bookshelf = this.bookshelf.filter(b=> b.bookISBN!=this.removeBook)
                     this.showConfirmDel = false;
                 }).catch(error=>{

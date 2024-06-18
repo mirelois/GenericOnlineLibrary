@@ -18,6 +18,8 @@
 import router from '@/router';
 import Rating from 'primevue/rating';
 import axios from "axios";
+import authHeader from '@/services/auth.header';
+
 export default{
 	props:{
 		username:'',
@@ -36,18 +38,19 @@ export default{
 			if(this.canInteract===false) {
 				this.handle_logout();
 			}
-			const headers = {
-        		'Content-Type': 'application/json',
-		    };
+			let header = authHeader();
+            let config = {headers:header}
+            header['Content-Type']='application/json';
+
 			const date = new Date();
 			const isoDateString = date.toISOString();
 			if(this.textreview!=""){
-				axios.post("http://localhost:8080/book/"+this.isbn+"/review?username="+this.username,
+				axios.post("http://localhost:8080/api/book/"+this.isbn+"/review?username="+this.username,
 				{
 					description:this.textreview,
 					postDate: isoDateString
 				},
-				{ headers: headers } 
+				config 
 				).then(resp =>{
 					this.$emit('newpost');
 
@@ -60,16 +63,17 @@ export default{
 			this.bookrate=0;
 		},
 		publishRating(){
+			let header = authHeader();
+            let config = {headers:header}
+            header['Content-Type']='application/json';
+
 			if(this.canInteract===false) {
 				this.handle_logout();
 			}
 			let rating = this.bookrate.toFixed(1);
-			const headers = {
-        		'Content-Type': 'application/json',
-		    };
 			if(rating!=0){
-				axios.post("http://localhost:8080/book/"+this.isbn+"/rate?username="+this.username+"&rating="+rating,
-				{ headers: headers } 
+				axios.post("http://localhost:8080/api/book/"+this.isbn+"/rate?username="+this.username+"&rating="+rating,
+				config
 				).then(resp =>{
 					console.log(resp)
 				}).catch(err=>{

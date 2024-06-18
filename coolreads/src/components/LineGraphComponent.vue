@@ -82,7 +82,7 @@ export default {
             let header = authHeader();
             let config = {headers:header};
             if(this.mytimeframe!="" && this.mydefault!=""){
-                axios.get("http://localhost:8080/book/"+this.isbn+"/stats/line?defaultBookshelf="+this.mydefault+"&timeFrame="+this.mytimeframe+"&pageNumber=0&pageSize=1",config)
+                axios.get("http://localhost:8080/api/book/"+this.isbn+"/stats/line?defaultBookshelf="+this.mydefault+"&timeFrame="+this.mytimeframe+"&pageNumber=0&pageSize=1",config)
                 .then(resp=>{
                     this.dados.datasets = [
                     {

@@ -78,7 +78,7 @@ export default{
         let config = {headers:header};
         console.log(type);
         header['Content-Type']='application/json';
-        axios.post("http://localhost:8080/book/"+this.isbn+"/review/"+this.reviewer+"/like?likeType="+type,{},config)
+        axios.post("http://localhost:8080/api/book/"+this.isbn+"/review/"+this.reviewer+"/like?likeType="+type,{},config)
         .then(resp=>{console.log(resp)})
         .catch(error=>{console.log(error)})
       }

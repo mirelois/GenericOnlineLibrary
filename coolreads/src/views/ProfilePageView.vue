@@ -174,7 +174,7 @@ export default {
     getMyInfo(){
       let header = authHeader();
       let config = {headers:header}
-      axios.get("http://localhost:8080/customer/me",config).then(me=>{
+      axios.get("http://localhost:8080/api/customer/me",config).then(me=>{
         this.birthDate = me.data.birthDate ? (new Date().getYear()-new Date(me.data.birthDate).getYear()) : '-';
         this.date = new Date(me.data.birthDate);
         this.country = me.data.country ? me.data.country : '-';
@@ -220,7 +220,7 @@ export default {
       console.log(this.profileImageUrl);
       console.log(this.selectedHighlighted);
 			
-      axios.put("http://localhost:8080/customer/me",
+      axios.put("http://localhost:8080/api/customer/me",
         {
 					name:this.name,
 					gender: genre,

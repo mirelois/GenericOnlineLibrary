@@ -65,7 +65,7 @@ export default{
 			if(header=={}) this.handle_logout();
             let config = {headers:header}
             header['Content-Type']='application/json';
-			axios.post("http://localhost:8080/customer/"+this.username+"/bookshelf",
+			axios.post("http://localhost:8080/api/customer/"+this.username+"/bookshelf",
 				{
 					name:this.bookshelfname,
 					privacy: "public"
@@ -87,7 +87,7 @@ export default{
 			if(header=={}) this.handle_logout();
 			let config = {headers:header}
             header['Content-Type']='application/json';
-			axios.get("http://localhost:8080/customer/"+this.username+"/bookshelf",config).then(resp =>{
+			axios.get("http://localhost:8080/api/customer/"+this.username+"/bookshelf",config).then(resp =>{
 				this.mybookshelves = resp.data.sort((b1,b2)=>b1.name.localeCompare(b2.name));
 				console.log(this.mybookshelves);
 			}).catch(err=>{
