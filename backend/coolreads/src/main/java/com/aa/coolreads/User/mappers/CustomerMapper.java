@@ -34,7 +34,7 @@ public class CustomerMapper {
                 .setPassword(customer.getPassword())
                 .setEmail(customer.getEmail())
                 .setName(profileDetails.getName())
-                .setGender(profileDetails.getGender().name())
+                .setGender(profileDetails.getGender()!= null ? profileDetails.getGender().name() : null)
                 .setPronouns(profileDetails.getPronouns())
                 .setBirthDate(profileDetails.getBirthDate())
                 .setCountry(profileDetails.getCountry())

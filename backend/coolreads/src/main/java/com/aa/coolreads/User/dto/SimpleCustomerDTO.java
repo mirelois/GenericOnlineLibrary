@@ -130,4 +130,20 @@ public class SimpleCustomerDTO {
     public void setHighlightedBookshelf(BookShelfDTO highlightedBookshelf) {
         this.highlightedBookshelf = highlightedBookshelf;
     }
+
+    @Override
+    public String toString() {
+        return "SimpleCustomerDTO{" +
+                "name='" + name + '\'' +
+                ", gender='" + gender + '\'' +
+                ", pronouns='" + pronouns + '\'' +
+                ", birthDate=" + birthDate +
+                ", country='" + country + '\'' +
+                ", description='" + description + '\'' +
+                ", interests='" + interests + '\'' +
+                ", profileImageUrl='" + profileImageUrl + '\'' +
+                ", profileBannerUrl='" + profileBannerUrl + '\'' +
+                ", highlightedBookshelf=" + highlightedBookshelf +
+                '}';
+    }
 }
