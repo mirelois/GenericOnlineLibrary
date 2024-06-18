@@ -1,4 +1,4 @@
-docker run --name postgres -e POSTGRES_PASSWORD=postgres \
+docker run --name postgres --net coolreads_net -e POSTGRES_PASSWORD=postgres -e PSQL_DATABASE=cool \
 -p 5432:5432 -d postgres:16
 
 sleep 5
