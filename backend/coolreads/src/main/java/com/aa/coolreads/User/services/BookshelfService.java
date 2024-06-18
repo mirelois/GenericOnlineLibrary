@@ -98,12 +98,15 @@ public class BookshelfService {
     }
 
     @Transactional
-    public Set<PersonalBookDTO> getBooks(String name, String username) throws CustomerNotFoundException, BookshelfNotFoundException {
+    public Set<PersonalBookDTO> getBooks(String bookshelfName, String username) throws CustomerNotFoundException, BookshelfNotFoundException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
-        Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(name, customer).orElseThrow(() -> new BookshelfNotFoundException(name));
-
-        return this.personalBooksRepository.findBooks(bookshelf).stream().map(this.bookshelfMapper::toPersonalBookDTO).collect(Collectors.toSet());
+        if(!Objects.equals(bookshelfName, "all")) {
+            Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(bookshelfName, customer).orElseThrow(() -> new BookshelfNotFoundException(bookshelfName));
+            return this.personalBooksRepository.findBooks(bookshelf).stream().map(this.bookshelfMapper::toPersonalBookDTO).collect(Collectors.toSet());
+        } else{
+            return this.personalBooksRepository.findAllBooksByCustomer(customer).stream().map(this.bookshelfMapper::toPersonalBookDTO).collect(Collectors.toSet());
+        }
     }
 
     public boolean checkIfExclusivityClassesAreConflictFree(String username, String isbn, String newBookshelfName) throws BookshelfNotFoundException, CustomerNotFoundException, BookNotFoundException {

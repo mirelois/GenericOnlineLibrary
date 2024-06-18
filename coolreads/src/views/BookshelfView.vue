@@ -18,38 +18,39 @@ if (localStorage.getItem('selectedLanguage')) {
 }
 </script>
 <template>
-    <main>
-        <div class="books-page">
-            <ShelfSideBarComponent v-if="username!==''" :username="username"></ShelfSideBarComponent>
-            <div class="text-wrapper-4">{{ translations.bookshelf }}: {{ bookshelfname }}</div> 
-        <input v-model="search_input" class="search-bookshelf" type="text" placeholder="Filter by book name"/> 
+    <div class="books-page">
+        <div class="line-div">
+        </div> 
+        <ShelfSideBarComponent v-if="username!==''" :username="username"></ShelfSideBarComponent>
+        <div class="text-wrapper-4">{{ translations.bookshelf }}: {{ bookshelfname }}</div> 
+        <input v-model="search_input" class="my-search-bookshelf" type="text" placeholder="Filter by book name"/> 
         <div class="my-sort-component">
-            <div class="listbox-title">
-                <img v-if="showDropdownMenu==true" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
-                <img v-if="showDropdownMenu==false" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/updroplist.svg">
+        <div class="listbox-title">
+            <img v-if="showDropdownMenu==true" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
+            <img v-if="showDropdownMenu==false" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/updroplist.svg">
             <div class="order-by-title">{{ translations.orderBy }}</div>
-        </div>
-        <div class="listbox-main">
+            </div>
+            <div class="listbox-main">
             <div class="listboxbg">
             </div>
-            <div class="placeholder-text">
-                <div class="order-by-placeholder">{{selectedOption}}</div>
-            </div>
+        <div class="placeholder-text">
+            <div class="order-by-placeholder">{{selectedOption}}</div>
+        </div>
         </div>
         <div v-show="showDropdownMenu==true" class="clip-list">
-            <div class="dropdown-list">
-                <div class="item-option-d" @click="sortBooks(`Date`)">
-                    <div class="item-content">{{ translations.date }}</div>
-                </div>
-                <div class="item-option-d" @click="sortBooks(`Title`)">
+            <div class="my-dropdown-list">
+            <div class="item-option-d" @click="sortBooks(`Date`)">
+            <div class="item-content">{{ translations.date }}</div>
+            </div>
+            <div class="item-option-d" @click="sortBooks(`Title`)">
             <div class="item-content">{{ translations.title }}</div>
             </div>
             <div class="item-option-d" @click="sortBooks(`Rate`)">
             <div class="item-content">{{ translations.rate }}</div>
-        </div>
-    </div>
-    <div class="clip-list-child">
-    </div>
+            </div>
+            </div>
+            <div class="clip-list-child">
+            </div>
         </div>     
     </div>
         <div class="div">
@@ -69,17 +70,17 @@ if (localStorage.getItem('selectedLanguage')) {
             </div>
         </div>
         <div v-if="showConfirmDel==true">
-            <ConfirmComponent @confirmation_response="confirmdeleteBook" :header_msg="confirm_msg"></ConfirmComponent>
+           <ConfirmComponent @confirmation_response="confirmdeleteBook" :header_msg="confirm_msg"></ConfirmComponent>
         </div>
         <div class="pagination">
             <div class="pagination-child">
             </div>
-            <div class="div">
-                <div class="parent">
-                    <img class="vector-icon" @click="backPage()" alt="" src="/img/back.svg">
-                    <div v-for="(n,index) in nrpages" class="div3" :class="activate[n -1]==true? 'child':''">{{n}}</div>
-                    <img class="vector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
-                </div>
+            <div>
+            <div class="parent">
+            <img class="myvector-icon" @click="backPage()" alt="" src="/img/back.svg">
+            <div v-for="(n,index) in nrpages" class="mydiv3" :class="activate[n -1]==true? 'mychild':''">{{n}}</div>
+            <img class="myvector-icon1" @click="nextPage()" alt="" src="/img/front.svg">
+            </div>
             </div>
             <div class="newfooter">
                 <FooterComponent></FooterComponent>
@@ -87,7 +88,6 @@ if (localStorage.getItem('selectedLanguage')) {
         </div>
     </div>
     <NavComponent :username="username"></NavComponent>
-</main>
 </template>
 <script>
 import axios from "axios";
@@ -102,7 +102,7 @@ export default {
     },
     data(){
         return {
-            bookshelf:[],  //{ titulo:"biografia", rate:2.3,launchDate:"2011-10-11", cover: "/img/biografia.png", id: 1 },
+            bookshelf:[],  //{ titulo:"biografia", rate:2.3,launchDate:"2011-10-11", coverImage: "https://m.media-amazon.com/images/I/81q77Q39nEL._AC_UF1000,1000_QL80_.jpg", id: 1 },
             activate : [],
             showDropdownMenu:false,
             page: 0,
@@ -257,7 +257,7 @@ export default {
 
 .books-page .overlap {
   position: relative;
-  width: 1000px;
+  width: 1379px;
   height: 1763px;
   top: 550px;
   left: 100px;
@@ -402,6 +402,48 @@ export default {
     top: 0;
     left: 0;
 }
+.my-search-bookshelf{
+    position: relative;
+    width: 739px;
+    height: 57px;
+    padding-left: 35px;
+    background: url("/img/Search.svg") no-repeat left;
+    background-color: #e6e6e66e;
+    border-radius: 25px;
+    font-size: 22px;
+}
+
+.my-search-bookshelf {
+    position: relative;
+    width: 739px;
+    height: 57px;
+    padding-left: 35px;
+    background: url("/img/Search.svg") no-repeat left;
+    background-color: #e6e6e66e;
+    border-radius: 25px;
+    font-size: 22px;
+}
+
+.my-search-bookshelf .search {
+    position: absolute;
+    width: 33px;
+    height: 34px;
+    top: 11px;
+    left: 16px;
+}
+.my-search-bookshelf .text-wrapper {
+    position: absolute;
+    height: 26px;
+    top: 14px;
+    left: 61px;
+    font-family: "Inika-Regular", Helvetica;
+    font-weight: 400;
+    color: #4e4e4e;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+} 
 
 
 .search-bookshelf {
@@ -501,6 +543,17 @@ export default {
     border-radius: 25px;
 }
 
+.books-page .my-search-bookshelf {
+  position: absolute;
+  width: 739px;
+  height: 57px;
+  top: 444px;
+  left: 615px;
+  background-color: #e6e6e66e;
+  border-radius: 25px;
+  z-index: 22;
+}
+
 .books-page .search-2 {
     position: absolute;
     width: 33px;
@@ -532,6 +585,28 @@ export default {
     width: 542px;
     height: 68.4px;
 }
+
+.myvector-icon {
+    width: 26px;
+    position: absolute;
+    height: 26px;
+    left: -60px;
+    top: -5px;
+}
+.myvector-icon:hover {
+    cursor:pointer;
+}
+.myvector-icon1 {
+    width: 26px;
+    position: absolute;
+    height: 26px;
+    left: 630px;
+    top: -5px;
+}
+.myvector-icon1:hover {
+    cursor:pointer;
+}
+
 .vector-icon {
     position: absolute;
     width: 30px;
@@ -561,6 +636,14 @@ export default {
     width: 62px;
     height: 62px;
 }
+
+.mychild {
+  position: absolute;
+  border-radius: 50%;
+  background-color: #8798d4;
+  width: 42px;
+  height: 42px;
+}
 .div3 {
     width: 32px;
     position: relative;
@@ -570,6 +653,17 @@ export default {
     justify-content: center;
     height: auto;
     flex-shrink: 0;
+}
+
+.mydiv3 {
+  width: 30px;
+  position: relative;
+  font-weight: 600;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 30px;
+  flex-shrink: 0;
 }
 .parent {
     position: absolute;
@@ -678,6 +772,7 @@ export default {
   	bottom: 69.55%;
   	left: 4.55%;
   	color: #666;
+    height: 70px;
 }
 .item-content {
   	position: absolute;
@@ -707,6 +802,24 @@ export default {
   align-items: center;
   justify-content: center;
   height: 130px;
+  z-index: 10;
+}
+
+.my-dropdown-list {
+  position: absolute;
+  width: auto;
+  top: 50px;
+  right: 7%;
+  left: 0%;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  height: 1px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
   z-index: 10;
 }
 .clip-list-child {
@@ -746,5 +859,7 @@ body {
 	margin-left: -80px !important;
     background-color: #222831;
 }
+
+
 
 </style>

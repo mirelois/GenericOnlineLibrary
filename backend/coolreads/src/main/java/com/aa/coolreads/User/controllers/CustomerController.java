@@ -9,10 +9,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -45,26 +43,26 @@ public class CustomerController {
                     .toUri();
             return ResponseEntity.status(HttpStatus.CREATED).location(location).build();
         } catch (CustomerAlreadyExistsException e){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO){
         try {
             return ResponseEntity.ok(this.authenticationService.authenticate(loginDTO));
         } catch(CustomerNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping("/me")
-    public ResponseEntity<SimpleCustomerDTO> getCurrentCustomerProfile(){
+    public ResponseEntity<?> getCurrentCustomerProfile(){
         try {
             SimpleCustomerDTO simpleCustomerDTO = this.customerService.getMyCustomerProfile();
             return ResponseEntity.ok().body(simpleCustomerDTO);
         } catch (CustomerNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -96,11 +94,11 @@ public class CustomerController {
     }
 
     @GetMapping("/username/{username}")
-    public ResponseEntity<SimpleCustomerDTO> getCustomer(@PathVariable String username) {
+    public ResponseEntity<?> getCustomer(@PathVariable String username) {
         try{
             return ResponseEntity.ok().body(this.customerService.getCustomer(username));
         } catch (CustomerNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
