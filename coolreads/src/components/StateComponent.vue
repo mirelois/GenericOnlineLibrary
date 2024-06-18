@@ -4,7 +4,7 @@
             <img class="statedown-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
             </div>
             <div class="listbox-main">
-            <button @click="choosen_state" class="listboxbg">{{stateValue}}
+            <button @click="choosen_state" class="mylistboxbg">{{stateValue}}
             </button>
         <div v-if="showStateMenu===true">
             <StateSelectorComponent @optionStateSelected="optionofStateSelected"></StateSelectorComponent>
@@ -50,14 +50,10 @@ export default{
     left: 4.55%;
     font-size: 25px;
 }
-.listboxbg {
+.mylistboxbg {
     position: absolute;
-    height: 100%;
+    height: 50px;
     width: 100%;
-    top: 0%;
-    right: 0%;
-    bottom: 0%;
-    left: 0%;
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
     border-radius: 15px;
     background-color: #c2c2c2;
@@ -69,23 +65,24 @@ export default{
     padding-top: 11px;
     padding-right: 11px;
 }
-.listboxbg:active{
+.mylistboxbg:active{
     transform: scale(0.98); 
     box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24); 
 }
-.listboxbg:hover {
+.mylistboxbg:hover {
     cursor:pointer;
 }
 .statedown-icon-d {
   position: absolute;
   height: 35px;
-  width: 25px;
+  width: 30px;
   top: 370%;
   right: 4%;
   max-width: 100%;
   max-height: 100%;
   z-index: 11;
   padding-left: 5px;
+  
 }
 
 .statedown-icon-d:hover {

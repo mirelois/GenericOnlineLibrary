@@ -88,7 +88,7 @@ export default{
 			let config = {headers:header}
             header['Content-Type']='application/json';
 			axios.get("http://localhost:8080/customer/"+this.username+"/bookshelf",config).then(resp =>{
-				this.mybookshelves = resp.data;
+				this.mybookshelves = resp.data.sort((b1,b2)=>b1.name.localeCompare(b2.name));
 				console.log(this.mybookshelves);
 			}).catch(err=>{
 				console.log(err)
