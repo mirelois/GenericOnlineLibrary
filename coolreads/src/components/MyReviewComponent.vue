@@ -31,6 +31,9 @@ export default{
 			textreview:''
 		}
 	},
+	created() {
+		this.textreview = this.$store.state.auth.savedReview;
+	},
 	methods:{
 		publishReview(){
 			if(this.canInteract===false) {
@@ -83,6 +86,7 @@ export default{
 		handle_logout(){
             this.$store.dispatch('auth/logout', this.$route.path).then(
             () => {
+				this.$store.dispatch('auth/storeReview', this.textreview);
                 router.push({path:'/signup'})
             },
             error => {

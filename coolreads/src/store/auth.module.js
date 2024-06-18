@@ -2,13 +2,16 @@ import AuthService from '../services/auth.service';
 
 const user = JSON.parse(localStorage.getItem('user'));
 const initialState = user
-  ? { status: { loggedIn: true }, lastRoute: '/', user: user }
-  : { status: { loggedIn: false }, lastRoute: '/', user: null };
+  ? { status: { loggedIn: true }, lastRoute: '/', user: user, savedReview: '' }
+  : { status: { loggedIn: false }, lastRoute: '/', user: null, savedReview: '' };
 
 const auth = {
   namespaced: true,
   state: initialState,
   actions: {
+    storeReview({commit}, textReview){
+      commit('storeReview', textReview);
+    },
     login({ commit }, user) {
       return AuthService.login(user).then(
         user => {
@@ -65,7 +68,11 @@ const auth = {
       state.status.loggedIn = false;
       state.user = null;
       console.log("Storing Route: " + lastRoute);
-      state.lastRoute = lastRoute;
+      if (lastRoute) {
+        state.lastRoute = lastRoute;
+      } else {
+        state.lastRoute = '/'
+      }
     },
     registerSuccess(state) {
       state.status.loggedIn = false;
@@ -80,6 +87,10 @@ const auth = {
     changePasswordFailure(state, error) {
       state.passwordChangeMessage = "Pass not correct";
       console.error("Error: Password change failed", error);
+    },
+    storeReview(state, textReview) {
+      state.storeReview = textReview
+      console.log("Stored review");
     },
   },
 };
