@@ -23,7 +23,7 @@ if (localStorage.getItem('selectedLanguage')) {
         </div> 
         <ShelfSideBarComponent v-if="username!==''" :username="username"></ShelfSideBarComponent>
         <div class="text-wrapper-4">{{ translations.bookshelf }}: {{ bookshelfname }}</div> 
-        <input v-model="search_input" class="search-bookshelf" type="text" placeholder="Filter by book name"/> 
+        <input v-model="search_input" class="my-search-bookshelf" type="text" placeholder="Filter by book name"/> 
         <div class="my-sort-component">
         <div class="listbox-title">
             <img v-if="showDropdownMenu==true" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
@@ -38,7 +38,7 @@ if (localStorage.getItem('selectedLanguage')) {
         </div>
         </div>
         <div v-show="showDropdownMenu==true" class="clip-list">
-            <div class="dropdown-list">
+            <div class="my-dropdown-list">
             <div class="item-option-d" @click="sortBooks(`Date`)">
             <div class="item-content">{{ translations.date }}</div>
             </div>
@@ -402,6 +402,48 @@ export default {
     top: 0;
     left: 0;
 }
+.my-search-bookshelf{
+    position: relative;
+    width: 739px;
+    height: 57px;
+    padding-left: 35px;
+    background: url("/img/Search.svg") no-repeat left;
+    background-color: #e6e6e66e;
+    border-radius: 25px;
+    font-size: 22px;
+}
+
+.my-search-bookshelf {
+    position: relative;
+    width: 739px;
+    height: 57px;
+    padding-left: 35px;
+    background: url("/img/Search.svg") no-repeat left;
+    background-color: #e6e6e66e;
+    border-radius: 25px;
+    font-size: 22px;
+}
+
+.my-search-bookshelf .search {
+    position: absolute;
+    width: 33px;
+    height: 34px;
+    top: 11px;
+    left: 16px;
+}
+.my-search-bookshelf .text-wrapper {
+    position: absolute;
+    height: 26px;
+    top: 14px;
+    left: 61px;
+    font-family: "Inika-Regular", Helvetica;
+    font-weight: 400;
+    color: #4e4e4e;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+} 
 
 
 .search-bookshelf {
@@ -499,6 +541,17 @@ export default {
     left: 615px;
     background-color: #e6e6e66e;
     border-radius: 25px;
+}
+
+.books-page .my-search-bookshelf {
+  position: absolute;
+  width: 739px;
+  height: 57px;
+  top: 444px;
+  left: 615px;
+  background-color: #e6e6e66e;
+  border-radius: 25px;
+  z-index: 22;
 }
 
 .books-page .search-2 {
@@ -707,6 +760,24 @@ export default {
   align-items: center;
   justify-content: center;
   height: 130px;
+  z-index: 10;
+}
+
+.my-dropdown-list {
+  position: absolute;
+  width: auto;
+  top: 50px;
+  right: 7%;
+  left: 0%;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  height: 1px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
   z-index: 10;
 }
 .clip-list-child {
