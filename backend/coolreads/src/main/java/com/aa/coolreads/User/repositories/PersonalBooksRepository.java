@@ -20,6 +20,9 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
     @Query(value = "SELECT pb FROM PersonalBook pb JOIN pb.bookshelves bs WHERE bs = :bookshelf")
     Set<PersonalBook> findBooks(Bookshelf bookshelf);
 
+    @Query(value = "SELECT pb FROM PersonalBook pb WHERE pb.customer = :customer")
+    Set<PersonalBook> findAllBooksByCustomer(Customer customer);
+
     @Query("SELECT pb FROM PersonalBook pb WHERE pb.book = :book AND pb.customer = :customer")
     Optional<PersonalBook> getPersonalBookByBookAndCustomer(Book book, Customer customer);
 

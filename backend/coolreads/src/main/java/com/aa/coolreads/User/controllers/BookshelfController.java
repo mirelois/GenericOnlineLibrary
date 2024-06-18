@@ -75,11 +75,11 @@ public class BookshelfController {
 
     @PreAuthorize("#username == principal.username")
     @GetMapping("/{name}")
-    public ResponseEntity<Set<PersonalBookDTO>> getBooks(@PathVariable String username, @PathVariable String name){
+    public ResponseEntity<?> getBooks(@PathVariable String username, @PathVariable String name){
         try{
             return ResponseEntity.ok().body(this.bookshelfService.getBooks(name, username));
         } catch (BookshelfNotFoundException | CustomerNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -90,7 +90,7 @@ public class BookshelfController {
             this.bookshelfService.addBookshelfExclusivityClass(username, name, exclusivityClassName);
             return ResponseEntity.ok().build();
         } catch (BookshelfNotFoundException | CustomerNotFoundException | ExclusivityClassNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
