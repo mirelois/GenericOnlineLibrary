@@ -7,8 +7,6 @@ import FooterComponent from '../components/FooterComponent.vue';
   <main>
     <NavComponent :username="username"></NavComponent>
     <ShelfSideBarComponent v-if="username!==''" :username="username"></ShelfSideBarComponent>
-  	<div class="line-div">
-    </div> 
   </main>
 </template>
 <script>
