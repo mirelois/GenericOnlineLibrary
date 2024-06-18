@@ -290,10 +290,17 @@ export default {
                     config 
             	).then(resp =>{
                     if(resp.status==200){
-                        this.msg="The book was inserted to your "+state+" collection.";
-						this.showPopup=true;
+						if(this.$store.state.language.selectedLanguage !== 'portuguese'){
+							this.$toast.success("The book was inserted to your "+state+" collection.");
+						} else {
+							this.$toast.success("O livro foi adicionado à coleção " + state + ".");
+						}
                     }else{
-                        this.msg="Something went wrong."
+						if(this.$store.state.language.selectedLanguage !== 'portuguese'){
+							this.$toast.error("Something went wrong.");
+						} else{
+							this.$toast.error("Aconteceu algo de mal.");
+						}
                     }
 					this.showConfirm=false;
 					console.log(resp)
