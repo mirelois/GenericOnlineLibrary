@@ -5,6 +5,7 @@ export default function authHeader() {
       return { Authorization: 'Bearer ' + JSON.parse(user).token };
 
     } else {
+      console.warn('User token not found or invalid.');
       return {};
     }
   }
