@@ -9,6 +9,9 @@ const Bookshelfprivacy = ref('public');
 
 const store = useStore();
 
+const loggedIn = computed(() => store.state.auth.status.loggedIn);
+const email = computed(() => {if (store.state.auth.status.loggedIn) return store.state.auth.user.email; else return '';});
+const username = computed(() => {if (store.state.auth.status.loggedIn) return store.state.auth.user.info.sub; else return '';});
 const translations = computed(() => store.getters['language/currentTranslations']);
 const selectedLanguage = computed(() => store.state.language.selectedLanguage);
 
@@ -30,11 +33,11 @@ function closeChangePasswordPopup() {
 </script>
 
 <template>
-  <NavComponent />
-  <div class="account-info">
+  <NavComponent :username="username"/>
+  <div v-if="loggedIn" class="account-info">
     <div class="email">{{ translations.email }}</div>
     <div class="password">{{ translations.password }}</div>
-    <div class="goodreadsuser1gmailcom">Goodreadsuser1@gmail.com</div>
+    <div class="goodreadsuser1gmailcom">{{ email }}</div>
     <div class="changepassword" @click="openChangePasswordPopup">
       <div class="changepassword-child">
         <div class="change-password-text">{{ translations.changePassword }}</div>
@@ -68,7 +71,6 @@ function closeChangePasswordPopup() {
     </div>
   </div>
 </template>
-
 
 <style scoped>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,700&display=swap');

@@ -33,11 +33,11 @@ if (localStorage.getItem('selectedLanguage')) {
                 </div>
             </div>
             <a href="/settings">
-                <div v-if="username !== ''" class="settings-section">
+                <div class="settings-section">
                     <img class="settings" src="/img/settings.svg"/> {{ translations.settings }}
                 </div>
             </a>
-            <a href="/">
+            <a v-if="username !== ''" href="/">
                 <div class="home-section">
                     <img class="vuesax-outline-home" src="/img/home-2.svg"/> {{ translations.home }}
                 </div>
@@ -84,8 +84,10 @@ if (localStorage.getItem('selectedLanguage')) {
                     <div class="c">{{ translations.bookshelf }}</div>
                 </div>
             </a>
-            <button v-if="username!==''" @click="handle_logout()" class="authbtn1">{{translations.logout}}</button>
-            <div>
+            <div class="buttonWrapper1">
+                <button v-if="username!==''" @click="handle_logout()" class="authbtn1">{{translations.logout}}</button>
+            </div>
+            <div class="buttonWrapper2">
                 <div v-if="username===''"><button @click="handle_login()" class="authbtn1">{{translations.login}}</button></div>
                 <div v-if="username===''"><button @click="handle_signup()" class="authbtn2">{{translations.signup}}</button></div>
             </div>
@@ -143,7 +145,7 @@ export default {
         handle_logout(){
             this.$store.dispatch('auth/logout').then(
             () => {
-                router.go()
+                router.push('/bookmenu')
             },
             error => {
               this.message =
@@ -214,7 +216,7 @@ a {
 
 a:hover { text-decoration: underline; }
 .navegador {
-    position:fixed; 
+    position:fixed;
     width: 100%;
     height: 115px;
     top:0px;
@@ -492,8 +494,7 @@ a:hover { text-decoration: underline; }
 }
 
 .authbtn1 {
-    position: absolute;
-    bottom: 20px;
+    position: relative;
     padding: 10px 20px;
     background-color: #da9f46d9;
     color: white;
@@ -503,11 +504,9 @@ a:hover { text-decoration: underline; }
     width: auto;
     float: left;
     margin-bottom: 22px;
-    margin-left: 1900px;
 }
 .authbtn2 {
-    position: absolute;
-    bottom: 20px;
+    position: relative;
     padding: 10px 20px;
     background-color: #da9f46d9;
     color: white;
@@ -517,7 +516,6 @@ a:hover { text-decoration: underline; }
     width: auto;
     float: left;
     margin-bottom: 22px;
-    margin-left: 2000px;
 }
 
 .registration-button,
@@ -729,4 +727,10 @@ font-family: Inika;
 .notifications-text{
     color:white;
 }
+
+.buttonWrapper2 {
+    left: 120px;
+    position: relative;
+}
+
 </style>

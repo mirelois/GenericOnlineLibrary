@@ -10,7 +10,7 @@
             </span>
           </div>
           <div class="titlenameWrapper">
-            <div class="titlename" @click="route('/')">
+            <div class="titlename" @click="route('/bookmenu')">
               <div class="c">C</div>
               <div class="coolreadsWrapper">
                 <i class="coolreads1">oolReads</i>
@@ -65,8 +65,8 @@
         </div>
         </div>
         </div>
-      <ToastComponent v-if="error_msg!==''" :msg="error_msg" @close_toast="closemsg"></ToastComponent>
         </div>
+      <ToastComponent v-if="error_msg!==''" :msg="error_msg" @close_toast="closemsg"></ToastComponent>
 </template>
 
 <script>

@@ -2,7 +2,7 @@
 	<div>
 		<div class="form">
 		<div class="titlenameWrapper">
-            <div class="titlename" @click="route('/')">
+            <div class="titlename" @click="route('/bookmenu')">
               <div class="c">C</div>
   			  <i class="coolreads1">oolReads</i>
             </div>
@@ -20,7 +20,7 @@
 			  <div class="email">{{ translations.emailOrUsername }}</div>
 			</div>
 			<div class="input-text-wrapper">
-			  <input v-model="username" class="input-text" placeholder="example@example.com"/>
+			  <input v-model="username" class="input-text" placeholder="example"/>
 			  <div class="input-text-child"></div>
 			</div>
 		  </div>
@@ -91,9 +91,9 @@ export default{
     handleLogin() {
 		if(this.username==='' || this.password===''){
 			if (this.selectedLanguage == 'portuguese') {
-          		this.error_msg = "Existem campos vazios. Introduza email, o username e password.";
+          		this.error_msg = "Existem campos vazios. Introduza username e password.";
 			} else {
-				this.error_msg = "Some fields are empty. Introduce email, username and password.";
+				this.error_msg = "Some fields are empty. Introduce username and password.";
 			}
 			return;
 		}

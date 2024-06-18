@@ -79,5 +79,10 @@ export default {
   box-sizing: border-box;
   height: 3176.1px;
   left: -800px;
-} 
+}
+
+main {
+  width: 100vw;
+}
+
 </style>

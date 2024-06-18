@@ -4,7 +4,7 @@ import NavComponent from '../components/NavComponent.vue';
 <template>
     <main>
         <b class="order-by">Genres</b>
-        <b class="for-you">For You</b>
+        <b v-if="username!==''" class="for-you">For You</b>
         <div class="allcategories">
             <div class="image-4-parent" @click="navigateToCategory('adventure')">
             <img class="image-4-icon" alt="" src="/img/aventura.png">
@@ -53,7 +53,7 @@ import NavComponent from '../components/NavComponent.vue';
             <b class="manga">Manga</b>
             </div>
         </div>
-        <NavComponent></NavComponent>
+        <NavComponent :username="username"></NavComponent>
     </main> 
 </template>
 
