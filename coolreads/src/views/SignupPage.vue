@@ -66,14 +66,11 @@
         </div>
         </div>
         </div>
-      <ToastComponent v-if="error_msg!==''" :msg="error_msg" @close_toast="closemsg"></ToastComponent>
 </template>
 
 <script>
 import router from "../router/index";
 import User from "@/models/user";
-import ToastComponent from "@/components/ToastComponent.vue";
-import {useToast} from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css'
 export default {
   data(){
@@ -90,25 +87,32 @@ export default {
       this.$router.push(route);
     },
     createAccount() {
+
       if(this.username==='' || this.password==='' || this.email===''){
         if (this.selectedLanguage == 'portuguese') {
-          this.error_msg = "Existem campos vazios. Introduza email, o username e password.";
+          this.$toast.error('Existem campos vazios. Introduza email, o Nome de utilizador e palavra-passe.');
         } else {
-          this.error_msg = "Some fields are empty. Introduce email, username and password.";
+          this.$toast.error('Some fields are empty. Introduce email, username and password.');
         }
         return;
 		  }
+
       this.$store.dispatch('auth/register', new User(this.username,this.email,this.password)).then(
             data => {
               console.log(data);
+              if(this.selectedLanguage == 'portuguese'){
+                this.$toast.success("Registro efetuado com sucesso!")
+              } else {
+                this.$toast.success("Register successful!")
+              }
+              
             	router.push('/login');
             },
             error => {
-              const $toast = useToast();
               if (this.selectedLanguage == 'portuguese') {
-                $toast.error('Username ou password inválidos. Tente novamente.');
+                this.$toast.error('Nome de utilizador ou palavra-passe inválidos. Tente novamente.');
               } else {
-               $toast.error('Invalid username or password. Try again.');
+                this.$toast.error('Invalid username or password. Try again.');
               }
             }
           );
@@ -138,9 +142,6 @@ export default {
     if (this.loggedIn) {
       this.$router.push('/profile');
     }
-  },
-  components:{
-    ToastComponent
   }
 };
 </script>
