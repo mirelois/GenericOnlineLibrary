@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Set;
 
 @RestController
-@RequestMapping(value = "/customer/{username}/bookshelf")
+@RequestMapping(value = "/api/customer/{username}/bookshelf")
 public class BookshelfController {
 
     private final BookshelfService bookshelfService;

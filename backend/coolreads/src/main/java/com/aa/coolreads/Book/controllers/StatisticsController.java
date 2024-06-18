@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/book/{isbn}/stats")
+@RequestMapping(value = "/api/book/{isbn}/stats")
 public class StatisticsController {
 
     private final StatisticService statisticService;
