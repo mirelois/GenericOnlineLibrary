@@ -22,7 +22,7 @@ import Rating from 'primevue/rating';
     		<div class="autor">by {{ author }}</div>
 			<div class="group-categories">
 				<span v-for="genre in genres" v-if="!genre">
-					<div class="rectangle-div">
+					<div class="rectangle-div" @click="navigateToCategory(genre)">
         			{{ genre }}	
 	      			</div>
 				</span>
@@ -161,6 +161,7 @@ export default {
 		const token = localStorage.getItem('user');
 		if (!token || this.$store.state.auth.status.loggedIn===false) {
 			this.can_interact=false;
+			console.warn('User token not found in localStorage');
 			return;
 		}
 		try {
@@ -173,6 +174,9 @@ export default {
 			console.error('Error parsing user token:', error);
 		}
 	},methods:{
+		navigateToCategory(category) {
+        this.$router.push({ name: 'bookCategoria', params: { category } });
+        },
 		getBook(isbn){
 			axios.get("http://localhost:8080/book/"+isbn).then(book =>{
 				this.title = book.data.title;
@@ -557,6 +561,7 @@ export default {
 }
 
 .rectangle-div {
+	cursor: pointer;
 	display: inline-block; 
 	position: relative;
 	border-radius: 4px;

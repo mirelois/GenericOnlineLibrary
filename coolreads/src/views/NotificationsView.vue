@@ -96,7 +96,7 @@ onMounted(() => {
         <img class="clock-icon" alt="" src="/img/clock.svg">
         <b class="time">{{ notification.time }}</b>
         <b class="message">{{ notification.message }}</b>
-        <button @click="handleDelete(notification.id)">{{ translations.delete }}</button>
+        <div class="deletebutton"><button @click="handleDelete(notification.id)">{{ translations.delete }}</button></div>
       </div>
     </div>
     <div class="pagination">
@@ -152,7 +152,14 @@ onMounted(() => {
   align-items: center;
   height: 60px;
 }
-
+.deletebutton {
+  position: absolute;
+  left: -100px;
+  margin-left: 40px;
+  width: 70px;
+  height: 40px;
+  overflow: hidden;
+}
 .clock-icon {
   position: absolute;
   left: 0;
