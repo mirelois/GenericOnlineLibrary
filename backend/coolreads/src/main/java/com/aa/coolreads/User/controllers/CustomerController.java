@@ -95,7 +95,7 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/username/{username}")
     public ResponseEntity<SimpleCustomerDTO> getCustomer(@PathVariable String username) {
         try{
             return ResponseEntity.ok().body(this.customerService.getCustomer(username));
