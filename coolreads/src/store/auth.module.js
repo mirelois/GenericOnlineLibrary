@@ -2,8 +2,8 @@ import AuthService from '../services/auth.service';
 
 const user = JSON.parse(localStorage.getItem('user'));
 const initialState = user
-  ? { status: { loggedIn: true }, user: user }
-  : { status: { loggedIn: false }, user: null };
+  ? { status: { loggedIn: true }, lastRoute: '/', user: user }
+  : { status: { loggedIn: false }, lastRoute: '/', user: null };
 
 const auth = {
   namespaced: true,
@@ -22,9 +22,9 @@ const auth = {
         }
       );
     },
-    logout({ commit }) {
+    logout({ commit }, lastRoute) {
       AuthService.logout();
-      commit('logout');
+      commit('logout', lastRoute);
     },
     register({ commit }, user) {
       return AuthService.register(user).then(
@@ -61,9 +61,11 @@ const auth = {
       state.status.loggedIn = false;
       state.user = null;
     },
-    logout(state) {
+    logout(state, lastRoute) {
       state.status.loggedIn = false;
       state.user = null;
+      console.log("Storing Route: " + lastRoute);
+      state.lastRoute = lastRoute;
     },
     registerSuccess(state) {
       state.status.loggedIn = false;

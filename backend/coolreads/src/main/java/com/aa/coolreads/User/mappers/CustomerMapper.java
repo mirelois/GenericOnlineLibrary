@@ -75,7 +75,7 @@ public class CustomerMapper {
         Optional.ofNullable(simpleCustomerDTO.getCountry()).ifPresent(profileDetails::setCountry);
         Optional.ofNullable(simpleCustomerDTO.getDescription()).ifPresent(profileDetails::setDescription);
         Optional.ofNullable(simpleCustomerDTO.getInterests()).ifPresent(profileDetails::setInterests);
-        Optional.ofNullable(simpleCustomerDTO.getGender()).ifPresent(gender -> profileDetails.setGender(Gender.valueOf(simpleCustomerDTO.getGender())));
+        Optional.ofNullable(simpleCustomerDTO.getGender()).ifPresent(gender -> profileDetails.setGender(Gender.valueOf(simpleCustomerDTO.getGender().toLowerCase())));
         Optional.ofNullable(simpleCustomerDTO.getPronouns()).ifPresent(profileDetails::setPronouns);
         Optional.ofNullable(simpleCustomerDTO.getName()).ifPresent(profileDetails::setName);
         Optional.ofNullable(simpleCustomerDTO.getProfileBannerUrl()).ifPresent(profileDetails::setProfileBannerUrl);

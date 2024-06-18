@@ -310,7 +310,7 @@ export default {
             this.marginReviewBottom=h;
 		},
 		getAuthorInfo(){
-			axios.get("http://localhost:8080/customer/"+this.author).then(resp=>{
+			axios.get("http://localhost:8080/customer/username/"+this.author).then(resp=>{
 				this.authorName = resp.data.name;
 				this.authorImage = resp.data.profileImageUrl;
 			}).catch(error=>{

@@ -126,7 +126,11 @@ export default{
 	position: absolute;
 	font-size: 26px;
 	letter-spacing: 0.03em;
-	margin-left: 40px;
+	margin-left: -10px;
+	background: #000;
+	width: 400px;
+	height: 125px;
+	text-align: center;
 }
 .shelves {
   	position: absolute;

@@ -69,7 +69,7 @@ if (localStorage.getItem('selectedLanguage')) {
       <b class="label">{{translations.gender}}</b>
       <div v-if="edit_activated==false" class="value">{{gender}}</div>
       <select v-model="selected_gender" v-if="edit_activated==true" class="value-aux" name="gender" id="gender">
-        <option value="Femaile">Female</option>
+        <option value="Female">Female</option>
         <option value="Male">Male</option>
         <option value="Non-binary">Non-binary</option>
         <option value="nd_gender">-</option>
@@ -108,8 +108,8 @@ if (localStorage.getItem('selectedLanguage')) {
   </div>
   <div class="highlighted-bookshelf-my-top-parent">
     <div class="highlighted-bookshelf-my">Highlight: {{highlightedBookshelf.name}}</div>
-    <div v-for="book in highlightedBookshelf.personalBooks" v-if="!book" class="book-row">
-      <img class="book-icon" alt="" :src="book.coverImage">
+    <div class="book-row">
+      <img v-for="(value,index) in highlightedBookshelf.personalBooks" :v-if="!value && index<4" class="book-icon" :alt="index" :src="value.coverImage"/>
     </div>
     <div v-if="edit_activated==true">
       <BookshelfDropdownComponent @bookshelf_highlighted="setHighlighted" :username="username"></BookshelfDropdownComponent>
@@ -181,14 +181,17 @@ export default {
         this.name = me.data.name ? me.data.name : this.username;
         this.description = me.data.description ? me.data.description : '';
         this.gender = me.data.gender ? me.data.gender : '-';
-        this.highlightedBookshelf = me.data.highlightedBookshelf ? me.data.highlightedBookshelf : '-';
+        console.log("qhats happening");
+        console.log(me.data.highlightedBookshelf);
+        this.highlightedBookshelf = me.data.highlightedBookshelf ? me.data.highlightedBookshelf : {'name':'-'};
+        if(this.highlightedBookshelf!='') this.selectedHighlighted =  me.data.highlightedBookshelf;
+        else this.selectedHighlighted='None';
         this.profileImageUrl = me.data.profileImageUrl ? me.data.profileImageUrl : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
         this.interests = me.data.interests ? me.data.interests : '';
         this.pronouns = me.data.pronouns ? me.data.pronouns : '-';
         this.selected_country = me.data.country;
         this.selected_gender = me.data.gender;
         this.selected_pronoun = me.data.pronouns;
-        console.log(me.data)
       }).catch(error=>{
         console.log(error);
       })
@@ -209,10 +212,18 @@ export default {
     handle_edit(){
       let header = authHeader();
       let config = {headers:header};
+      console.log(this.name);
+      let genre = this.selected_gender.replaceAll('-','_').toLowerCase();
+      console.log(genre);
+      console.log(this.description);
+      console.log(this.interests);
+      console.log(this.profileImageUrl);
+      console.log(this.selectedHighlighted);
+			
       axios.put("http://localhost:8080/customer/me",
         {
 					name:this.name,
-					gender: this.selected_gender,
+					gender: genre,
 					pronouns: this.selected_pronoun,
 					birthDate: this.date,
 					country: this.selected_country,
@@ -226,6 +237,15 @@ export default {
       ).then((resp)=>{
         console.log(resp)
         if(resp.status==200) {
+          this.name=this.name,
+					this.gender= genre,
+					this.pronouns = this.selected_pronoun.replaceAll('_','-').toLowerCase(),
+					this.country= this.selected_country,
+					this.description= this.description,
+					this.interests= this.interests,
+          this.highlightedBookshelf = this.selectedHighlighted;
+          console.log("debug");
+          console.log(this.highlightedBookshelf)
           this.edit_activated=false;
         }
       }
@@ -241,6 +261,7 @@ export default {
       console.log(event);
     },
     setHighlighted(selected){
+      console.log(selected);
       this.selectedHighlighted=selected;
     },
     handle_logout(){

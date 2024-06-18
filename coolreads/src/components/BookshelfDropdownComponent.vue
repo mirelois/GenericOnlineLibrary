@@ -33,7 +33,7 @@ export default {
             header['Content-Type']='application/json';
 			axios.get("http://localhost:8080/customer/"+this.username+"/bookshelf",config).then(resp =>{
                 for(let i=0;i<resp.data.length;i++){
-                if(resp.data[i].privacy=="PUBLIC"){
+                if(resp.data[i].privacy=="PUBLIC" && resp.data[i].name!="all"){
                     this.myoptions.push(resp.data[i])
                 }
                 }

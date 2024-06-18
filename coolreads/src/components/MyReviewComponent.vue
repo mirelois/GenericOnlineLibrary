@@ -33,7 +33,9 @@ export default{
 	},
 	methods:{
 		publishReview(){
-			if(this.canInteract===false) this.handle_logout();
+			if(this.canInteract===false) {
+				this.handle_logout();
+			}
 			const headers = {
         		'Content-Type': 'application/json',
 		    };
@@ -58,6 +60,9 @@ export default{
 			this.bookrate=0;
 		},
 		publishRating(){
+			if(this.canInteract===false) {
+				this.handle_logout();
+			}
 			let rating = this.bookrate.toFixed(1);
 			const headers = {
         		'Content-Type': 'application/json',
@@ -76,7 +81,7 @@ export default{
 			} 
 		},
 		handle_logout(){
-            this.$store.dispatch('auth/logout').then(
+            this.$store.dispatch('auth/logout', this.$route.path).then(
             () => {
                 router.push({path:'/signup'})
             },
