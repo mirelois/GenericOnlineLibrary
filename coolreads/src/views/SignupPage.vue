@@ -60,7 +60,7 @@
             <button class="createbutton" @click="createAccount">{{ translations.createAccountButton }}</button>
           <div class="alreadyHaveAnAccountParent">
             <div class="alreadyHaveAn">{{ translations.alreadyHaveAccount }}</div>
-            <a class="logIn" href="/login">{{ translations.login }}</a>
+            <a class="logIn" @click="route('/login')">{{ translations.login }}</a>
           </div>
         </div>
         </div>

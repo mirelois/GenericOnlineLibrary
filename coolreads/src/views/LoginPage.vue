@@ -65,10 +65,13 @@ export default{
 			open:'/img/iconeye.svg',
 			closed:'/img/closed-eye-icon.svg'	
 		},
-		eye: 'open'
+		eye: 'open',
 	}
   },
   computed: {
+	lastRoute() {
+		return this.$store.state.auth.lastRoute;
+	},
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
     },
@@ -81,7 +84,7 @@ export default{
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push('/profile');
+      this.$router.push(this.lastRoute);
     }
   },
   methods: {
@@ -98,9 +101,9 @@ export default{
 			return;
 		}
         this.$store.dispatch('auth/login', new User(this.username,'',this.password)).then(
-            (u) => {
+			(u) => {
 				console.log("Login successful, user:", u);
-            	this.$router.push('/profile');
+            	this.$router.push(this.lastRoute);
             },
             error => {
 				if (this.selectedLanguage == 'portuguese') {
