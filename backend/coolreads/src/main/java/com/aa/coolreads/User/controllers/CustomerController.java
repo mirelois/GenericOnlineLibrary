@@ -17,7 +17,7 @@ import java.net.URI;
 import java.util.Set;
 
 @RestController
-@RequestMapping(value = "/customer")
+@RequestMapping(value = "/api/customer")
 public class CustomerController {
 
     private final CustomerService customerService;

@@ -33,10 +33,11 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/customer/register", "/customer/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/book/{isbn}", "/book/name", "/book/genre", "/book/{isbn}/review"
-                        , "/book/{isbn}/review/{review_username}/comment", "/customer/{username}").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/customer/register", "/api/customer/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/book/{isbn}", "/api/book/name", "/api/book/genre", "/api/book/{isbn}/review"
+                                , "/api/book/{isbn}/review/{review_username}/comment", "/api/customer/{username}").permitAll()
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

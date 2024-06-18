@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Set;
 
 @RestController
-@RequestMapping(value = "/book/{isbn}/review")
+@RequestMapping(value = "/api/book/{isbn}/review")
 public class BookReviewController {
 
     private final BookReviewService bookReviewService;
