@@ -81,7 +81,7 @@ public class Seeder implements CommandLineRunner {
 
         if (month != 2) {
             day = rand.nextInt(31) + 1;
-        }else {
+        } else {
             day = rand.nextInt(28) + 1;
         }
         return new Date(year, month, day);
@@ -101,12 +101,12 @@ public class Seeder implements CommandLineRunner {
         loadPersonalBookData(isbns);
         enrichCustomers();
         addFriends();
-        loadNotifications();
+        loadNotifications(isbns);
     }
 
     private void loadPersonalBookData(ArrayList<String> isbns) {
 
-        Random rand  = new Random();
+        Random rand = new Random();
         rand.setSeed(2024);
 
         for (int i = 0; i < 100; i++) {
@@ -116,7 +116,7 @@ public class Seeder implements CommandLineRunner {
                 String isbn = isbns.get(rand.nextInt(isbns.size()));
 
                 try {
-                    bookshelfService.insertBook("bookshelf"+i, "user" + i, isbn);
+                    bookshelfService.insertBook("bookshelf" + i, "user" + i, isbn);
                 } catch (CustomerNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (BookshelfNotFoundException e) {
@@ -129,14 +129,13 @@ public class Seeder implements CommandLineRunner {
             }
 
 
-
         }
     }
 
-    private void loadPublisher(){
+    private void loadPublisher() {
 
         for (int i = 0; i < 4; i++) {
-            PublisherDTO publisherDTO = new PublisherDTO("publisher" + i, "email"+i+"@gmail.com", "siteurl"+i, "logourl"+i);
+            PublisherDTO publisherDTO = new PublisherDTO("publisher" + i, "email" + i + "@gmail.com", "siteurl" + i, "logourl" + i);
             try {
                 publisherService.insertPublisher(publisherDTO);
             } catch (PublisherAlreadyExistsException e) {
@@ -167,15 +166,15 @@ public class Seeder implements CommandLineRunner {
 
             BookDTO bookDTO = new BookDTO(
                     isbn,
-                    "title"+i,
+                    "title" + i,
                     "description" + i,
                     makeDate(rand),
                     200,
-                    "publisher"+(i % 4),
+                    "publisher" + (i % 4),
                     genre,
                     "author1",
                     "https://picsum.photos/id/" + rand.nextInt(1000) + "/650/870"
-                    );
+            );
 
             try {
                 bookService.insertBook(bookDTO);
@@ -196,7 +195,7 @@ public class Seeder implements CommandLineRunner {
 
     }
 
-    private void loadAuthor(){
+    private void loadAuthor() {
 
         try {
 
@@ -221,21 +220,21 @@ public class Seeder implements CommandLineRunner {
 
         for (int i = 0; i < 100; i++) {
 
-            BookShelfDTO bookShelfDTO  = new BookShelfDTO("currently_reading", Privacy.PUBLIC.name(), new HashSet<PersonalBookDTO>());
+            BookShelfDTO bookShelfDTO = new BookShelfDTO("currently_reading", Privacy.PUBLIC.name(), new HashSet<PersonalBookDTO>());
 
             SimpleCustomerDTO simpleCustomerDTO = new SimpleCustomerDTO("user" + i,
                     genders[rand.nextInt(genders.length)].name(),
                     "they/them",
                     makeDate(rand),
                     countries[rand.nextInt(countries.length)],
-                    "description"+i,
-                    "interests"+i,
+                    "description" + i,
+                    "interests" + i,
                     "https://randomuser.me/api/portraits/male/" + rand.nextInt(100) + ".jpg",
                     "https://picsum.photos/id/" + rand.nextInt(1000) + "/650/870",
-                    bookShelfDTO );
+                    bookShelfDTO);
 
             try {
-                customerService.updateMyCustomerProfile(simpleCustomerDTO, "user"+i);
+                customerService.updateMyCustomerProfile(simpleCustomerDTO, "user" + i);
             } catch (CustomerNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (BookshelfNotFoundException e) {
@@ -272,7 +271,7 @@ public class Seeder implements CommandLineRunner {
             for (int j = 0; j < 10; j++) {
                 String friend = "user" + rand.nextInt(100);
                 try {
-                    notificationService.sendFriendRequestNotification("user" + i,  friend);
+                    notificationService.sendFriendRequestNotification("user" + i, friend);
                     notificationService.addFriend(friend, "user" + i);
                 } catch (CustomerNotFoundException e) {
                     throw new RuntimeException(e);
@@ -298,17 +297,28 @@ public class Seeder implements CommandLineRunner {
         }
     }
 
-    public void loadNotifications() {
+    public void loadNotifications(ArrayList<String> isbns) {
+
+        Random rand = new Random();
+        rand.setSeed(2024);
 
         for (int i = 0; i < 100; i++) {
 
             for (int j = 0; j < 50; j++) {
 
-                NotificationCreationDTO notificationCreationDTO = new NotificationCreationDTO(NotificationType.values()[j % NotificationType.values().length]);
-
                 try {
-                    notificationService.insertNotification(notificationCreationDTO, "user" + i);
+                    NotificationType notificationType = NotificationType.values()[j % NotificationType.values().length];
+
+                    if (notificationType == NotificationType.FRIEND_REVIEWED_BOOK_NOTIFICATION | notificationType == NotificationType.FRIEND_STARRED_BOOK_NOTIFICATION) {
+                        notificationService.insertBookRelatedNotification(notificationType, isbns.get(rand.nextInt(100)), "user" + i);
+                    }else{
+                        NotificationCreationDTO notificationCreationDTO = new NotificationCreationDTO(notificationType);
+                        notificationService.insertNotification(notificationCreationDTO, "user" + i);
+                    }
+
                 } catch (CustomerNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (BookNotFoundException e) {
                     throw new RuntimeException(e);
                 }
             }
