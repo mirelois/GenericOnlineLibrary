@@ -148,7 +148,7 @@ public class CustomerController {
     }
 
     @GetMapping("/me/notifications")
-    public ResponseEntity<?> getNotifications(Integer page, Integer size){
+    public ResponseEntity<?> getNotifications(@RequestParam Integer page, @RequestParam Integer size){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
             Set<NotificationDTO> notificationDTOS = this.notificationService.getNotificationsByUserName(username, page, size);
@@ -159,7 +159,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/me/notifications")
-    public ResponseEntity<String> removeNotification(Long notificationId){
+    public ResponseEntity<String> removeNotification(@RequestParam Long notificationId){
         try{
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             this.notificationService.deleteNotification(username, notificationId);
