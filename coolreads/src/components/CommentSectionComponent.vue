@@ -82,7 +82,7 @@ export default {
             }
         },
         publishComment(){
-            if(this.mycomment!="" && this.canInteract==true){
+            if(this.mycomment!="" && this.canInteract===true){
                 let header = authHeader();
                 let config = {headers:header}
                 header['Content-Type']='application/json';

@@ -64,24 +64,18 @@ import Rating from 'primevue/rating';
     		</div>
 	<div v-bind:style="{ 'color': authorcolor, 'font-weight': authorfont }" @click="changeTabStyle(`Author`)" class="author-title">Author 
 			<div class="author-content" v-if="activeTab=='Author'">
-				<div v-if="can_interact==true">
 				<img :src="authorImage" class="authorImage"/>
 				<br>Author: {{ authorName }}</br>
 				<br>Publisher: {{ publisher }}</br>
 				<br>Launch Date: {{ launchDate }}</br>
-			</div>
-			<div v-if="can_interact==false">{{ loginMsg }}</div>
 		</div>
     	</div>
 	<div v-bind:style="{ 'color': statisticscolor, 'font-weight': statisticsfont }" @click="changeTabStyle(`Statistics`)" class="statistics-title">Statistics 
 			<div class="author-content" v-if="activeTab=='Statistics'">
-				<div v-if="can_interact==true">
 					<br><div class="stats-row"><CategorySelectorComponent @category_selected="setCategorySelected"></CategorySelectorComponent><DefaultSelectorComponent @default_bookshelf="setDefaultSelected"></DefaultSelectorComponent></div></br>
 					<br><div class="stats-row"><PieStatsComponent :categoria="categorySelected" :bookshelf="defaultSelected" :isbn="isbn"></PieStatsComponent><StateFrequencyComponent :isbn="isbn"></StateFrequencyComponent></div></br>
 					<br><TimeFrameComponent @time_frame="setTimeFrameSelected"></TimeFrameComponent></br>
 					<div class="stats-row"><LineGraphComponent :timeframe="timeframeSelected" :bookshelf="defaultSelected"></LineGraphComponent></div>	
-				</div>
-				<div v-if="can_interact==false">{{ loginMsg }}</div>
 			</div>
     		</div>
 	</div>
@@ -317,9 +311,7 @@ export default {
             this.marginReviewBottom=h;
 		},
 		getAuthorInfo(){
-			let header = authHeader();
-      		let config = {headers:header};
-			axios.get("http://localhost:8080/api/customer/username/"+this.author,config).then(resp=>{
+			axios.get("http://localhost:8080/api/customer/username/"+this.author).then(resp=>{
 				this.authorName = resp.data.name;
 				this.authorImage = resp.data.profileImageUrl;
 			}).catch(error=>{

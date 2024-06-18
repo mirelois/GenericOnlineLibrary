@@ -72,13 +72,11 @@ export default {
     methods:{
         getData(mycategory, mydefault){
             if(mycategory!='' && mydefault!=''){
-                let header = authHeader();
-                let config = {headers:header};
                 let categ = mycategory;
                 let newcateg = categ.toLowerCase(); 
                 let bookshf = mydefault;
                 let newbookshf = bookshf.toLowerCase().replaceAll(" ","_"); 
-                axios.get("http://localhost:8080/api/book/"+this.isbn+"/stats/pie/"+newcateg+"?defaultBookshelf="+newbookshf,config).then(resp=>{
+                axios.get("http://localhost:8080/api/book/"+this.isbn+"/stats/pie/"+newcateg+"?defaultBookshelf="+newbookshf).then(resp=>{
                     this.dados.datasets = [{
                         backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
                         data: resp.data.data

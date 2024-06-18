@@ -42,7 +42,8 @@ export default{
     },
     likes:{},
     isbn:'',
-    reviewer:''
+    reviewer:'',
+    canInteract: Boolean
   },
   data(){
     return {
@@ -55,6 +56,9 @@ export default{
       this.setup();
   },methods:{
     changeEmoji(id){
+      if(this.canInteract===false){
+        return;
+      }
       for(let i=0; i<this.emojiIds.length;i++){
         this.emojiidMap[this.emojiMap[i]]= this.emojiIds[i]
         this.emojiActivated[this.emojiIds[i]]=false;
@@ -71,6 +75,9 @@ export default{
       }
     },
     updateLikes(type){
+      if(this.canInteract===false){
+        return;
+      } 
       if(this.emojiActivated[this.emojiidMap[type]]==true && this.likes[type]>=1) this.likes[type] = this.likes[type] - 1;
       else{
         this.likes[type] = this.likes[type] + 2;
