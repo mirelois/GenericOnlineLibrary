@@ -435,7 +435,7 @@ flex-shrink: 0;
   left: 765px;
   background-color: #fff;
   width: 917px;
-  height: 1280px;
+  height: 1350px;
   display: flex;
   flex-direction: column;
   align-items: center;
