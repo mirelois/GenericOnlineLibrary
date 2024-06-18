@@ -119,11 +119,11 @@ export default{
 		},
 		changeInputType(){
 			if(this.type==='password') {
-				this.eye='open';
+				this.eye='closed';
 				this.type='text';
 			}
 			else {
-				this.eye='closed';
+				this.eye='open';
 				this.type='password'
 			}
 		},
