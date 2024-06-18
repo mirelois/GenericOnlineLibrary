@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 public class NotificationMapper {
 
     public NotificationDTO toNotificationDTO(Notification notification) {
-        return new NotificationDTO(notification.getNotificationType(), notification.getId());
+        Book book = notification.getRelatedBook();
+        Customer customer = notification.getCustomerCreator();
+        return new NotificationDTO(notification.getNotificationType(), notification.getId(), customer.getUsername(), book.getTitle(), book.getAuthor().getUsername(), notification.getCreatedAt());
     }
 
     public Notification toNotification(NotificationCreationDTO notificationCreationDTO, Customer customerCreator, Customer customer) {
