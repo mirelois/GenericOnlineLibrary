@@ -154,8 +154,10 @@ public class Seeder implements CommandLineRunner {
 
         Set<String> genre = new HashSet<>();
 
-        for (int i = 0; i < 4; i++) {
-            genre.add("scifi");
+        String genres[] = {"scifi", "fantasy", "adventure", "mystery", "biography", "manga", "music", "sports", "romance"};
+
+        for (int i = 0; i < rand.nextInt(genres.length); i++) {
+            genre.add(genres[rand.nextInt(genres.length)]);
         }
 
 
