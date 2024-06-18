@@ -73,17 +73,18 @@ public class Seeder implements CommandLineRunner {
 
         rand.setSeed(System.currentTimeMillis());
 
-        int year = rand.nextInt(1970, 2025);
+        int year = rand.nextInt( 120);
 
-        int month = rand.nextInt(12) + 1;
+        int month = rand.nextInt(12);
 
         int day;
 
-        if (month != 2) {
+        if (month != 1) {
             day = rand.nextInt(31) + 1;
         } else {
             day = rand.nextInt(28) + 1;
         }
+
         return new Date(year, month, day);
     }
 
