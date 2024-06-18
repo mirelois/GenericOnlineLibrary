@@ -6,9 +6,7 @@ import com.aa.coolreads.Book.exception.*;
 import com.aa.coolreads.Book.models.Genre;
 import com.aa.coolreads.Book.services.BookService;
 import com.aa.coolreads.Book.services.PublisherService;
-import com.aa.coolreads.User.dto.BookShelfCreationDTO;
-import com.aa.coolreads.User.dto.NotificationCreationDTO;
-import com.aa.coolreads.User.dto.RegisterDTO;
+import com.aa.coolreads.User.dto.*;
 import com.aa.coolreads.User.exception.*;
 import com.aa.coolreads.User.mappers.BookshelfMapper;
 import com.aa.coolreads.User.mappers.CustomerMapper;
@@ -41,25 +39,24 @@ public class Seeder implements CommandLineRunner {
     private final PublisherService publisherService;
     private final AuthenticationService authenticationService;
     private final NotificationService notificationService;
+    private final CustomerService customerService;
 
-    public Seeder(BookshelfService bookshelfService, BookService bookService, PublisherService publisherService, AuthenticationService authenticationService, NotificationService notificationService) {
+    public Seeder(BookshelfService bookshelfService, BookService bookService, PublisherService publisherService, AuthenticationService authenticationService, NotificationService notificationService, CustomerService customerService) {
         this.bookshelfService = bookshelfService;
         this.bookService = bookService;
         this.publisherService = publisherService;
         this.authenticationService = authenticationService;
         this.notificationService = notificationService;
+        this.customerService = customerService;
     }
 
 
-    private static String makeISBN() throws CheckDigitException {
-
-        Random random = new Random();
-        random.setSeed(2024);
+    private static String makeISBN(Random rand) throws CheckDigitException {
 
         StringBuilder prefix = new StringBuilder("978");
 
         for (int i = 0; i < 9; i++) {
-            prefix.append(random.nextInt(10));
+            prefix.append(rand.nextInt(10));
         }
 
         ISBNCheckDigit isbnCheckDigit = new ISBNCheckDigit();
@@ -72,9 +69,7 @@ public class Seeder implements CommandLineRunner {
 
     }
 
-    private static Date makeDate() {
-        Random rand = new Random();
-        rand.setSeed(2024);
+    private static Date makeDate(Random rand) {
 
         rand.setSeed(System.currentTimeMillis());
 
@@ -104,6 +99,7 @@ public class Seeder implements CommandLineRunner {
         loadCustomerData();
         loadBookshelfData();
         loadPersonalBookData(isbns);
+        enrichCustomers();
         addFriends();
         loadNotifications();
     }
@@ -151,6 +147,9 @@ public class Seeder implements CommandLineRunner {
 
     private ArrayList<String> loadBookData() throws CheckDigitException {
 
+        Random rand = new Random();
+        rand.setSeed(2024);
+
         ArrayList<String> bookData = new ArrayList<>();
 
         Set<String> genre = new HashSet<>();
@@ -162,7 +161,7 @@ public class Seeder implements CommandLineRunner {
 
         for (int i = 0; i < 100; i++) {
 
-            String isbn = makeISBN();
+            String isbn = makeISBN(rand);
 
             bookData.add(isbn);
 
@@ -170,12 +169,12 @@ public class Seeder implements CommandLineRunner {
                     isbn,
                     "title"+i,
                     "description" + i,
-                    makeDate(),
+                    makeDate(rand),
                     200,
                     "publisher"+(i % 4),
                     genre,
                     "author1",
-                    "url"
+                    "https://picsum.photos/id/" + rand.nextInt(1000) + "/650/870"
                     );
 
             try {
@@ -209,8 +208,41 @@ public class Seeder implements CommandLineRunner {
 
         } catch (CustomerAlreadyExistsException e) {
         }
+    }
 
+    private void enrichCustomers() {
 
+        Random rand = new Random();
+        rand.setSeed(2024);
+
+        Gender genders[] = Gender.values();
+
+        String countries[] = {"Portugal", "Brazil", "USA", "Canada", "France", "UK"};
+
+        for (int i = 0; i < 100; i++) {
+
+            BookShelfDTO bookShelfDTO  = new BookShelfDTO("currently_reading", Privacy.PUBLIC.name(), new HashSet<PersonalBookDTO>());
+
+            SimpleCustomerDTO simpleCustomerDTO = new SimpleCustomerDTO("user" + i,
+                    genders[rand.nextInt(genders.length)].name(),
+                    "they/them",
+                    makeDate(rand),
+                    countries[rand.nextInt(countries.length)],
+                    "description"+i,
+                    "interests"+i,
+                    "https://randomuser.me/api/portraits/male/" + rand.nextInt(100) + ".jpg",
+                    "https://picsum.photos/id/" + rand.nextInt(1000) + "/650/870",
+                    bookShelfDTO );
+
+            try {
+                customerService.updateMyCustomerProfile(simpleCustomerDTO, "user"+i);
+            } catch (CustomerNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (BookshelfNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
     }
 
     private void loadCustomerData() {
