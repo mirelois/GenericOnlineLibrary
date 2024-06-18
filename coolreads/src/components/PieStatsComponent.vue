@@ -84,7 +84,11 @@ export default {
                         data: resp.data.data
                         }
                     ]
-                    this.dados.labels = resp.data.labels;
+                    if (resp.data.labels) {
+                        this.dados.labels = resp.data.labels;
+                    } else {
+                        this.dados.labels = []
+                    }
                     this.updatekey++;
                     console.log(this.dados);
                 }).catch(error=>{

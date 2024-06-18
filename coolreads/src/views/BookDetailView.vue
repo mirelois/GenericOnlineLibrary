@@ -21,8 +21,8 @@ import Rating from 'primevue/rating';
 			<div class="titulo">{{ title }}</div>
     		<div class="autor">by {{ author }}</div>
 			<div class="group-categories">
-				<span v-for="genre in genres" v-if="!genre">
-					<div class="rectangle-div" @click="navigateToCategory(genre)">
+				<span v-for="genre in genres">
+					<div class="rectangle-div" v-if="!genre" @click="navigateToCategory(genre)">
         			{{ genre }}	
 	      			</div>
 				</span>
