@@ -1,12 +1,12 @@
 <template>
-    <div class="bodyCategory">
+    <div class="books-page">
       <NavComponent :username="username"></NavComponent>
       <b class="category-fantasy">Genre - {{ category }}</b>
       <input v-model="searchInput" type="text" class="my-search-box" placeholder="Search for books..." />
       <div class="sort-component">
         <div class="listbox-title" @click="showMenu">
-          <img v-if="showDropdownMenu" class="chevron-icon-d" alt="" src="/img/updroplist.svg">
-          <img v-else class="chevron-icon-d" alt="" src="/img/downdroplist.svg">
+          <img v-if="showDropdownMenu" class="cat-chevron-icon-d" alt="" src="/img/updroplist.svg">
+          <img v-else class="cat-chevron-icon-d" alt="" src="/img/downdroplist.svg">
           <div class="order-by-title">Order By</div>
         </div>
         <div class="listbox-main">
@@ -30,13 +30,13 @@
         </div>
       </div>
       <div class="separator"></div>
-          <div class="divm">
+          <div class="div">
                 <div class="overlap">
-                    <div class="book-row">
+                    <div class="my-book-row">
                         <div class="book">
                             <div class="overlap-group">
-                            <div v-for="(row, index) in paginatedBooks" :key="index"> 
-                            <BookComponent v-for="book in row" :bookISBN="book.isbn" :cover="book.imageUrl" />
+                            <div class="mywrapper" v-for="(row, index) in paginatedBooks" :key="index"> 
+                            <BookComponent :categories_page="true" v-for="book in row" :bookISBN="book.isbn" :cover="book.imageUrl" />
                           </div>
                         </div>
                       </div>
@@ -205,6 +205,9 @@ margin: 0; line-height: normal;
   top: 190px;
   left: -1050px;
 }
+.mywrapper{
+  display:flex;
+}
 .bodyCategory .divm:not(#searchbox) {
     width: 600px;
     height: 700px;
@@ -217,7 +220,7 @@ margin: 0; line-height: normal;
     height: 100px;
     flex-direction: row;
 } 
-.bodyCategory .book-row {
+.bodyCategory .my-book-row {
     display: flex;
     width: 1060px;
     align-items: flex-end;
@@ -230,6 +233,247 @@ margin: 0; line-height: normal;
 .bodyCategory ~ .remove {
   display: none
 }
+.books-page .my-book-row {
+  display: flex;
+  width: 1060px;
+  align-items: flex-end;
+  gap: 45px;
+  position: absolute;
+  top: 160px;
+  left: -180px;
+}
+
+.books-page .book {
+    position: relative;
+    width: 180px;
+    height: 280px;
+} 
+
+.books-page {
+	width: 2000px;
+	display: flex;
+	flex-direction: row;
+}
+.books-page .div:not(#searchbox) {
+  width: 1300px;
+  height: 800px;
+  position: absolute;
+  left: 500px;
+}
+
+.books-page .text-wrapper-4 {
+  position: absolute;
+  top: 300px;
+  left: 600px;
+  font-family: "Inika-Regular", Helvetica;
+  font-weight: 400;
+  color: #e9e9e9;
+  font-size: 80px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.books-page .remove {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 0;
+    left: 165px;
+}
+.books-page .book-add {
+    position: absolute;
+    width: 179px;
+    height: 280px;
+    top: 29px;
+    left: 68px;
+    cursor: pointer;
+}
+.books-page .div-wrapper {
+    position: relative;
+    width: 180px;
+    height: 280px;
+    box-shadow: var(--book-shadow);
+    background: linear-gradient(180deg, rgba(221, 221, 221, 0) 0%, rgb(221, 221, 221) 100%);
+}
+.books-page .text-wrapper-3 {
+    position: absolute;
+    top: 87px;
+    left: 68px;
+    font-family: "Inika-Regular", Helvetica;
+    font-weight: 400;
+    color: #000000;
+    font-size: 80px;
+    letter-spacing: 0;
+    line-height: normal;
+}
+
+.item-option-d {
+    align-self: stretch;
+    position: relative;
+    background-color: #c2c2c2;
+    height: 44px;
+    overflow: hidden;
+    flex-shrink: 0;
+} 
+
+.item-option-d:hover {
+    cursor:pointer;
+} 
+
+.books-page .pagination {
+    position: absolute;
+    width: 542px;
+    height: 68px;
+    top: 2400px;
+    left: 800px;
+    background-color: #f6f8ff;
+    border-radius: 32.32px;
+    box-shadow: 0px 4.97px 4.97px #00000033;
+}
+
+.books-page .overlap-2 {
+    position: absolute;
+    width: 445px;
+    height: 42px;
+    top: 13px;
+    left: 80px;
+}
+
+.books-page .vector {
+    top: 12px;
+    left: 433px;
+    position: absolute;
+    width: 8px;
+    height: 16px;
+}
+
+.books-page .element {
+    position: absolute;
+    width: 445px;
+    height: 42px;
+    top: 0;
+    left: 0;
+}
+
+
+.search-bookshelf {
+    position: relative;
+    width: 739px;
+    height: 57px;
+    padding-left: 35px;
+    background: url("/img/Search.svg") no-repeat left;
+    background-color: #e6e6e66e;
+    border-radius: 25px;
+    font-size: 22px;
+}
+
+.search-bookshelf .search {
+    position: absolute;
+    width: 33px;
+    height: 34px;
+    top: 11px;
+    left: 16px;
+}
+.search-bookshelf .text-wrapper {
+    position: absolute;
+    height: 26px;
+    top: 14px;
+    left: 61px;
+    font-family: "Inika-Regular", Helvetica;
+    font-weight: 400;
+    color: #4e4e4e;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+} 
+
+.books-page .overlap-group-2 {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    top: 0;
+    left: 0;
+    background-color: #8698d4;
+    border-radius: 21px;
+}
+.books-page .text-wrapper-5 {
+    position: absolute;
+    height: 20px;
+    top: 10px;
+    left: 10px;
+    color: #ffffff;
+    width: 21px;
+    font-family: "Lato-SemiBold", Helvetica;
+    font-weight: 600;
+    font-size: 18px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+}
+.books-page .frame {
+    display: flex;
+    width: 363px;
+    height: 20px;
+    align-items: flex-start;
+    gap: 36px;
+    position: absolute;
+    top: 10px;
+    left: 78px;
+}
+.books-page .text-wrapper-6 {
+    position: relative;
+    height: 19.5px;
+    margin-top: -1.5px;
+    color: #646464;
+    width: 21px;
+    font-family: "Lato-SemiBold", Helvetica;
+    font-weight: 600;
+    font-size: 18px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+}
+.books-page .vector-2 {
+    top: 26px;
+    left: 14px;
+    position: absolute;
+    width: 8px;
+    height: 16px;
+}
+.books-page .search-bookshelf {
+    position: absolute;
+    width: 739px;
+    height: 57px;
+    top: 444px;
+    left: 615px;
+    background-color: #e6e6e66e;
+    border-radius: 25px;
+}
+
+.books-page .search-2 {
+    position: absolute;
+    width: 33px;
+    height: 34px;
+    top: 11px;
+    left: 16px;
+}
+.books-page .text-wrapper-7 {
+    position: absolute;
+    height: 26px;
+    top: 14px;
+    left: 61px;
+    font-family: "Inika-Regular", Helvetica;
+    font-weight: 400;
+    color: #4e4e4e;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+} 
+
 .separator {
   position: absolute;
   width: 865px;
@@ -477,20 +721,18 @@ margin: 0; line-height: normal;
   border-radius: 25px;
   background-color: #c2c2c2;
 }
-.chevron-icon-d {
+.cat-chevron-icon-d {
   position: absolute;
   height: 30px;
   width: 30px;
-  top: 330%;
-  right: 7.86%;
-  bottom: 45%;
-  left: 88.57%;
   max-width: 100%;
   max-height: 100%;
   z-index: 11;
+  margin-left: 310px;
+  margin-top: 90px;
 }
 
-.chevron-icon-d:hover {
+.cat-chevron-icon-d:hover {
   cursor: pointer;
 }
 

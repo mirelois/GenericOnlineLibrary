@@ -24,10 +24,10 @@ if (localStorage.getItem('selectedLanguage')) {
         <ShelfSideBarComponent v-if="username!==''" :username="username"></ShelfSideBarComponent>
         <div class="text-wrapper-4">{{ translations.bookshelf }}: {{ bookshelfname }}</div> 
         <input v-model="search_input" class="search-bookshelf" type="text" placeholder="Filter by book name"/> 
-        <div class="sort-component">
+        <div class="my-sort-component">
         <div class="listbox-title">
-            <img v-if="showDropdownMenu==true" class="chevron-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
-            <img v-if="showDropdownMenu==false" class="chevron-icon-d" @click='showMenu' alt="" src="/img/updroplist.svg">
+            <img v-if="showDropdownMenu==true" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/downdroplist.svg">
+            <img v-if="showDropdownMenu==false" class="my-chevron-icon-d" @click='showMenu' alt="" src="/img/updroplist.svg">
             <div class="order-by-title">{{ translations.orderBy }}</div>
             </div>
             <div class="listbox-main">
@@ -61,7 +61,7 @@ if (localStorage.getItem('selectedLanguage')) {
                         <div class="book">
                             <div class="overlap-group">
                                 <div v-for="book in displayBooksPerPage" v-if="!book">
-                                    <BookComponent @removeBook="showConfirmDeletion" :cover="book.coverImage" :bookISBN="book.bookISBN" ></BookComponent>
+                                    <BookComponent :categories_page="false" @removeBook="showConfirmDeletion" :cover="book.coverImage" :bookISBN="book.bookISBN" ></BookComponent>
                                 </div>
                             </div>
                         </div>
@@ -602,11 +602,12 @@ export default {
     grid-row-gap:70px;
 } 
 .order-by-title {
-  	position: absolute;
-  	top: 0%;
-  	left: 0%;
-  	font-weight: 500;
+  position: absolute;
+  top: 22px;
+  left: 0%;
+  font-weight: 500;
 }
+
 .listbox-title {
   position: absolute;
   font-family: "Inika-Regular", Helvetica;
@@ -631,19 +632,25 @@ export default {
     background-color: #c2c2c2;
 }
 .chevron-icon-d {
-    position: absolute;
-    height: 30px;
-    width: 30px;
-    top: 330%;
-    right: 7.86%;
-    bottom: 45%;
-    left: 88.57%;
-    max-width: 100%;
-    max-height: 100%;
-    z-index:11;
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  z-index: 11;
+  margin-top: 88px;
+  margin-left: 320px;
 }
-
 .chevron-icon-d:hover {
+    cursor:pointer;
+}
+.my-chevron-icon-d {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  z-index: 11;
+  margin-top: 77px;
+  margin-left: 320px;
+}
+.my-chevron-icon-d:hover {
     cursor:pointer;
 }
 
@@ -712,6 +719,19 @@ export default {
 }
 .sort-component {
   width: 400px;
+  top: 370px;
+  left: 1400px;
+  margin: 20px auto;
+  text-align: left;
+  font-size: 16px;
+  color: #fff;
+  font-family: Montserrat;
+  position: absolute;
+  height: 450px;
+}
+
+.my-sort-component {
+  width: 400px;
   top: 380px;
   left: 1400px;
   margin: 20px auto;
@@ -720,9 +740,8 @@ export default {
   color: #fff;
   font-family: Montserrat;
   position: absolute;
-  height: 400px;
+  height:400px;
 }
-
 body {
 	margin-left: -80px !important;
     background-color: #222831;
