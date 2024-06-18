@@ -32,7 +32,7 @@ export default{
 		}
 	},
 	created() {
-		this.textreview = this.$store.state.auth.savedReview;
+		this.textreview = this.$store.state.auth.storedReview;
 	},
 	methods:{
 		publishReview(){
@@ -84,10 +84,10 @@ export default{
 			} 
 		},
 		handle_logout(){
+			this.$store.dispatch('auth/storeReview', this.textreview);
             this.$store.dispatch('auth/logout', this.$route.path).then(
             () => {
-				this.$store.dispatch('auth/storeReview', this.textreview);
-                router.push({path:'/signup'})
+				router.push({path:'/signup'})
             },
             error => {
               this.message =
