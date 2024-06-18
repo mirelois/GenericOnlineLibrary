@@ -69,8 +69,11 @@ public class CustomerController {
 
     @PutMapping("/me")
     public ResponseEntity<String> updateCurrentCustomerProfile(@RequestBody SimpleCustomerDTO simpleCustomerDTO){
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
         try{
-            this.customerService.updateMyCustomerProfile(simpleCustomerDTO);
+            this.customerService.updateMyCustomerProfile(simpleCustomerDTO, username);
             return ResponseEntity.ok().build();
         } catch (CustomerNotFoundException | BookshelfNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

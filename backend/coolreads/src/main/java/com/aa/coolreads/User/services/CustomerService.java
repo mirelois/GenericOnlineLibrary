@@ -54,8 +54,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public void updateMyCustomerProfile(SimpleCustomerDTO simpleCustomerDTO) throws CustomerNotFoundException, IllegalArgumentException, BookshelfNotFoundException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    public void updateMyCustomerProfile(SimpleCustomerDTO simpleCustomerDTO, String username) throws CustomerNotFoundException, IllegalArgumentException, BookshelfNotFoundException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
         if(simpleCustomerDTO.getHighlightedBookshelf()!=null || simpleCustomerDTO.getHighlightedBookshelf().getName()!=null){
