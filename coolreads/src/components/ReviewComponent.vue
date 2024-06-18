@@ -74,7 +74,7 @@ export default{
 			if(response=="yes"){
 				let header = authHeader();
 	            let config = {headers:header}
-				axios.delete('http://localhost:8080/book/'+this.isbn+"/review?username="+this.usernameReviewer,config)
+				axios.delete('http://localhost:8080/api/book/'+this.isbn+"/review?username="+this.usernameReviewer,config)
 				.then(resp=>{
 					console.log(resp)
 					if(resp.status==200) this.$emit('review_deletion');

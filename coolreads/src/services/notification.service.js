@@ -1,7 +1,7 @@
 import axios from 'axios';
 import authHeader from './auth.header';
 
-const API_URL = 'http://localhost:8080/customer/me/notifications';
+const API_URL = 'http://localhost:8080/api/customer/me/notifications';
 
 class NotificationService {
   getNotifications(username, page, size) {

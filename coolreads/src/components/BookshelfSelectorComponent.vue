@@ -40,7 +40,7 @@ export default {
             let header = authHeader();
             let config = {headers:header}
             header['Content-Type']='application/json';
-            axios.get("http://localhost:8080/customer/"+this.username+"/bookshelf",config).then(resp =>{
+            axios.get("http://localhost:8080/api/customer/"+this.username+"/bookshelf",config).then(resp =>{
               for(let i=0;i<resp.data.length;i++){
                 if(resp.data[i].name!="did_not_finish" && resp.data[i].name!="want_to_read" && resp.data[i].name!="currently_reading" && resp.data[i].name!="already_read" && resp.data[i].name!="all") this.options.push(resp.data[i]);
               }
@@ -60,7 +60,7 @@ export default {
             const date = new Date();
 			      const isoDateString = date.toISOString();
             this.checkedOptions.forEach(bookshelf => {
-                axios.post("http://localhost:8080/customer/"+this.username+"/bookshelf/"+bookshelf,
+                axios.post("http://localhost:8080/api/customer/"+this.username+"/bookshelf/"+bookshelf,
 				            {
                       pagesRead:0,
                       insertDate:isoDateString,

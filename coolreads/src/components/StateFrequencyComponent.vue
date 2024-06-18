@@ -31,7 +31,7 @@ export default {
             console.log(this.isbn);
             let header = authHeader();
             let config = {headers:header};
-            axios.get("http://localhost:8080/book/"+this.isbn+"/stats/numbers",config).then(resp=>{
+            axios.get("http://localhost:8080/api/book/"+this.isbn+"/stats/numbers",config).then(resp=>{
                     this.frequencies.push(resp.data.alreadyRead)
                     this.frequencies.push(resp.data.currentlyReading)
                     this.frequencies.push(resp.data.didNotFinish)

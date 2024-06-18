@@ -143,7 +143,7 @@
   
       const fetchBooksByCategory = async () => {
         try {
-          const response = await axios.get(`http://localhost:8080/book/genre?genre=${encodeURIComponent(category.value.toLowerCase())}`);
+          const response = await axios.get(`http://localhost:8080/api/book/genre?genre=${encodeURIComponent(category.value.toLowerCase())}`);
           books.value = response.data;
           filtered.value = books.value;
           console.log('Books fetched successfully!', books.value);

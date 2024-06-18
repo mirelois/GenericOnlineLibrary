@@ -86,7 +86,7 @@ export default {
                 let header = authHeader();
                 let config = {headers:header}
                 header['Content-Type']='application/json';
-                axios.post("http://localhost:8080/book/"+this.isbn+"/review/"+this.reviewer+"/comment",
+                axios.post("http://localhost:8080/api/book/"+this.isbn+"/review/"+this.reviewer+"/comment",
                 this.mycomment,
                 config
                 ).then(resp=>{
@@ -100,7 +100,7 @@ export default {
             //let header = authHeader();
             //let config = {headers:header}
             //header['Content-Type']='application/json';
-            axios.get("http://localhost:8080/book/"+this.isbn+"/review/"+this.reviewer+"/comment?page="+this.morepage+"&size=1"
+            axios.get("http://localhost:8080/api/book/"+this.isbn+"/review/"+this.reviewer+"/comment?page="+this.morepage+"&size=1"
             ).then(resp=>{
                 if(resp.data.length==0){
                     this.showMoretxt=false;

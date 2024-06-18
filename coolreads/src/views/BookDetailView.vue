@@ -64,18 +64,24 @@ import Rating from 'primevue/rating';
     		</div>
 	<div v-bind:style="{ 'color': authorcolor, 'font-weight': authorfont }" @click="changeTabStyle(`Author`)" class="author-title">Author 
 			<div class="author-content" v-if="activeTab=='Author'">
+				<div v-if="can_interact==true">
 				<img :src="authorImage" class="authorImage"/>
 				<br>Author: {{ authorName }}</br>
 				<br>Publisher: {{ publisher }}</br>
 				<br>Launch Date: {{ launchDate }}</br>
 			</div>
-    		</div>
+			<div v-if="can_interact==false">{{ loginMsg }}</div>
+		</div>
+    	</div>
 	<div v-bind:style="{ 'color': statisticscolor, 'font-weight': statisticsfont }" @click="changeTabStyle(`Statistics`)" class="statistics-title">Statistics 
 			<div class="author-content" v-if="activeTab=='Statistics'">
-				<br><div class="stats-row"><CategorySelectorComponent @category_selected="setCategorySelected"></CategorySelectorComponent><DefaultSelectorComponent @default_bookshelf="setDefaultSelected"></DefaultSelectorComponent></div></br>
-				<br><div class="stats-row"><PieStatsComponent :categoria="categorySelected" :bookshelf="defaultSelected" :isbn="isbn"></PieStatsComponent><StateFrequencyComponent :isbn="isbn"></StateFrequencyComponent></div></br>
-				<br><TimeFrameComponent @time_frame="setTimeFrameSelected"></TimeFrameComponent></br>
-				<div class="stats-row"><LineGraphComponent :timeframe="timeframeSelected" :bookshelf="defaultSelected"></LineGraphComponent></div>
+				<div v-if="can_interact==true">
+					<br><div class="stats-row"><CategorySelectorComponent @category_selected="setCategorySelected"></CategorySelectorComponent><DefaultSelectorComponent @default_bookshelf="setDefaultSelected"></DefaultSelectorComponent></div></br>
+					<br><div class="stats-row"><PieStatsComponent :categoria="categorySelected" :bookshelf="defaultSelected" :isbn="isbn"></PieStatsComponent><StateFrequencyComponent :isbn="isbn"></StateFrequencyComponent></div></br>
+					<br><TimeFrameComponent @time_frame="setTimeFrameSelected"></TimeFrameComponent></br>
+					<div class="stats-row"><LineGraphComponent :timeframe="timeframeSelected" :bookshelf="defaultSelected"></LineGraphComponent></div>	
+				</div>
+				<div v-if="can_interact==false">{{ loginMsg }}</div>
 			</div>
     		</div>
 	</div>
@@ -138,7 +144,8 @@ export default {
 			authorImage:'',
 			categorySelected:'',
 			defaultSelected:'',
-			timeframeSelected:''
+			timeframeSelected:'',
+			loginMsg:'Log in to your account to see this information.'
 		}
 	},
 	components: {
@@ -178,7 +185,7 @@ export default {
         this.$router.push({ name: 'bookCategoria', params: { category } });
         },
 		getBook(isbn){
-			axios.get("http://localhost:8080/book/"+isbn).then(book =>{
+			axios.get("http://localhost:8080/api/book/"+isbn).then(book =>{
 				this.title = book.data.title;
 				this.author = book.data.authorUsername;
 				this.genres = book.data.genres;
@@ -201,7 +208,7 @@ export default {
 		},
 		getReviews(isbn,update){
 			if(update==1) this.nrpageReview=0;
-			axios.get("http://localhost:8080/book/"+isbn+"/review?page="+this.nrpageReview+"&size=1").then(review =>{
+			axios.get("http://localhost:8080/api/book/"+isbn+"/review?page="+this.nrpageReview+"&size=1").then(review =>{
 				if(review.data.length==0){
 					this.showMoretxt=false;
 					return;
@@ -284,7 +291,7 @@ export default {
         	    let state = this.stateSelected.replaceAll(" ","_").toLowerCase();
 				//const date = new Date();
 				//const isoDateString = date.toISOString();
-				axios.post("http://localhost:8080/customer/"+this.username+"/bookshelf/"+state+"?isbn="+this.isbn,
+				axios.post("http://localhost:8080/api/customer/"+this.username+"/bookshelf/"+state+"?isbn="+this.isbn,
 				    {},
                     config 
             	).then(resp =>{
@@ -310,7 +317,9 @@ export default {
             this.marginReviewBottom=h;
 		},
 		getAuthorInfo(){
-			axios.get("http://localhost:8080/customer/username/"+this.author).then(resp=>{
+			let header = authHeader();
+      		let config = {headers:header};
+			axios.get("http://localhost:8080/api/customer/username/"+this.author,config).then(resp=>{
 				this.authorName = resp.data.name;
 				this.authorImage = resp.data.profileImageUrl;
 			}).catch(error=>{

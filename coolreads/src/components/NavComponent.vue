@@ -125,7 +125,7 @@ export default {
             this.isNotificationsOpen = !this.isNotificationsOpen
         },
         getResults(){
-            axios.get('http://localhost:8080/book/name?title='+this.inputtxt).then((books)=>{
+            axios.get('http://localhost:8080/api/book/name?title='+this.inputtxt).then((books)=>{
                 this.results = books.data;
                 let index = 0;
                 this.results.forEach(b => {
