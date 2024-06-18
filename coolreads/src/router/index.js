@@ -30,7 +30,7 @@ const router = createRouter({
       component: BooksMenuView
     },
     {
-      path: '/books/:bookisbn',
+      path: '/book/:bookisbn',
       name: 'bookdetail',
       component: BookDetailView
     },
@@ -60,7 +60,7 @@ const router = createRouter({
       component: SettingsView
     },
     {
-      path: '/books/?categoria=:category',
+      path: '/books/:category',
       name: 'bookCategoria',
       component: BookCategoryView
     },

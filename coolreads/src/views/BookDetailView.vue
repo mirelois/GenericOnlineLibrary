@@ -161,6 +161,7 @@ export default {
 		const token = localStorage.getItem('user');
 		if (!token || this.$store.state.auth.status.loggedIn===false) {
 			this.can_interact=false;
+			return;
 		}
 		try {
 			const decodedToken = JSON.parse(token);

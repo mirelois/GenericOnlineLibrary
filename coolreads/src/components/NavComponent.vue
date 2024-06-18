@@ -33,12 +33,12 @@ if (localStorage.getItem('selectedLanguage')) {
                 </div>
             </div>
             <a href="/settings">
-                <div class="settings-section">
+                <div v-if="username !== ''" class="settings-section">
                     <img class="settings" src="/img/settings.svg"/> {{ translations.settings }}
                 </div>
             </a>
-            <a v-if="username !== ''" href="/">
-                <div class="home-section">
+            <a href="/">
+                <div v-if="username !== ''" class="home-section">
                     <img class="vuesax-outline-home" src="/img/home-2.svg"/> {{ translations.home }}
                 </div>
             </a>
@@ -47,7 +47,7 @@ if (localStorage.getItem('selectedLanguage')) {
                 <div v-if="inputtxt !== ''" id="myDropdown" class="dropdown-content">
                     <div class="txtinserted">{{ translations.resultsFor }}: {{ textInserted }}</div>
                     <div class="myresult" v-for="result in results" :key="result.isbn">
-                        <a :href="`/books/${result.isbn}`">{{ result.title }}<img :src="result.imageUrl" class="result-img" width="30px" height="50px" /></a>
+                        <a :href="`/book/${result.isbn}`">{{ result.title }}<img :src="result.imageUrl" class="result-img" width="30px" height="50px" /></a>
                     </div>
                 </div>
             </div>
@@ -84,10 +84,8 @@ if (localStorage.getItem('selectedLanguage')) {
                     <div class="c">{{ translations.bookshelf }}</div>
                 </div>
             </a>
-            <div class="buttonWrapper1">
-                <button v-if="username!==''" @click="handle_logout()" class="authbtn1">{{translations.logout}}</button>
-            </div>
-            <div class="buttonWrapper2">
+            <button v-if="username!==''" @click="handle_logout()" class="authbtn1">{{translations.logout}}</button>
+            <div>
                 <div v-if="username===''"><button @click="handle_login()" class="authbtn1">{{translations.login}}</button></div>
                 <div v-if="username===''"><button @click="handle_signup()" class="authbtn2">{{translations.signup}}</button></div>
             </div>
@@ -216,7 +214,7 @@ a {
 
 a:hover { text-decoration: underline; }
 .navegador {
-    position:fixed;
+    position:fixed; 
     width: 100%;
     height: 115px;
     top:0px;
@@ -494,7 +492,8 @@ a:hover { text-decoration: underline; }
 }
 
 .authbtn1 {
-    position: relative;
+    position: absolute;
+    bottom: 20px;
     padding: 10px 20px;
     background-color: #da9f46d9;
     color: white;
@@ -504,9 +503,11 @@ a:hover { text-decoration: underline; }
     width: auto;
     float: left;
     margin-bottom: 22px;
+    margin-left: 1900px;
 }
 .authbtn2 {
-    position: relative;
+    position: absolute;
+    bottom: 20px;
     padding: 10px 20px;
     background-color: #da9f46d9;
     color: white;
@@ -516,6 +517,7 @@ a:hover { text-decoration: underline; }
     width: auto;
     float: left;
     margin-bottom: 22px;
+    margin-left: 2000px;
 }
 
 .registration-button,
@@ -727,10 +729,4 @@ font-family: Inika;
 .notifications-text{
     color:white;
 }
-
-.buttonWrapper2 {
-    left: 120px;
-    position: relative;
-}
-
 </style>

@@ -3,7 +3,7 @@
         <div class="book">
             <div class="property-minorbook">
                 <div class="overlap-group">
-                    <a :href="`/books/${bookISBN}`"><img class="book-2" :src="cover"/></a>
+                    <a :href="`/book/${bookISBN}`"><img class="book-2" :src="cover"/></a>
                     <img class="remove" @click="showConfirmDeletion" src="/img/minus-circle.svg"/>
                 </div>
             </div>

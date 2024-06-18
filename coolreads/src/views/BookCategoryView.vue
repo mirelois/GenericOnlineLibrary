@@ -1,6 +1,6 @@
 <template>
     <div class="bodyCategory">
-      <NavComponent :username="this.$store.state.auth.user.info.sub"></NavComponent>
+      <NavComponent :username="username"></NavComponent>
       <b class="category-fantasy">Genre - {{ category }}</b>
       <input v-model="searchInput" type="text" class="my-search-box" placeholder="Search for books..." />
       <div class="sort-component">
@@ -59,6 +59,7 @@
   <script>
   import { ref, computed, watch, onMounted } from 'vue';
   import { useRoute } from 'vue-router';
+  import { useStore } from 'vuex';
   import axios from 'axios';
   import NavComponent from '../components/NavComponent.vue';
   import BookComponent from '../components/BookCoverComponent.vue';
@@ -70,6 +71,8 @@
     },
     setup() {
       const route = useRoute();
+      const store = useStore();
+      const username = computed(() => {if (store.state.auth.status.loggedIn) return store.state.auth.user.info.sub; else return '';});
       const category = computed(() => route.params.category);
   
       const showDropdownMenu = ref(false);
@@ -167,6 +170,7 @@
   
       return {
         category,
+        username,
         showDropdownMenu,
         selectedOption,
         showMenu,

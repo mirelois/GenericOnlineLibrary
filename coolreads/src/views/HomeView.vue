@@ -65,7 +65,7 @@ export default {
     }
 }
 #app {
-    max-width: 1440px;
+    max-width: 3000px;
     font-weight: normal;
 }
 .newfooter {
