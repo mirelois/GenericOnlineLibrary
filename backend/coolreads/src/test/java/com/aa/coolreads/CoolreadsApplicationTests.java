@@ -270,7 +270,7 @@ class CoolreadsApplicationTests {
     @Test
     void testNotificationGet(){
         try {
-            Set<NotificationDTO> notificationDTOS =  notificationService.getNotificationsByUserName("user0", 0, 10);
+            Set<NotificationDTO> notificationDTOS =  notificationService.getNotificationsByUserName("user0", 1, 10);
             System.out.println(notificationDTOS);
         } catch (CustomerNotFoundException e) {
             throw new RuntimeException(e);
