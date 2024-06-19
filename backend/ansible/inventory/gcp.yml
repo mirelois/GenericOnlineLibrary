@@ -39,8 +39,8 @@ all:
 
   # DB Deploy variables
   db_container_port: 5432
-  mount_path: /var/lib/mysql
-  claim_name: mysql-pv-claim
+  mount_path: /var/lib/psql
+  claim_name: psql-pv-claim
   pvc_storage_size: 20Gi
 
 

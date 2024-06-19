@@ -1,10 +1,10 @@
 ---
-# Persistent Volume Claim for MySQL pod
+# Persistent Volume Claim for PostgreSQL pod
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ claim_name }}
-  namespace: {{ ascn_namespace }}
+  namespace: {{ coolreads_namespace }}
 spec:
   accessModes:
     - ReadWriteOnce
