@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -124,16 +125,16 @@ public class BookService {
         return books.stream().map(this.bookMapper::toBookDTO).collect(Collectors.toSet());
     }
 
-    @Cacheable(value = "booksByGenre", key = "#genre")
+    @Cacheable(value = "booksByGenre", key = "#genre + '-' + #page + '-' + #size")
     @Transactional
-    public Set<BookDTO> findBooksByGenre(String genre, Integer page, Integer size) throws GenresNotFoundException {
+    public List<BookDTO> findBooksByGenre(String genre, Integer page, Integer size) throws GenresNotFoundException {
         Set<String> genres = new HashSet<>();
         genres.add(genre);
         this.genreRepository.findById(genre).orElseThrow(() -> new GenresNotFoundException(genres));
 
         PageRequest pageable = PageRequest.of(page, size);
         Page<Book> books =  this.bookRepository.findBooksByGenre(genre,pageable);
-        return books.stream().map(this.bookMapper::toBookDTO).collect(Collectors.toSet());
+        return books.stream().map(this.bookMapper::toBookDTO).collect(Collectors.toList());
     }
 
     private void checkIfValidISBN(String isbn) throws InvalidISBNExeption {
