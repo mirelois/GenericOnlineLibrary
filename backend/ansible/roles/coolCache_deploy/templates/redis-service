@@ -1,0 +1,18 @@
+---
+# Service for exposing Redis
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ cache_service_name }} # logical name of the service, which will also become the DNS name of the service when it is created.
+  namespace: {{ coolreads_namespace }}
+  labels:
+    app: {{ cache_connection_name }}
+    tier: cache
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ cache_connection_name }}
+  ports:
+    - protocol: TCP
+      targetPort: {{ cache_container_port }} # port that containers are listening on
+      port: {{ cache_container_port }} # port number exposed internally in the cluster

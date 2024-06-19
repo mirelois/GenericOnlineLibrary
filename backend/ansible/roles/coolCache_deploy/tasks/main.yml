@@ -1,0 +1,22 @@
+---
+- name: Deploy Cache DB
+  kubernetes.core.k8s:
+    state: present
+    template: 'redis-deployment'
+    wait: yes
+    wait_timeout: 300
+
+- name: Deploy Cool DB Service
+  kubernetes.core.k8s:
+    state: present
+    template: 'redis-service'
+    wait: yes
+
+- name: Wait for Redis to be ready
+  wait_for:
+    host: localhost  
+    port: 6379       
+    timeout: 300      
+    delay: 10         
+    state: started
+

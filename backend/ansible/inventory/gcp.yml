@@ -31,6 +31,10 @@ all:
   # Database variables
   db_username: postgres
   db_password: "postgres"
+  
+  # Cache variables
+  cache_connection_name: redis
+  cache_container_port: 6379
 
 
   # Laravel Deploy variables

@@ -6,4 +6,5 @@
   gather_facts: false
   roles:
     - coolDB_undeploy
+    - coolCache_undeploy
     - coolreads_undeploy

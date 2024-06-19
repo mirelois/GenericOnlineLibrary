@@ -1,0 +1,27 @@
+---
+# Deployment for Redis
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  namespace: {{ coolreads_namespace }}
+  labels:
+    app: {{ cache_connection_name }}
+    tier: cache
+spec:
+  selector:
+    matchLabels:
+      app: {{ cache_connection_name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ cache_connection_name }}
+        tier: cache
+    spec:
+      containers:
+      - name: {{ cache_connection_name }}
+        image: redis
+        ports:
+        - containerPort: {{ cache_container_port }}
