@@ -17,6 +17,7 @@ import com.aa.coolreads.User.models.Customer;
 import com.aa.coolreads.User.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -102,6 +103,7 @@ public class BookReviewService {
         return commentsPage.get().map(this.bookMapper::toReviewCommentDTO).collect(Collectors.toSet());
     }
 
+    @CacheEvict(value = "book", key = "#isbn")
     @Transactional
     public void insertReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException {
         Book book = this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
@@ -112,6 +114,7 @@ public class BookReviewService {
         this.bookReviewRepository.save(this.bookMapper.toReview(simpleReviewDTO, customer, book));
     }
 
+    @CacheEvict(value = "book", key = "#isbn")
     @Transactional
     public void updateReview(String isbn, String username, SimpleReviewDTO simpleReviewDTO) throws BookNotFoundException, CustomerNotFoundException, ReviewNotFoundException, InsufficientReviewParametersException {
         Book book = this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
@@ -129,6 +132,7 @@ public class BookReviewService {
         this.bookReviewRepository.save(review);
     }
 
+    @CacheEvict(value = "book", key = "#isbn")
     @Transactional
     public void deleteReview(String isbn, String username) throws CustomerNotFoundException, BookNotFoundException {
         this.bookRepository.findById(isbn).orElseThrow(() -> new BookNotFoundException(isbn));
@@ -136,7 +140,7 @@ public class BookReviewService {
 
         this.bookReviewRepository.deleteById(new ReviewId(username, isbn));
     }
-
+    
     @Transactional
     public void insertLike(String isbn, String review_username, String likeType) throws CustomerNotFoundException, ReviewNotFoundException, InvalidLikeTypeException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();

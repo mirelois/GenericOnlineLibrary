@@ -175,6 +175,7 @@ public class BookService {
         return this.bookMapper.toRatingDTO(rating);
     }
 
+    @CacheEvict(value = "book", key = "#isbn")
     @Transactional
     public void insertRating(String isbn, String username, Double rating) throws BookNotFoundException, CustomerNotFoundException, InvalidRatingException {
 
@@ -187,6 +188,7 @@ public class BookService {
         this.bookRatingRepository.save(this.bookMapper.toRating(rating, book, customer));
     }
 
+    @CacheEvict(value = "book", key = "#isbn")
     @Transactional
     public void updateRating(String isbn, String username, Double rating) throws BookNotFoundException, CustomerNotFoundException, InvalidRatingException, RatingNotFoundException {
 
@@ -201,6 +203,7 @@ public class BookService {
         this.bookRatingRepository.save(ratingEntity);
     }
 
+    @CacheEvict(value = "book", key = "#isbn")
     @Transactional
     public void deleteRating(String isbn, String username) throws BookNotFoundException, CustomerNotFoundException{
         findBookByIsbn(isbn);
