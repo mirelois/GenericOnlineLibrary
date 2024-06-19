@@ -37,6 +37,23 @@ const recentNotifications = computed(() => {
     return notifications.value.slice(0, 2);
 });
 
+const formatNotificationType = (type) => {
+  switch (type) {
+    case 'POST_NOTIFICATION':
+      return 'New Post';
+    case 'FRIEND_REQUEST_NOTIFICATION':
+      return 'Received Friend Request';
+    case 'FRIEND_REQUEST_ACCEPTED_NOTIFICATION':
+      return 'Friend Request Accepted';
+    case 'FRIEND_REVIEWED_BOOK_NOTIFICATION':
+      return 'New Book Review';
+    case 'FRIEND_STARRED_BOOK_NOTIFICATION':
+      return 'New Book Star';
+    default:
+      return 'Notification';
+  }
+};
+
 onMounted(() => {
     const token = localStorage.getItem('user');
     if (token) {
@@ -108,7 +125,7 @@ onMounted(() => {
                 <span>{{ notification.username }}</span>
                 <span class="span"> </span>
             </b>
-            <div class="liked-your-review">{{ notification.notificationType }}</div>
+            <div class="liked-your-review">{{ formatNotificationType(notification.notificationType) }}</div>
             <div class="min">{{ timeMachine(notification.createdAt) }}</div>
         </div>
                 <div class="notification11" id="notification1Container1">
@@ -610,7 +627,6 @@ top: -10px;
     font-size: 12px; 
     display: inline-block;
     height: auto;
-    top: -15px; 
     flex-shrink: 0;
     word-wrap: break-word; 
     max-width: 300px; 
