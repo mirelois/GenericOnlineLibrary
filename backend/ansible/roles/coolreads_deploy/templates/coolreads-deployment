@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: {{ app_name }}
-        image: hiddenduck/coolreads:no-cache
+        image: hiddenduck/coolreads:latest
         env:
         - name: DB_CONNECTION
           value: {{ db_connection_name }}
@@ -32,6 +32,6 @@ spec:
         - name: DB_PASSWORD
           value: "{{ db_password }}" # Use secret object in real usage
         - name: PROFILE
-          value: prod
+          value: {{ profile }}
         ports:
         - containerPort: {{ coolreads_container_port }}

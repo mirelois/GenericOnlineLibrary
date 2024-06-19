@@ -25,6 +25,7 @@ all:
   db_database_name: cool
   db_connection_name: postgresql
   db_service_name: psql-service
+  profile: prod
 
 
   # Database variables
