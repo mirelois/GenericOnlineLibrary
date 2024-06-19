@@ -217,6 +217,8 @@ public class Seeder implements CommandLineRunner {
 
         Gender genders[] = Gender.values();
 
+        String pic[] = {"woman", "men"};
+
         String countries[] = {"Portugal", "Brazil", "USA", "Canada", "France", "UK"};
 
         for (int i = 0; i < 100; i++) {
@@ -230,7 +232,7 @@ public class Seeder implements CommandLineRunner {
                     countries[rand.nextInt(countries.length)],
                     "description" + i,
                     "interests" + i,
-                    "https://randomuser.me/api/portraits/woman/" + rand.nextInt(100) + ".jpg",
+                    "https://randomuser.me/api/portraits/" + pic[rand.nextInt(2)] + "/" + rand.nextInt(100) + ".jpg",
                     "https://picsum.photos/id/" + rand.nextInt(1000) + "/650/870",
                     bookShelfDTO);
 
