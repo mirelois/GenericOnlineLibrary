@@ -29,6 +29,15 @@ public class BookReviewController {
         this.bookReviewService = bookReviewService;
     }
 
+    @GetMapping("/username/{username}")
+    public ResponseEntity<?> getCustomerReview(@PathVariable String isbn, @PathVariable String username) {
+        try {
+            return ResponseEntity.ok().body(this.bookReviewService.getReviewByCustomer(isbn, username));
+        } catch (CustomerNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @GetMapping
     public Set<BookReviewDTO> getReview(@PathVariable String isbn, @RequestParam Integer page, @RequestParam Integer size){
         return this.bookReviewService.getReviews(isbn, page, size);

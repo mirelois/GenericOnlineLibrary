@@ -74,6 +74,23 @@ public class BookReviewService {
     }
 
     @Transactional
+    public BookReviewDTO getReviewByCustomer(String isbn, String username) throws CustomerNotFoundException {
+
+        this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
+
+        Optional<Review> optionalReview = this.bookReviewRepository.findById(new ReviewId(username, isbn));
+        if(optionalReview.isEmpty()) return null;
+
+        Review review = optionalReview.get();
+
+        BookReviewDTO bookReviewDTO = this.bookMapper.toBookReviewDTO(review, this.bookReviewCommentRepository.getReviewCommentSize(review));
+        Optional<Double> rating = this.bookRatingRepository.findByBookIsbnAndUsername(isbn, bookReviewDTO.getCustomerUsername());
+        rating.ifPresent(bookReviewDTO::setRating);
+
+        return bookReviewDTO;
+    }
+
+    @Transactional
     public Set<BookReviewCommentDTO> getReviewComments(String isbn, String review_username, Integer pageNumber, Integer pageSize) throws CustomerNotFoundException, BookNotFoundException {
 
         Customer customer = this.customerRepository.findById(review_username).orElseThrow(() -> new CustomerNotFoundException(review_username));
