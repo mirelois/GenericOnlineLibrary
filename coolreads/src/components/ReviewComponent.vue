@@ -10,7 +10,7 @@
 		</div>
         <div class="reviewer">
         <span>review by </span>
-        <span class="sophie-mayer">{{ usernameReviewer }}</span>
+        <span class="sophie-mayer" @click="profilePage">{{ usernameReviewer }}</span>
 			<div>
 				<Rating id="estrelas" :modelValue="reviewRate" @update:modelValue="reviewRate = $event" readonly :cancel="false" />
 			</div>
@@ -59,6 +59,9 @@ export default{
 		ConfirmComponent
 	},
 	methods:{
+		profilePage() {
+			this.$router.push('/profile/' + this.usernameReviewer);
+		},
 		expandHeight(height){
 			this.$emit("expandHeight");
 		},
