@@ -25,7 +25,6 @@ all:
   db_database_name: cool
   db_connection_name: postgresql
   db_service_name: psql-service
-  db_container_port: 5432
 
 
   # Database variables

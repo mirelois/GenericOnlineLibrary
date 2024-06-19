@@ -13,5 +13,6 @@ spec:
   selector:
     app: {{ db_connection_name }}
   ports:
-    - targetPort: {{ db_container_port }} # port that containers are listening on
+    - protocol: TCP
+      targetPort: {{ db_container_port }} # port that containers are listening on
       port: {{ db_container_port }} # port number exposed internally in the cluster
