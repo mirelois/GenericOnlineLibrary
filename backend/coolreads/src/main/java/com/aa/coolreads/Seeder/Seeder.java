@@ -71,8 +71,6 @@ public class Seeder implements CommandLineRunner {
 
     private static Date makeDate(Random rand) {
 
-        rand.setSeed(System.currentTimeMillis());
-
         int year = rand.nextInt( 120);
 
         int month = rand.nextInt(12);
