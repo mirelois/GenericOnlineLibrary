@@ -145,7 +145,7 @@ class CoolreadsApplicationTests {
 
         try {
             bookReviewService.insertReview(
-                    "9780660599960",
+                    "9789996311215",
                     "user0",
                     reviewDTO
             );
@@ -245,7 +245,7 @@ class CoolreadsApplicationTests {
     @Test
     void testStatisticsNumber(){
 
-        StatisticsNumberDTO numbers = statisticService.getStatisticsNumbers("9780660599960");
+        StatisticsNumberDTO numbers = statisticService.getStatisticsNumbers("9781673363609");
 
         System.out.println(numbers.getAlreadyRead());
         System.out.println(numbers.getCurrentlyReading());
