@@ -7,7 +7,7 @@ import com.aa.coolreads.Book.mappers.StatisticsMapper;
 import com.aa.coolreads.Book.models.TimeFrame;
 import com.aa.coolreads.User.models.DefaultBookshelf;
 import com.aa.coolreads.User.repositories.PersonalBooksRepository;
-import com.aa.coolreads.User.repositories.Sliceable;
+import com.aa.coolreads.User.services.Sliceable;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

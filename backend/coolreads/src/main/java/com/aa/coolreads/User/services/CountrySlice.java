@@ -1,4 +1,4 @@
-package com.aa.coolreads.User.repositories;
+package com.aa.coolreads.User.services;
 
 import com.aa.coolreads.Book.dto.SliceInterfaceDTO;
 import com.aa.coolreads.Book.services.StatisticService;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class CountrySlice implements Sliceable{
+public class CountrySlice implements Sliceable {
 
     private final StatisticService statisticService;
 
