@@ -17,11 +17,11 @@
     api_version: v1
     kind: Service
     name: "{{ app_service_name }}"
-    namespace: '{{ cool_namespace }}'
+    namespace: '{{ coolreads_namespace }}'
   register: coolreads_service
   until: coolreads.resources[0].status.loadBalancer.ingress[0].ip is defined
-  retries: 6
-  delay: 15
+  retries: 15
+  delay: 40
   
 - name: Replace older app_ip with new dynamically generated coolreads service ip
   lineinfile:

@@ -50,7 +50,7 @@ import Rating from 'primevue/rating';
 	<div v-bind:style="{ 'color': reviewcolor, 'font-weight': reviewfont }" @click="changeTabStyle(`Reviews`)" class="reviews-title">Reviews 
 			<img class="line-icon" alt="" src="/img/line.svg"> 
 			<div v-if="activeTab=='Reviews'">
-			<MyReviewComponent :canInteract="can_interact" @newpost="getReviews(this.isbn,1)" :username="username" :profileImg="profileImg" :isbn="isbn"></MyReviewComponent>
+			<MyReviewComponent :canInteract="can_interact" :ownReview="ownReview" @newpost="getReviews(this.isbn,1)" :username="username" :profileImg="profileImg" :isbn="isbn"></MyReviewComponent>
 			<div class="review-div" v-for="review in reviews" v-if="!review">
 					<ReviewComponent @review_deletion="getReviews(this.isbn,1)" :options="review.myown" :canInteract="can_interact" :isbn="isbn" :marginReviewBottom="marginReviewBottom" @expandHeight="increaseHeight" :likesCount="review.likes" :emojiIds="review.emojiIds" :reviewRate="review.rating" :reviewDescription="review.description"
 					:imageReviewer="review.customerUrl" :usernameReviewer="review.customerUsername"></ReviewComponent>					
@@ -139,7 +139,8 @@ export default {
 			categorySelected:'',
 			defaultSelected:'',
 			timeframeSelected:'',
-			loginMsg:'Log in to your account to see this information.'
+			loginMsg:'Log in to your account to see this information.',
+			ownReview:null,
 		}
 	},
 	components: {
@@ -157,8 +158,6 @@ export default {
 		TimeFrameComponent
     },created(){
 		this.isbn = this.$route.params.bookisbn;
-		this.getBook(this.isbn);
-		this.getReviews(this.isbn,0);
 		const token = localStorage.getItem('user');
 		if (!token || this.$store.state.auth.status.loggedIn===false) {
 			this.can_interact=false;
@@ -169,12 +168,16 @@ export default {
 			const decodedToken = JSON.parse(token);
 			if(decodedToken.info.exp<Date.now()/1000) {
 				this.can_interact=false;
+				this.handle_logout();
 			}
 			this.setUsername(decodedToken.info.sub);
 		} catch (error) {
 			console.error('Error parsing user token:', error);
 		}
-	},methods:{
+		this.getBook(this.isbn);
+		this.getReviews(this.isbn,0);
+	},
+	methods:{
 		navigateToCategory(category) {
         this.$router.push({ name: 'bookCategoria', params: { category } });
         },
@@ -201,7 +204,17 @@ export default {
 			}
 		},
 		getReviews(isbn,update){
+			let header = authHeader();
+            let config = {headers:header};
 			if(update==1) this.nrpageReview=0;
+			if (this.username) {
+				axios.get("http://localhost:8080/api/book/"+isbn+"/review/username/"+this.username, config).then(review => {
+					this.ownReview = review.data;
+					console.log(this.ownReview);
+				}).catch(err=>{
+					console.error(err);
+				});
+			}
 			axios.get("http://localhost:8080/api/book/"+isbn+"/review?page="+this.nrpageReview+"&size=1").then(review =>{
 				if(review.data.length==0){
 					this.showMoretxt=false;
@@ -219,15 +232,15 @@ export default {
 				let descreview = this.reviews.filter(b=> b.description!="");
 				this.nrreviews = descreview.length;
 				this.nrratings = this.reviews.length;
-				for (let i = 0; i < this.reviews.length; i++) {
+				for (let i = 1; i <= this.reviews.length; i++) {
 					let ids = ["r"+(5*i+1),"r"+(5*i+2),"r"+(5*i+3),"r"+(5*i+4),"r"+(5*i+5)];
-					this.reviews[i]["emojiIds"]=ids;
+					this.reviews[i-1]["emojiIds"]=ids;
 				}
 				console.log("the reviews");
 				console.log(review.data);
 			}).catch(err=>{
 				console.log(err)
-			})
+			});
 		},
 		getMoreReviews(){
 			let h = this.marginReviewBottom.replace('px','');

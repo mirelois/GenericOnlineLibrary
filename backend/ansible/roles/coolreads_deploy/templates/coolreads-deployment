@@ -4,7 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ app_name }}
-  namespace: {{ cool_namespace }}
+  namespace: {{ coolreads_namespace }}
   labels:
     app: {{ app_name }}
 spec:
@@ -31,5 +31,7 @@ spec:
           value: {{ db_username }}
         - name: DB_PASSWORD
           value: "{{ db_password }}" # Use secret object in real usage
+        - name: PROFILE
+          value: test
         ports:
         - containerPort: {{ coolreads_container_port }}

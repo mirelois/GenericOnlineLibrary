@@ -1,9 +1,9 @@
 ---
-# Deployment for deploying laravelio
+# Deployment for deploying coolreads
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ app_name }}
-  namespace: {{ ascn_namespace }}
+  namespace: {{ coolreads_namespace }}
   labels:
     app: {{ app_name }}
