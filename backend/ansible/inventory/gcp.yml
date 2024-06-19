@@ -34,6 +34,7 @@ all:
   
   # Cache variables
   cache_connection_name: redis
+  cache_service_name: redis
   cache_container_port: 6379
 
 

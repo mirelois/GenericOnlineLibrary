@@ -21,7 +21,7 @@
   register: coolreads_service
   until: coolreads.resources[0].status.loadBalancer.ingress[0].ip is defined
   retries: 15
-  delay: 40
+  delay: 30
   
 - name: Replace older app_ip with new dynamically generated coolreads service ip
   lineinfile:
