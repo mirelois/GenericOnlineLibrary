@@ -4,22 +4,13 @@
         <div class="review-box">
         </div>
         <img class="foto-icon" alt="" :src="profileImg">
-		<div class="reviewer-options" @click="changeSettingsOpened">...</div>
-		<div v-if="optionsDropdowned==true" class="dropdown-settings-content">
-			<div id="row-option" @click="showConfirmation" >Delete</div>
-		</div>
         <div class="reviewer">
 			<div class="mystar-class">
-				<Rating id="estrelas" v-model="bookrate" :cancel="false" />
+				<Rating id="estrelas" v-model="bookrate" @click="publishRating" :cancel="false" />
 			</div>
 		</div>
         <input type="text" v-model="textreview" class="review-area"></input> 
         <button class="publish" @click="publishReview">Publish</button> 
-		<EmojiReactionComponent v-if="ownReview!=null" :canInteract="canInteract" :reviewer="username" :isbn="isbn" :likes="ownReview.likes" :emojiIds="emojiIds"></EmojiReactionComponent>
-		<CommentSectionComponent v-if="ownReview!=null" :canInteract="canInteract" :reviewer="username" :isbn="isbn" @comment_opened="expandHeight"></CommentSectionComponent>	
-		<div v-if="confirmation==true">
-			<ConfirmComponent :header_msg="msg" @confirmation_response="getResponse"></ConfirmComponent>
-		</div>
     </div>
 	</main>
 </template>
@@ -37,9 +28,7 @@ export default{
 		username:'',
 		isbn:'',
 		profileImg:'',
-		canInteract: Boolean,
-		ownReview:null,
-		emojiIds : ["r"+1,"r"+2,"r"+3,"r"+4,"r"+5],
+		canInteract: Boolean
 	},
 	data(){
 		return{
@@ -64,22 +53,6 @@ export default{
 		},
 	},
 	methods:{
-		getResponse(response){
-			this.optionsDropdowned=false;
-			this.confirmation=false;
-			if(response=="yes"){
-				let header = authHeader();
-	            let config = {headers:header}
-				axios.delete('http://localhost:8080/api/book/'+this.isbn+"/review?username="+this.usernameReviewer,config)
-				.then(resp=>{
-					console.log(resp)
-					if(resp.status==200) this.$emit('review_deletion');
-				}).catch(error=>{
-					console.log(error);
-				})
-				
-			}
-		},
 		showConfirmation(){
 			this.confirmation=!this.confirmation;
 			console.log(this.confirmation);
@@ -110,21 +83,22 @@ export default{
 			let header = authHeader();
             let config = {headers:header}
             header['Content-Type']='application/json';
-
 			const date = new Date();
 			const isoDateString = date.toISOString();
-			axios.post("http://localhost:8080/api/book/"+this.isbn+"/review?username="+this.username,
+			if(this.textreview!=""){
+				axios.post("http://localhost:8080/api/book/"+this.isbn+"/review?username="+this.username,
 				{
 					description:this.textreview,
 					postDate: isoDateString
 				},
 				config 
 				).then(resp =>{
+					if(resp.status==200) this.$emit('newpost');
 					console.log(resp)
-					this.publishRating();
 				}).catch(err=>{
 					console.log(err)
 				})
+			}
 			this.textreview='';
 			this.bookrate=0;
 			if (this.selectedLanguage == "portuguese") {
@@ -137,19 +111,22 @@ export default{
 			let header = authHeader();
             let config = {headers:header}
             header['Content-Type']='application/json';
-
 			if(this.canInteract===false) {
 				this.handle_logout();
 			}
 			let rating = this.bookrate.toFixed(1);
-			axios.post("http://localhost:8080/api/book/"+this.isbn+"/rate?username="+this.username+"&rating="+rating,{},
+			if(rating!=0){
+				axios.post("http://localhost:8080/api/book/"+this.isbn+"/rate?username="+this.username+"&rating="+rating,{},
 				config
 				).then(resp =>{
-					this.$emit('newpost');
 					console.log(resp)
 				}).catch(err=>{
 					console.log(err)
-				});
+				})
+			}else{
+				console.log("obrigar utilizador a inserir rating");
+				return;
+			} 
 		},
 		handle_logout(){
 			this.$store.dispatch('auth/storeReview', this.textreview);
