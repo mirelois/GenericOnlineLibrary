@@ -36,6 +36,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/customer/register", "/api/customer/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/book/{isbn}", "/api/book/name", "/api/book/genre", "/api/book/{isbn}/review"
                                 , "/api/book/{isbn}/review/{review_username}/comment", "/api/customer/username/{username}", "/api/book/{isbn}/stats/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/book").hasRole("AUTHOR")
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
                 )
