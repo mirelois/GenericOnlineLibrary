@@ -185,7 +185,9 @@ export default {
       if (this.$route.params.username) {
         route = "http://localhost:8080/api/customer/username/" + this.$route.params.username;
       }
+      console.log(route);
       axios.get(route, config).then(me=>{
+        console.log(me);
         this.birthDate = me.data.birthDate ? (new Date().getYear()-new Date(me.data.birthDate).getYear()) : '-';
         this.date = new Date(me.data.birthDate);
         this.country = me.data.country ? me.data.country : '-';
