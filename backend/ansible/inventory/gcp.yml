@@ -38,8 +38,7 @@ all:
 
 
   # DB Deploy variables
-  mysql_allow_empty_password: "true"
-  db_container_port: 3306
+  db_container_port: 5432
   mount_path: /var/lib/mysql
   claim_name: mysql-pv-claim
   pvc_storage_size: 20Gi
