@@ -126,12 +126,12 @@ public class BookService {
 
     @Cacheable(value = "booksByGenre", key = "#genre")
     @Transactional
-    public Set<BookDTO> findBooksByGenre(String genre) throws GenresNotFoundException {
+    public Set<BookDTO> findBooksByGenre(String genre, Integer page, Integer size) throws GenresNotFoundException {
         Set<String> genres = new HashSet<>();
         genres.add(genre);
         this.genreRepository.findById(genre).orElseThrow(() -> new GenresNotFoundException(genres));
 
-        PageRequest pageable = PageRequest.of(0, 5);
+        PageRequest pageable = PageRequest.of(page, size);
         Page<Book> books =  this.bookRepository.findBooksByGenre(genre,pageable);
         return books.stream().map(this.bookMapper::toBookDTO).collect(Collectors.toSet());
     }

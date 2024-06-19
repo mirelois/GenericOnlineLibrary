@@ -34,9 +34,9 @@ public class BookController {
     }
 
     @GetMapping("/genre")
-    public ResponseEntity<?> getBooksByGenre(@RequestParam String genre){
+    public ResponseEntity<?> getBooksByGenre(@RequestParam String genre, @RequestParam Integer page, @RequestParam Integer size){
         try{
-            return ResponseEntity.ok().body(bookService.findBooksByGenre(genre));
+            return ResponseEntity.ok().body(bookService.findBooksByGenre(genre, page, size));
         } catch (GenresNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
