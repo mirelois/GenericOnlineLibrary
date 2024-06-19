@@ -4,17 +4,29 @@
         <div class="review-box">
         </div>
         <img class="foto-icon" alt="" :src="profileImg">
+		<div class="reviewer-options" @click="changeSettingsOpened">...</div>
+		<div v-if="optionsDropdowned==true" class="dropdown-settings-content">
+			<div id="row-option" @click="showConfirmation" >Delete</div>
+		</div>
         <div class="reviewer">
 			<div class="mystar-class">
-				<Rating id="estrelas" v-model="bookrate" @click="publishRating" :cancel="false" />
+				<Rating id="estrelas" v-model="bookrate" :cancel="false" />
 			</div>
 		</div>
         <input type="text" v-model="textreview" class="review-area"></input> 
         <button class="publish" @click="publishReview">Publish</button> 
-    </div> 
+		<EmojiReactionComponent v-if="ownReview!=null" :canInteract="canInteract" :reviewer="username" :isbn="isbn" :likes="ownReview.likes" :emojiIds="emojiIds"></EmojiReactionComponent>
+		<CommentSectionComponent v-if="ownReview!=null" :canInteract="canInteract" :reviewer="username" :isbn="isbn" @comment_opened="expandHeight"></CommentSectionComponent>	
+		<div v-if="confirmation==true">
+			<ConfirmComponent :header_msg="msg" @confirmation_response="getResponse"></ConfirmComponent>
+		</div>
+    </div>
 	</main>
 </template>
 <script>
+import EmojiReactionComponent from './EmojiReactionComponent.vue';
+import CommentSectionComponent from './CommentSectionComponent.vue';
+import ConfirmComponent from './ConfirmComponent.vue';
 import router from '@/router';
 import Rating from 'primevue/rating';
 import axios from "axios";
@@ -25,18 +37,72 @@ export default{
 		username:'',
 		isbn:'',
 		profileImg:'',
-		canInteract: Boolean
+		canInteract: Boolean,
+		ownReview:null,
+		emojiIds : ["r"+1,"r"+2,"r"+3,"r"+4,"r"+5],
 	},
 	data(){
 		return{
 			bookrate:0,
-			textreview:''
+			textreview:'',
+			optionsDropdowned:false,
+			confirmation:false,
+			msg:"Do you want to remove your review?",
 		}
 	},
+	watch: {
+      'ownReview' (to, from) {
+        this.setOwnReview();
+      }
+    },
 	created() {
-		this.textreview = this.$store.state.auth.storedReview;
+		this.setOwnReview();
+	},
+	computed: {
+		selectedLanguage() {
+			return this.$store.state.language.selectedLanguage;
+		},
 	},
 	methods:{
+		getResponse(response){
+			this.optionsDropdowned=false;
+			this.confirmation=false;
+			if(response=="yes"){
+				let header = authHeader();
+	            let config = {headers:header}
+				axios.delete('http://localhost:8080/api/book/'+this.isbn+"/review?username="+this.usernameReviewer,config)
+				.then(resp=>{
+					console.log(resp)
+					if(resp.status==200) this.$emit('review_deletion');
+				}).catch(error=>{
+					console.log(error);
+				})
+				
+			}
+		},
+		showConfirmation(){
+			this.confirmation=!this.confirmation;
+			console.log(this.confirmation);
+		},
+		changeSettingsOpened(){
+			this.optionsDropdowned=!this.optionsDropdowned;
+		},
+		profilePage() {
+			this.$router.push('/user/' + this.username);
+		},
+		expandHeight(height){
+			this.$emit("expandHeight");
+		},
+		setOwnReview() {
+			console.log(this.ownReview);
+			if (this.ownReview) {
+				this.bookrate = this.ownReview.rating ? this.ownReview.rating : 0;
+				this.textreview = this.ownReview.description;
+			}
+			if (this.$store.state.auth.storedReview) {
+				this.textreview = this.$store.state.auth.storedReview;
+			}
+		},
 		publishReview(){
 			if(this.canInteract===false) {
 				this.handle_logout();
@@ -47,7 +113,7 @@ export default{
 
 			const date = new Date();
 			const isoDateString = date.toISOString();
-			if(this.textreview!=""){
+			if(this.textreview!="" || this.bookrate!=0) {
 				axios.post("http://localhost:8080/api/book/"+this.isbn+"/review?username="+this.username,
 				{
 					description:this.textreview,
@@ -55,15 +121,17 @@ export default{
 				},
 				config 
 				).then(resp =>{
-					this.$emit('newpost');
-
 					console.log(resp)
+					this.publishRating();
 				}).catch(err=>{
 					console.log(err)
 				})
 			}
-			this.textreview='';
-			this.bookrate=0;
+			if (this.selectedLanguage == "portuguese") {
+				this.$toast.success("Avaliação publicada com sucesso!");
+			} else {
+				this.$toast.success("Review successfully published!");
+			}
 		},
 		publishRating(){
 			let header = authHeader();
@@ -74,18 +142,14 @@ export default{
 				this.handle_logout();
 			}
 			let rating = this.bookrate.toFixed(1);
-			if(rating!=0){
-				axios.post("http://localhost:8080/api/book/"+this.isbn+"/rate?username="+this.username+"&rating="+rating,{},
+			axios.post("http://localhost:8080/api/book/"+this.isbn+"/rate?username="+this.username+"&rating="+rating,{},
 				config
 				).then(resp =>{
+					this.$emit('newpost');
 					console.log(resp)
 				}).catch(err=>{
 					console.log(err)
-				})
-			}else{
-				console.log("obrigar utilizador a inserir rating");
-				return;
-			} 
+				});
 		},
 		handle_logout(){
 			this.$store.dispatch('auth/storeReview', this.textreview);
@@ -103,7 +167,10 @@ export default{
     	},
 	},
 	components: {
-		Rating
+		Rating,
+		EmojiReactionComponent,
+		CommentSectionComponent,
+		ConfirmComponent,
 	}
 }
 </script>
@@ -120,7 +187,7 @@ export default{
 }
 .review-area {
     width: 500px;
-    position: relative;
+    position: absolute;
     border-radius: 20px;
     background-color: #5b5b5b;
     height: 50px;
@@ -193,5 +260,37 @@ export default{
     box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24); 
     /* Lowering the shadow */ 
 } 
+.reviewer-options {
+	position: absolute;
+	top: 35px;
+	left: 800px;
+	font-weight: 600;
+	display: inline-block;
+	width: 196.4px;
+	height: 21.9px;
+	font-size: 33px;
+	cursor: pointer;
+}
+
+.dropdown-settings-content {
+  position: relative;
+  top: 85px;
+  left: 800px;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-settings-content #row-option {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+#row-option:hover{
+	background-color:rgb(139, 139, 139);
+}
 </style>
 

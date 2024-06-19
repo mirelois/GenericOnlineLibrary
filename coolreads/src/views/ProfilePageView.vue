@@ -194,7 +194,7 @@ export default {
         this.gender = me.data.gender ? me.data.gender : '-';
         console.log("qhats happening");
         console.log(me.data.highlightedBookshelf);
-        this.highlightedBookshelf = me.data.highlightedBookshelf ? me.data.highlightedBookshelf : {'name':'-'};
+        this.highlightedBookshelf = me.data.highlightedBookshelf ? me.data.highlightedBookshelf : {'name':null};
         if(this.highlightedBookshelf!='') this.selectedHighlighted =  me.data.highlightedBookshelf;
         else this.selectedHighlighted='None';
         this.profileImageUrl = me.data.profileImageUrl ? me.data.profileImageUrl : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
