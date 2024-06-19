@@ -217,7 +217,7 @@ public class Seeder implements CommandLineRunner {
 
         Gender genders[] = Gender.values();
 
-        String pic[] = {"woman", "men"};
+        String pic[] = {"women", "men"};
 
         String countries[] = {"Portugal", "Brazil", "USA", "Canada", "France", "UK"};
 
