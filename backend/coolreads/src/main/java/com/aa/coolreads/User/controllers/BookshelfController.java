@@ -144,11 +144,11 @@ public class BookshelfController {
 
     @PreAuthorize("#username == principal.username")
     @DeleteMapping("/personalBook")
-    public ResponseEntity<String> deleteBook(@PathVariable String username, @RequestParam String isbn){
+    public ResponseEntity<String> deleteBook(@PathVariable String username, @RequestParam String isbn, @RequestParam String bookshelfName){
         try{
-            this.bookshelfService.deleteBook(username, isbn);
+            this.bookshelfService.deleteBook(username, isbn, bookshelfName);
             return ResponseEntity.ok().build();
-        } catch (CustomerNotFoundException e) {
+        } catch (CustomerNotFoundException | BookshelfNotFoundException | PersonalBookNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

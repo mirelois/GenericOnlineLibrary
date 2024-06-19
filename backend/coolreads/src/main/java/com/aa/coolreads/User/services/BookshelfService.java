@@ -189,10 +189,22 @@ public class BookshelfService {
     }
 
     @Transactional
-    public void deleteBook(String username, String isbn) throws CustomerNotFoundException{
+    public void deleteBook(String username, String isbn, String bookshelfName) throws CustomerNotFoundException, BookshelfNotFoundException, PersonalBookNotFoundException {
         Customer customer = this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
-        this.personalBooksRepository.deletePersonalBookByIsbnAndCustomer(isbn, customer);
+        Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(bookshelfName, customer).orElseThrow(() -> new BookshelfNotFoundException(bookshelfName));
+
+        PersonalBook personalBook = this.personalBooksRepository.findPersonalBookByCustomer(customer).orElseThrow(() -> new PersonalBookNotFoundException(isbn));
+
+        Set<Bookshelf> bookshelves = personalBook.getBookshelves();
+        bookshelves.remove(bookshelf);
+
+        if(bookshelves.isEmpty()){
+            this.personalBooksRepository.delete(personalBook);
+        } else {
+            personalBook.setBookshelves(bookshelves);
+            this.personalBooksRepository.save(personalBook);
+        }
     }
 
     @Transactional

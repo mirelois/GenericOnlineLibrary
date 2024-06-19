@@ -29,9 +29,8 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
     @Query("SELECT COUNT(*) > 0 FROM PersonalBook pb JOIN pb.bookshelves pbbs WHERE pb.customer = :customer AND pb = :personalBook AND pbbs.exclusivityClass = :exclusivityClass")
     boolean checkIfPersonalBookHasConflict(Customer customer, PersonalBook personalBook, ExclusivityClass exclusivityClass);
 
-    @Modifying
-    @Query("DELETE FROM PersonalBook pb WHERE pb.customer = :customer AND pb.book.isbn = :isbn")
-    void deletePersonalBookByIsbnAndCustomer(String isbn, Customer customer);
+    @Query(value = "SELECT pb FROM PersonalBook pb WHERE pb.customer = :customer")
+    Optional<PersonalBook> findPersonalBookByCustomer(Customer customer);
 
     @Query(value = "SELECT COUNT(*) FROM PersonalBook pb WHERE pb.customer = :customer")
     Integer getBookSizeByCustomer(Customer customer);
