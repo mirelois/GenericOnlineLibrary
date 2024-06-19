@@ -230,7 +230,7 @@ public class Seeder implements CommandLineRunner {
                     countries[rand.nextInt(countries.length)],
                     "description" + i,
                     "interests" + i,
-                    "https://randomuser.me/api/portraits/male/" + rand.nextInt(100) + ".jpg",
+                    "https://randomuser.me/api/portraits/woman/" + rand.nextInt(100) + ".jpg",
                     "https://picsum.photos/id/" + rand.nextInt(1000) + "/650/870",
                     bookShelfDTO);
 
