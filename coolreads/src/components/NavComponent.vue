@@ -43,9 +43,9 @@ if (localStorage.getItem('selectedLanguage')) {
                 </div>
             </a>
             <div>
-                <input type="text" v-model="inputtxt" class="my-search-box" :placeholder="translations.searchPlaceholder" name="search">
-                <div v-if="inputtxt !== ''" id="myDropdown" class="dropdown-content">
-                    <div class="txtinserted">{{ translations.resultsFor }}: {{ textInserted }}</div>
+                <input type="text" v-model="inputtxt" @click.prevent="toggleDropdown" class="my-search-box" :placeholder="translations.searchPlaceholder" name="search">
+                <div :class="{shown: state}" v-show="state" id="myDropdown" class="dropdown-content">
+                    <div class="txtinserted" >{{ translations.resultsFor }}: {{ textInserted }}</div>
                     <div class="myresult" v-for="result in results" :key="result.isbn">
                         <a :href="`/book/${result.isbn}`">{{ result.title }}<img :src="result.imageUrl" class="result-img" width="30px" height="50px" /></a>
                     </div>
@@ -107,6 +107,7 @@ export default {
             inputtxt:'',
             results:[],
             message:'',
+            state: false,
         }
     },
     computed: {
@@ -115,6 +116,14 @@ export default {
         }        
     },
     methods: {
+        toggleDropdown (e) {
+          this.state = !this.state
+        },
+        close (e) {
+            if (!this.$el.contains(e.target)) {
+                this.state = false
+            }
+        },
         openProfile() {
             if(this.isProfileOpen==true) this.backgroundColor = "#000000"
             else this.backgroundColor = "#da9f46d9"
@@ -170,6 +179,12 @@ export default {
         inputtxt() {
             this.getResults();
         }
+    },
+    mounted () {
+        document.addEventListener('click', this.close)
+    },
+    beforeDestroy () {
+        document.removeEventListener('click',this.close)
     }
     
 }

@@ -2,6 +2,7 @@ const state = () => ({
     selectedLanguage: localStorage.getItem('selectedLanguage') || 'english',
     translations: {
       english: {
+        resultsFor: 'Results for',
         selectLanguage: 'Select your preferred language',
         email: 'Email:',
         username: 'Username',
@@ -71,6 +72,7 @@ const state = () => ({
         createbookshelf: 'Create Bookshelf',
       },
       portuguese: {
+        resultsFor: 'Resultados para',
         selectLanguage: 'Selecione a linguagem pretendida',
         email: 'Email:',
         username: 'Nome de Utilizador',
