@@ -7,5 +7,6 @@
   roles:
     - gke_namespace_create
     - coolDB_deploy
+    - coolCache_deploy
     - coolreads_deploy
     
