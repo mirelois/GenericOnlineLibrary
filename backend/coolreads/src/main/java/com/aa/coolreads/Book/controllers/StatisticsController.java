@@ -5,6 +5,10 @@ import com.aa.coolreads.Book.dto.StatisticsNumberDTO;
 import com.aa.coolreads.Book.models.TimeFrame;
 import com.aa.coolreads.Book.services.StatisticService;
 import com.aa.coolreads.User.models.DefaultBookshelf;
+import com.aa.coolreads.User.services.AgeSlice;
+import com.aa.coolreads.User.services.CountrySlice;
+import com.aa.coolreads.User.services.GenderSlice;
+import com.aa.coolreads.User.services.Sliceable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,17 +28,25 @@ public class StatisticsController {
     @GetMapping("/pie/gender")
     public ResponseEntity<StatisticsChartDTO> getStatisticsGenderPie(@PathVariable String isbn, @RequestParam String defaultBookshelf) {
 
-        return ResponseEntity.ok().body(this.statisticService.getStatisticsGenderPieChart(DefaultBookshelf.valueOf(defaultBookshelf.toLowerCase()), isbn));
+        Sliceable sliceable = new GenderSlice(this.statisticService);
+
+        return ResponseEntity.ok().body(this.statisticService.getStatisticsChart(DefaultBookshelf.valueOf(defaultBookshelf.toLowerCase()), isbn, sliceable));
     }
 
     @GetMapping("/pie/country")
     public ResponseEntity<StatisticsChartDTO> getStatisticsCountryPie(@PathVariable String isbn, @RequestParam String defaultBookshelf) {
-        return ResponseEntity.ok().body(this.statisticService.getStatisticsCountryPieChart(DefaultBookshelf.valueOf(defaultBookshelf.toLowerCase()), isbn));
+
+        Sliceable sliceable = new CountrySlice(this.statisticService);
+
+        return ResponseEntity.ok().body(this.statisticService.getStatisticsChart(DefaultBookshelf.valueOf(defaultBookshelf.toLowerCase()), isbn, sliceable));
     }
 
     @GetMapping("/pie/age")
     public ResponseEntity<StatisticsChartDTO> getStatisticsAgePie(@PathVariable String isbn, @RequestParam String defaultBookshelf) {
-        return ResponseEntity.ok().body(this.statisticService.getStatisticsAgePieChart(DefaultBookshelf.valueOf(defaultBookshelf.toLowerCase()), isbn));
+
+        Sliceable sliceable = new AgeSlice(this.statisticService);
+
+        return ResponseEntity.ok().body(this.statisticService.getStatisticsChart(DefaultBookshelf.valueOf(defaultBookshelf.toLowerCase()), isbn, sliceable));
     }
 
     @GetMapping("/line")

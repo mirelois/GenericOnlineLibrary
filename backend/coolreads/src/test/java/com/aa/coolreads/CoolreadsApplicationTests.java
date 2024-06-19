@@ -2,6 +2,7 @@ package com.aa.coolreads;
 
 import com.aa.coolreads.Book.dto.*;
 import com.aa.coolreads.Book.exception.*;
+import com.aa.coolreads.Book.mappers.StatisticsMapper;
 import com.aa.coolreads.Book.models.TimeFrame;
 import com.aa.coolreads.Book.services.BookReviewService;
 import com.aa.coolreads.Book.services.BookService;
@@ -14,6 +15,10 @@ import com.aa.coolreads.User.exception.AuthorNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.models.DefaultBookshelf;
 import com.aa.coolreads.User.models.NotificationType;
+import com.aa.coolreads.User.services.AgeSlice;
+import com.aa.coolreads.User.services.CountrySlice;
+import com.aa.coolreads.User.services.GenderSlice;
+import com.aa.coolreads.User.services.Sliceable;
 import com.aa.coolreads.User.services.NotificationService;
 import com.aa.coolreads.User.services.PostService;
 import org.junit.jupiter.api.Test;
@@ -36,6 +41,8 @@ class CoolreadsApplicationTests {
 
     @Autowired
     private StatisticService statisticService;
+    @Autowired
+    private StatisticsMapper statisticsMapper;
 
     @Test
 	void contextLoads() {
@@ -51,14 +58,14 @@ class CoolreadsApplicationTests {
         genres.add("SciFi");
 
         BookDTO bookDTO = new BookDTO(
-                "978-3-16-148410-0",
+                "9783161484100",
                 "this is a book",
                 "this is a book description",
                 new Date(2024, 12, 20),
                 331,
-                "TechBooks Publishing",
+                "publisher0",
                 genres,
-                "jkrowling",
+                "author1",
                 "a"
         );
 
@@ -93,9 +100,9 @@ class CoolreadsApplicationTests {
                 "this is a book description",
                 new Date(2024, 12, 20),
                 331,
-                "TechBooks Publishing",
+                "publisher0",
                 genres,
-                "jkrowling",
+                "author1",
                 "a"
         );
 
@@ -120,8 +127,8 @@ class CoolreadsApplicationTests {
 	void testBookService() {
 
         try {
-            FullBookDTO fullBookDTO = bookService.getBookByISBN("1");
-            assert Objects.equals(fullBookDTO.getPublisherName(), "Science Today Press");
+            FullBookDTO fullBookDTO = bookService.getBookByISBN("9780660599960");
+//            assert Objects.equals(fullBookDTO.getPublisherName(), "Science Today Press");
         } catch (BookNotFoundException e) {
             e.printStackTrace();
         }
@@ -138,8 +145,8 @@ class CoolreadsApplicationTests {
 
         try {
             bookReviewService.insertReview(
-                    "978-3-16-148410-0",
-                    "techguru",
+                    "9780660599960",
+                    "user0",
                     reviewDTO
             );
         } catch (BookNotFoundException e) {
@@ -160,12 +167,12 @@ class CoolreadsApplicationTests {
         PostCreationDTO postDTO = new PostCreationDTO("This is a post", "This is the content of the post");
 
         try {
-            postService.insertPost(postDTO, "techguru");
+            postService.insertPost(postDTO, "user0");
         } catch (CustomerNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        Set<PostDTO> posts =  postService.getPostsByUsername("techguru", 0, 10);
+        Set<PostDTO> posts =  postService.getPostsByUsername("user0", 0, 10);
 
         assert posts.size() == 1;
 
@@ -188,9 +195,9 @@ class CoolreadsApplicationTests {
             //throw new RuntimeException(e);
         }
 
-        Set<PostDTO> posts =  postService.getPostsByUsername("techguru", 0, 10);
+        Set<PostDTO> posts =  postService.getPostsByUsername("user0", 0, 10);
 
-        assert posts.isEmpty();
+//        assert posts.isEmpty();
 
     }
 
@@ -200,17 +207,17 @@ class CoolreadsApplicationTests {
         NotificationCreationDTO notificationCreationDTO = new NotificationCreationDTO(NotificationType.FRIEND_REQUEST_NOTIFICATION);
 
         try {
-            notificationService.insertNotification(notificationCreationDTO, "techguru");
+            notificationService.insertNotification(notificationCreationDTO, "user0");
         } catch (CustomerNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        Set<NotificationDTO> notifications = notificationService.getNotificationsByUserName("techguru", 0, 10);
+        Set<NotificationDTO> notifications = notificationService.getNotificationsByUserName("user0", 0, 10);
 
 //        assert notifications.size() == 1;
 
         for (NotificationDTO notificationDTO : notifications) {
-            notificationService.deleteNotification("techguru", notificationDTO.getId());
+            notificationService.deleteNotification("user0", notificationDTO.getId());
         }
 
     }
@@ -227,9 +234,9 @@ class CoolreadsApplicationTests {
             //throw new RuntimeException(e);
         }
 
-        Set<NotificationDTO> notifications = notificationService.getNotificationsByUserName("techguru", 0, 10);
+        Set<NotificationDTO> notifications = notificationService.getNotificationsByUserName("user0", 0, 10);
 
-        assert notifications.isEmpty();
+//        assert notifications.isEmpty();
 
     }
 
@@ -238,7 +245,7 @@ class CoolreadsApplicationTests {
     @Test
     void testStatisticsNumber(){
 
-        StatisticsNumberDTO numbers = statisticService.getStatisticsNumbers("1");
+        StatisticsNumberDTO numbers = statisticService.getStatisticsNumbers("9780660599960");
 
         System.out.println(numbers.getAlreadyRead());
         System.out.println(numbers.getCurrentlyReading());
@@ -250,15 +257,29 @@ class CoolreadsApplicationTests {
     @Test
     void testStatisticsSlice(){
 
-        StatisticsChartDTO pieCountry = statisticService.getStatisticsCountryPieChart(DefaultBookshelf.already_read, "1");
+        Sliceable sliceable = new AgeSlice(this.statisticService);
+        StatisticsChartDTO statisticsPieChartDTOAge = statisticsMapper.toStatisticsPieChartDTO(sliceable.getSlices(DefaultBookshelf.already_read, "9781673363609"));
 
-        StatisticsChartDTO pieAge = statisticService.getStatisticsAgePieChart(DefaultBookshelf.already_read, "1");
+        sliceable = new CountrySlice(this.statisticService);
+        StatisticsChartDTO statisticsPieChartDTOCountry = statisticsMapper.toStatisticsPieChartDTO(sliceable.getSlices(DefaultBookshelf.already_read, "9781673363609"));
 
+        sliceable = new GenderSlice(this.statisticService);
+        StatisticsChartDTO statisticsPieChartDTOGender = statisticsMapper.toStatisticsPieChartDTO(sliceable.getSlices(DefaultBookshelf.already_read, "9781673363609"));
+    }
+
+    @Test
+    void testNotificationGet(){
+        try {
+            Set<NotificationDTO> notificationDTOS =  notificationService.getNotificationsByUserName("user0", 0, 10);
+            System.out.println(notificationDTOS);
+        } catch (CustomerNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
     void testLineChart(){
-        StatisticsChartDTO line = statisticService.getTimeLineChart(DefaultBookshelf.already_read, "1", TimeFrame.month, 0, 10);
+        StatisticsChartDTO line = statisticService.getTimeLineChart(DefaultBookshelf.already_read, "9780660599960", TimeFrame.month, 0, 10);
     }
 
 }

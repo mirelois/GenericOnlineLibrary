@@ -1,17 +1,59 @@
 <script setup>
 import { useStore } from 'vuex';
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
 const store = useStore();
-
+const notifications = computed(() => store.state.notifications.notifications);
 const translations = computed(() => store.getters['language/currentTranslations']);
-const setLanguage = (language) => store.dispatch('language/setLanguage', language);
-const selectedLanguage = computed(() => store.state.language.selectedLanguage);
+const username = ref('');
+const page = ref(0);
+const maxPerPage = ref(10);
+const activate = ref([]);
 
-if (localStorage.getItem('selectedLanguage')) {
-    setLanguage(localStorage.getItem('selectedLanguage'));
-}
+const fetchNotifications = () => {
+    store.dispatch('notifications/fetchNotifications', {
+        username: username.value,
+        pageNumber: page.value,
+        pageSize: maxPerPage.value,
+    }).then(() => {
+        console.log('Notifications fetched');
+    });
+};
+
+const initializeActivate = () => {
+    activate.value = new Array(nrPages.value).fill(false);
+    if (activate.value.length > 0) activate.value[0] = true;
+};
+
+const nrPages = computed(() => Math.ceil(notifications.value.length / maxPerPage.value));
+
+const timeMachine = (dateString) => {
+    const date = parseISO(dateString);
+    return formatDistanceToNow(date, { addSuffix: true });
+};
+
+const recentNotifications = computed(() => {
+    return notifications.value.slice(0, 2);
+});
+
+onMounted(() => {
+    const token = localStorage.getItem('user');
+    if (token) {
+        try {
+            const decodedToken = JSON.parse(token);
+            username.value = decodedToken.info.sub;
+            fetchNotifications();
+            initializeActivate();
+        } catch (error) {
+            console.error('Error parsing user token:', error);
+        }
+    } else {
+        console.warn('User token not found in localStorage');
+    }
+});
 </script>
+
 <template>
     <main>
         <div class="navegador">
@@ -61,19 +103,14 @@ if (localStorage.getItem('selectedLanguage')) {
                 <div class="notifications-text">{{ translations.notifications }}</div>
             </div>
             <div v-if="isNotificationsOpen" tabindex="0" class="dropdown-notifications">
-                <div class="notification1">
-                    <b class="marlena">
-                        <span>Marlena</span>
-                        <span class="span"> </span>
-                    </b>
-                    <div class="liked-your-review">Liked your review of Soul by Olivia Wilson.</div>
-                    <div class="min">15min</div>
-                </div>
-                <div class="notification2">
-                    <b class="johnny">Johnny</b>
-                    <div class="liked-your-review1">Liked your review of Good Services by Lou Downe.</div>
-                    <div class="min">1h</div>
-                </div>
+                <div v-for="(notification, index) in recentNotifications" :key="notification.id" :class="'notification' + (index + 1)">
+            <b class="marlena">
+                <span>{{ notification.username }}</span>
+                <span class="span"> </span>
+            </b>
+            <div class="liked-your-review">{{ notification.notificationType }}</div>
+            <div class="min">{{ timeMachine(notification.createdAt) }}</div>
+        </div>
                 <div class="notification11" id="notification1Container1">
                     <div class="view-all"><a href="/notifications">{{ translations.viewAll }}</a></div>
                 </div>
@@ -560,16 +597,20 @@ width: 88px;
 position: relative;
 text-decoration: underline;
 display: inline-block;
-height: 44px;
+height: 35px;
 flex-shrink: 0;
+top: -10px; 
 }
 .liked-your-review {
-width: 298px;
-position: relative;
-font-size: 12px;
-display: inline-block;
-height: 29px;
-flex-shrink: 0;
+    width: auto; 
+    position: relative;
+    font-size: 12px; 
+    display: inline-block;
+    height: auto;
+    top: -15px; 
+    flex-shrink: 0;
+    word-wrap: break-word; 
+    max-width: 300px; 
 }
 .min {
 position: relative;
@@ -720,13 +761,6 @@ font-family: Inika;
     justify-content: center;
 }
 
-.marlena, .johnny {
-    width: 92px;
-    text-decoration: underline;
-    display: inline-block;
-    height: 44px;
-    flex-shrink: 0;
-}
 
 .liked-your-review, .liked-your-review1 {
     width: 298px;
