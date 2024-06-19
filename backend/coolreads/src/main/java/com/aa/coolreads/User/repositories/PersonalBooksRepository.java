@@ -62,7 +62,7 @@ public interface PersonalBooksRepository extends JpaRepository<PersonalBook, Lon
         )
         on agerange.id=bucket
         """)
-    List<SliceInterfaceDTO> getAgesByBookshelfName(String bookshelf, String isbn);
+    List<SliceInterfaceDTO> getAgeSlicesByBookshelfName(String bookshelf, String isbn);
 
     @Query(value = "select bs.customer.profileDetails.gender as className, count(*) as amount from PersonalBook pb JOIN pb.bookshelves bs where bs.name = :bookshelf and pb.book.isbn = :isbn group by bs.customer.profileDetails.gender")
     List<SliceInterfaceDTO> getGenderSlicesByBookshelfName(String bookshelf, String isbn);
