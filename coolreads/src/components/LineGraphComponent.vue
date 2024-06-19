@@ -80,7 +80,8 @@ export default {
     methods:{
         getData(){
             if(this.mytimeframe!="" && this.mydefault!=""){
-                axios.get("http://localhost:8080/api/book/"+this.isbn+"/stats/line?defaultBookshelf="+this.mydefault+"&timeFrame="+this.mytimeframe+"&pageNumber=0&pageSize=1")
+                let mdefault = this.mydefault.toLowerCase().replaceAll(" ","_");
+                axios.get("http://localhost:8080/api/book/"+this.isbn+"/stats/line?defaultBookshelf="+mdefault+"&timeFrame="+this.mytimeframe+"&pageNumber=0&pageSize=1")
                 .then(resp=>{
                     this.dados.datasets = [
                     {

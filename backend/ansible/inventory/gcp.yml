@@ -25,11 +25,16 @@ all:
   db_database_name: cool
   db_connection_name: postgresql
   db_service_name: psql-service
+  profile: prod
 
 
   # Database variables
   db_username: postgres
   db_password: "postgres"
+  
+  # Cache variables
+  cache_connection_name: redis
+  cache_container_port: 6379
 
 
   # Laravel Deploy variables

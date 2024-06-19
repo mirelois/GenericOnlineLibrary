@@ -1,0 +1,10 @@
+---
+- name: Undeploy Redis
+  kubernetes.core.k8s:
+    state: absent
+    template: 'redis-deployment'
+
+- name: Undeploy Redis Service
+  kubernetes.core.k8s:
+    state: absent
+    template: 'redis-service'
