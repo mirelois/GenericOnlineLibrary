@@ -81,6 +81,20 @@ public class CustomerController {
         }
     }
 
+    @DeleteMapping("/me")
+    public ResponseEntity<String> deleteCurrentCustomerProfileDetails(@RequestBody DeleteProfileDetailsDTO deleteProfileDetailsDTO){
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        try{
+            this.customerService.deleteSettingOnMyCustomerProfile(deleteProfileDetailsDTO, username);
+            return ResponseEntity.ok().build();
+        } catch (CustomerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Genre");
+        }
+    }
+
     @PutMapping("/me/password")
     public ResponseEntity<String> changePassword(@RequestParam String oldPassword, @RequestParam String newPassword){
         try{
@@ -148,7 +162,7 @@ public class CustomerController {
     }
 
     @GetMapping("/me/notifications")
-    public ResponseEntity<?> getNotifications(Integer page, Integer size){
+    public ResponseEntity<?> getNotifications(@RequestParam Integer page, @RequestParam Integer size){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
             Set<NotificationDTO> notificationDTOS = this.notificationService.getNotificationsByUserName(username, page, size);
@@ -159,7 +173,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/me/notifications")
-    public ResponseEntity<String> removeNotification(Long notificationId){
+    public ResponseEntity<String> removeNotification(@RequestParam Long notificationId){
         try{
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             this.notificationService.deleteNotification(username, notificationId);
