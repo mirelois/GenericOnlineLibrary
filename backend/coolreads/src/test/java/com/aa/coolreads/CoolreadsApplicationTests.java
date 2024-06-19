@@ -7,20 +7,12 @@ import com.aa.coolreads.Book.models.TimeFrame;
 import com.aa.coolreads.Book.services.BookReviewService;
 import com.aa.coolreads.Book.services.BookService;
 import com.aa.coolreads.Book.services.StatisticService;
-import com.aa.coolreads.User.dto.NotificationCreationDTO;
-import com.aa.coolreads.User.dto.NotificationDTO;
-import com.aa.coolreads.User.dto.PostCreationDTO;
-import com.aa.coolreads.User.dto.PostDTO;
+import com.aa.coolreads.User.dto.*;
 import com.aa.coolreads.User.exception.AuthorNotFoundException;
 import com.aa.coolreads.User.exception.CustomerNotFoundException;
 import com.aa.coolreads.User.models.DefaultBookshelf;
 import com.aa.coolreads.User.models.NotificationType;
-import com.aa.coolreads.User.services.AgeSlice;
-import com.aa.coolreads.User.services.CountrySlice;
-import com.aa.coolreads.User.services.GenderSlice;
-import com.aa.coolreads.User.services.Sliceable;
-import com.aa.coolreads.User.services.NotificationService;
-import com.aa.coolreads.User.services.PostService;
+import com.aa.coolreads.User.services.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,6 +35,8 @@ class CoolreadsApplicationTests {
     private StatisticService statisticService;
     @Autowired
     private StatisticsMapper statisticsMapper;
+    @Autowired
+    private CustomerService customerService;
 
     @Test
 	void contextLoads() {
@@ -275,6 +269,16 @@ class CoolreadsApplicationTests {
     @Test
     void testLineChart(){
         StatisticsChartDTO line = statisticService.getTimeLineChart(DefaultBookshelf.already_read, "9780660599960", TimeFrame.month, 0, 10);
+    }
+
+    @Test
+    void testCustomerget(){
+        try {
+            SimpleCustomerDTO customerDTO = customerService.getCustomer("user0");
+            System.out.println(customerDTO);
+        } catch (CustomerNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

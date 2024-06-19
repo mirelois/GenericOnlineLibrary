@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    @Query("SELECT n FROM Notification n WHERE n.customer.username = :username")
+    @Query("SELECT n FROM Notification n WHERE n.customer.username = :username ORDER BY n.createdAt DESC")
     Page<Notification> findByCustomerUsername(@Param("username") String username, PageRequest pageable);
 
     @Query("SELECT COUNT(*) > 0 FROM Notification n WHERE n.customer = :myCustomer AND n.customerCreator = :otherCustomer AND n.notificationType = :notificationType")
