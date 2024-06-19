@@ -60,7 +60,7 @@ export default{
 	},
 	methods:{
 		profilePage() {
-			this.$router.push('/profile/' + this.usernameReviewer);
+			this.$router.push('/user/' + this.usernameReviewer);
 		},
 		expandHeight(height){
 			this.$emit("expandHeight");

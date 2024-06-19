@@ -68,7 +68,7 @@ onMounted(() => {
             </div>
             <div v-if="isProfileOpen && username !== ''" tabindex="0" class="dropdown-profile">
                 <div class="viewprofileoption" id="viewProfileOptionContainer">
-                    <a href="/profile">{{ translations.viewProfile }}<div class="view-profile"></div></a>
+                    <a @click="userProfileNavigation()">{{ translations.viewProfile }}<div class="view-profile"></div></a>
                 </div>
                 <div class="signoutoption" id="signoutOptionContainer">
                     <div class="view-profile"><a @click="handle_logout">{{translations.logout}}</a></div>
@@ -153,6 +153,9 @@ export default {
         }        
     },
     methods: {
+        userProfileNavigation() {
+            this.$router.push('/profile');
+        },
         toggleDropdown (e) {
           this.state = !this.state
         },

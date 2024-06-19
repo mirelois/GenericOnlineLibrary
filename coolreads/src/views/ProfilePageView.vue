@@ -77,7 +77,7 @@ if (localStorage.getItem('selectedLanguage')) {
       </select>
 
     </div>
-    <button class="edit-profile-wrapper" @click="edit_activated=true">{{translations.editprofile}}</button>
+    <button class="edit-profile-wrapper" v-if="this.$route.params.username==null" @click="edit_activated=true">{{translations.editprofile}}</button>
     <button v-if="edit_activated==true" class="edit-profile-wrapper-2" @click="handle_edit()">{{translations.save}}</button>
   </div>
   <div class="section">
@@ -162,10 +162,15 @@ export default {
       }
       this.setUsername(decodedToken.info.sub);
       this.getMyInfo();
-    } catch (error) {ype="number"
+    } catch (error) {
       console.error('Error parsing user token:', error);
     }
     this.getCountries();
+  },
+  watch: {
+      '$route' (to, from) {
+        this.getMyInfo();
+      }
   },
 	methods:{
 		setUsername(username){
@@ -173,8 +178,14 @@ export default {
 		},
     getMyInfo(){
       let header = authHeader();
-      let config = {headers:header}
-      axios.get("http://localhost:8080/api/customer/me",config).then(me=>{
+      let config = {headers:header};
+      let route = "http://localhost:8080/api/customer/me";
+      console.log(this.$route.params.username);
+      console.log(this.username);
+      if (this.$route.params.username) {
+        route = "http://localhost:8080/api/customer/username/" + this.$route.params.username;
+      }
+      axios.get(route, config).then(me=>{
         this.birthDate = me.data.birthDate ? (new Date().getYear()-new Date(me.data.birthDate).getYear()) : '-';
         this.date = new Date(me.data.birthDate);
         this.country = me.data.country ? me.data.country : '-';

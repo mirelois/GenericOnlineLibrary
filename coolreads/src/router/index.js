@@ -40,6 +40,11 @@ const router = createRouter({
       component: ProfilePageView
     },
     {
+      path: '/user/:username',
+      name: 'otherprofile',
+      component: ProfilePageView
+    },
+    {
       path: '/editprofile',
       name: 'editprofile',
       component: EditProfileView
