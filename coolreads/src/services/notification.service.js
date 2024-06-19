@@ -8,7 +8,6 @@ class NotificationService {
       headers: authHeader(),
     })
     .then(response => {
-      console.log('Response data:', response.data);
       return response.data;
 
     })

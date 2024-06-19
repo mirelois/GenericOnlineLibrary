@@ -13,18 +13,14 @@ const username = ref('');
 const maxPerPage = computed(() => store.state.notifications.maxPerPage);
 const currentPage = computed(() => store.state.notifications.currentPage);
 const fetchNotifications = () => {
-  console.log('Fetching notifications for', username.value);
   store.dispatch('notifications/fetchNotifications', {
     username: username.value,
     pageNumber: currentPage.value,
     pageSize: maxPerPage.value,
   }).then(notifications=>{
-    console.log("hmmmm")
-    console.log(notifications)
   });
 };
 const nextPage = () => {
-  console.log("next pageee")
   store.commit('notifications/incrementPage');
   fetchNotifications();
 };
@@ -34,19 +30,11 @@ const backPage = () => {
   fetchNotifications();
 };
 
-const goToPage = (pageIndex) => {
-  store.commit('notifications/resetPage');
-  store.commit('notifications/incrementPage', pageIndex);
-  fetchNotifications();
-};
-
 const nrPages = computed(() => Math.ceil(notifications.value.length / maxPerPage.value));
 
 const paginatedNotifications = computed(() => {
   const start = currentPage.value * maxPerPage.value;
   const end = start + maxPerPage.value;
-  console.log("eiiii")
-  console.log(notifications.value)
   return notifications.value.slice(start, end);
 });
 
@@ -103,7 +91,7 @@ onMounted(() => {
       <div class="notif-pagination-child">
         <div class="parent">
           <img class="notif-vector-icon" @click="backPage" alt="" src="/img/back.svg">
-          <div class="notif-div3" :class="{ 'child': true }" >{{ nrPages }}</div>
+          <div class="notif-div3" :class="{ 'child': true }" >{{ store.state.notifications.currentPage + 1 }}</div>
           <img class="notif-vector-icon1" @click="nextPage" alt="" src="/img/front.svg">
         </div>
       </div>

@@ -10,8 +10,6 @@ const actions = {
   async fetchNotifications({ commit, state }, { username, pageNumber, pageSize }) {
     try {
       const notifications = await NotificationService.getNotifications(username, pageNumber, pageSize);
-      console.log("the notifications:")
-      console.log(notifications)
       commit('addNotifications', notifications);
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -29,11 +27,7 @@ const actions = {
 
 const mutations = {
   addNotifications(state, notifications) {
-    if (state.currentPage === 0) {
-      state.notifications = notifications;
-    } else {
       state.notifications.push(...notifications);
-    }
   },
   removeNotification(state, notificationId) {
     state.notifications = state.notifications.filter(
@@ -44,7 +38,9 @@ const mutations = {
     state.currentPage += 1;
   },
   decrementPage(state) {
-    state.currentPage = Math.max(state.currentPage - 1, 0);
+    if (state.currentPage > 0) {
+      state.currentPage -= 1;
+    }
   },
   resetPage(state) {
     state.currentPage = 0;
