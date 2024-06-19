@@ -48,11 +48,11 @@ public class FullBookMapper {
         return new BookReviewDTO(review.getDescription(), review.getPostDate(), commentsSize, toLikesDTO(review.getReviewLikes()), review.getCustomer().getUsername(), review.getCustomer().getProfileDetails().getProfileImageUrl());
     }
 
-    public FullBookDTO toFullBookDTO(Book book, double averageRating) {
+    public FullBookDTO toFullBookDTO(Book book, double averageRating, Long ratingCount, Long reviewCount) {
         Set<String> genres = book.getGenres().stream().map(Genre::getGenreType).collect(Collectors.toSet());
 
         return new FullBookDTO(book.getIsbn(), book.getTitle(), book.getDescription(), book.getLaunchDate(),
-                book.getTotalPageNumbers(), book.getPublisher().getName(), genres, book.getImageUrl(), book.getAuthor().getUsername(), averageRating);
+                book.getTotalPageNumbers(), book.getPublisher().getName(), genres, book.getImageUrl(), book.getAuthor().getUsername(), averageRating, ratingCount, reviewCount);
     }
 
     public BookDTO toBookDTO(Book book) {

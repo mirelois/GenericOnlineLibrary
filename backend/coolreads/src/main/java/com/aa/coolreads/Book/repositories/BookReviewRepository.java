@@ -14,5 +14,8 @@ public interface BookReviewRepository extends JpaRepository<Review, ReviewId> {
 
     @Query("SELECT r FROM Review r WHERE r.book.isbn = :isbn")
     Page<Review> findByIsbn(@Param("isbn") String isbn, PageRequest pageable);
+
+    @Query(value = "SELECT COUNT(*) FROM Review r WHERE r.book.isbn = :isbn")
+    Long getReviewCountByIsbn(String isbn);
 }
 

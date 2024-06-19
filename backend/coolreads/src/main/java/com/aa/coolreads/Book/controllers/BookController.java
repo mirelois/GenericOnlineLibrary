@@ -61,6 +61,7 @@ public class BookController {
         }
     }
 
+    @PreAuthorize("#username == principal.username")
     @GetMapping("/{isbn}/rate")
     public RatingDTO getBookRating(@PathVariable String isbn, @RequestParam String username){
         try {

@@ -30,6 +30,8 @@ public class BookService {
 
     private final BookRatingRepository bookRatingRepository;
 
+    private final BookReviewRepository bookReviewRepository;
+
     private final PublisherRepository publisherRepository;
 
     private final GenreRepository genreRepository;
@@ -39,9 +41,10 @@ public class BookService {
     private final FullBookMapper bookMapper;
 
     @Autowired
-    public BookService(BookRepository bookRepository, BookRatingRepository bookRatingRepository, PublisherRepository publisherRepository, GenreRepository genreRepository, CustomerRepository customerRepository, FullBookMapper fullBookMapper) {
+    public BookService(BookRepository bookRepository, BookRatingRepository bookRatingRepository, BookReviewRepository bookReviewRepository, PublisherRepository publisherRepository, GenreRepository genreRepository, CustomerRepository customerRepository, FullBookMapper fullBookMapper) {
         this.bookRepository = bookRepository;
         this.bookRatingRepository = bookRatingRepository;
+        this.bookReviewRepository = bookReviewRepository;
         this.publisherRepository = publisherRepository;
         this.genreRepository = genreRepository;
         this.customerRepository = customerRepository;
@@ -106,9 +109,11 @@ public class BookService {
     public FullBookDTO getBookByISBN(String isbn) throws BookNotFoundException {
         Book book = findBookByIsbn(isbn);
 
-        double averageRating = this.bookRatingRepository.getBookAverageRating(isbn);
+        RatingAvgAndCountDTO ratingAvgAndCountDTO = this.bookRatingRepository.getBookAverageRating(isbn);
 
-        return this.bookMapper.toFullBookDTO(book, averageRating);
+        Long reviewCount = this.bookReviewRepository.getReviewCountByIsbn(isbn);
+
+        return this.bookMapper.toFullBookDTO(book, ratingAvgAndCountDTO.getAverage(), ratingAvgAndCountDTO.getCount(), reviewCount);
     }
 
     @Cacheable(value = "booksByTitle", key = "#title")
