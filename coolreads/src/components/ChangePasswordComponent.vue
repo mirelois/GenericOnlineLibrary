@@ -23,7 +23,7 @@ const changePassword = async () => {
     await store.dispatch('auth/changePassword', { oldPassword: currentPassword.value, newPassword: newPassword.value });
     toastMessage.value = 'Successfuly changed password';
   } catch (error) {
-    toastMessage.value = error.response ? error.response.data : 'Fail';
+    toastMessage.value = 'Error! Current Password Incorrect!';
   } finally {
     showToast.value = true;
   }

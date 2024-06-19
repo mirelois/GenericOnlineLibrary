@@ -1,9 +1,9 @@
 ---
-# Playbook to undeploy laravel.io and its component
+# Playbook to undeploy coolreads and its component
 
-- name: Undeploy Laravelio
+- name: Undeploy Coolreads
   hosts: localhost
   gather_facts: false
   roles:
-    - laravelioDB_undeploy
-    - laravelioAPP_undeploy
+    - coolreadsDB_undeploy
+    - coolreads_undeploy

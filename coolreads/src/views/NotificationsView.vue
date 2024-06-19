@@ -7,7 +7,6 @@ import { formatDistanceToNow, parseISO } from 'date-fns';
 const store = useStore();
 const notifications = computed(() => {
   const notifs = store.state.notifications.notifications;
-  console.log('Computed notifications:', notifs);
   return notifs;
 });
 const translations = computed(() => store.getters['language/currentTranslations']);
@@ -23,19 +22,7 @@ const fetchNotifications = () => {
     pageNumber: page.value,
     pageSize: maxPerPage.value,
   }).then(() => {
-    console.log('Notifications fetched');
   });
-};
-
-const handleDelete = (notificationId) => {
-  store.dispatch('notifications/deleteNotification', notificationId)
-    .then(() => {
-      console.log('Notification deleted successfully');
-      fetchNotifications();
-    })
-    .catch((error) => {
-      console.error('Error deleting notification:', error);
-    });
 };
 
 const nextPage = () => {
@@ -81,6 +68,24 @@ const timeMachine = (dateString) => {
   return formatDistanceToNow(date, { addSuffix: true });
 };
 
+const formatNotificationType = (type) => {
+  switch (type) {
+    case 'POST_NOTIFICATION':
+      return 'New Post';
+    case 'FRIEND_REQUEST_NOTIFICATION':
+      return 'Received Friend Request';
+    case 'FRIEND_REQUEST_ACCEPTED_NOTIFICATION':
+      return 'Friend Request Accepted';
+    case 'FRIEND_REVIEWED_BOOK_NOTIFICATION':
+      return 'New Book Review';
+    case 'FRIEND_STARRED_BOOK_NOTIFICATION':
+      return 'New Book Star';
+    default:
+      return 'Notification';
+  }
+};
+
+
 onMounted(() => {
   const token = localStorage.getItem('user');
   if (token) {
@@ -107,12 +112,11 @@ onMounted(() => {
       <div v-for="notification in paginatedNotifications" :key="notification.id" class="notification">
         <img class="clock-icon" alt="" src="/img/clock.svg">
         <b class="time">{{ timeMachine(notification.createdAt) }}</b>
-        <b class="message">{{ notification.notificationType }} from {{ notification.username }}</b>
+        <b class="message">{{ formatNotificationType(notification.notificationType) }} from {{ notification.username }}</b>
         <div v-if="notification.title && notification.author" class="book-details">
           <b class="title">{{ notification.title }}</b>
           <b class="author">{{ notification.author }}</b>
         </div>
-        <div class="deletebutton"><button @click="handleDelete(notification.id)">{{ translations.delete }}</button></div>
       </div>
     </div>
     <div class="pagination">
@@ -275,6 +279,8 @@ onMounted(() => {
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  left: 5px;
+  top: 5.5px;
   height: 19.5px;
   flex-shrink: 0;
 }

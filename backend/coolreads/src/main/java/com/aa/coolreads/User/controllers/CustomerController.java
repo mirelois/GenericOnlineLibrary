@@ -162,10 +162,10 @@ public class CustomerController {
     }
 
     @GetMapping("/me/notifications")
-    public ResponseEntity<?> getNotifications(@RequestParam Integer page, @RequestParam Integer size){
+    public ResponseEntity<?> getNotifications(@RequestParam Integer pageNumber, @RequestParam Integer pageSize){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            Set<NotificationDTO> notificationDTOS = this.notificationService.getNotificationsByUserName(username, page, size);
+            Set<NotificationDTO> notificationDTOS = this.notificationService.getNotificationsByUserName(username, pageNumber, pageSize);
             return ResponseEntity.ok().body(notificationDTOS);
         } catch (CustomerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
