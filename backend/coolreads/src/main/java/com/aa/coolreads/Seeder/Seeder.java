@@ -117,7 +117,7 @@ public class Seeder implements CommandLineRunner {
                 String isbn = isbns.get(rand.nextInt(isbns.size()));
 
                 try {
-                    bookshelfService.insertBook("bookshelf" + i, "user" + i, isbn);
+                    bookshelfService.insertBook(DefaultBookshelf.already_read.name(), "user" + i, isbn);
                 } catch (CustomerNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (BookshelfNotFoundException e) {
