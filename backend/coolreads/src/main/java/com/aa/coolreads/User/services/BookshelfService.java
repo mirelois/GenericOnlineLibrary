@@ -194,7 +194,7 @@ public class BookshelfService {
 
         Bookshelf bookshelf = this.bookshelfRepository.findBookshelfByNameAndCustomer(bookshelfName, customer).orElseThrow(() -> new BookshelfNotFoundException(bookshelfName));
 
-        PersonalBook personalBook = this.personalBooksRepository.findPersonalBookByCustomer(customer).orElseThrow(() -> new PersonalBookNotFoundException(isbn));
+        PersonalBook personalBook = this.personalBooksRepository.findPersonalBookByCustomer(customer, isbn).orElseThrow(() -> new PersonalBookNotFoundException(isbn));
 
         Set<Bookshelf> bookshelves = personalBook.getBookshelves();
         bookshelves.remove(bookshelf);
