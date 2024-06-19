@@ -65,7 +65,11 @@ export default {
     },
     methods:{
         openCommentSection(){
-            this.$emit("comment_opened");
+            if (this.openComments) {
+              this.$emit("comment_closed");  
+            } else {
+              this.$emit("comment_opened");
+            }
             this.openComments=!this.openComments;
         },
         increaseArea(){

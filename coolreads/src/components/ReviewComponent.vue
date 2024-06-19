@@ -10,14 +10,14 @@
 		</div>
         <div class="reviewer">
         <span>review by </span>
-        <span class="sophie-mayer" @click="profilePage"><a :href="`/user/${usernameReviewer}`">{{ usernameReviewer }}</a></span>
+        <span class="sophie-mayer" @click="profilePage">{{ usernameReviewer }}</span>
 			<div>
 				<Rating id="estrelas" :modelValue="reviewRate" @update:modelValue="reviewRate = $event" readonly :cancel="false" />
 			</div>
 		</div>
         <div class="review">{{ reviewDescription }}</div>
 		<EmojiReactionComponent :canInteract="canInteract" :reviewer="usernameReviewer" :isbn="isbn" :likes="likesCount" :emojiIds="emojiIds"></EmojiReactionComponent>
-		<CommentSectionComponent :canInteract="canInteract" :reviewer="usernameReviewer" :isbn="isbn" @comment_opened="expandHeight"></CommentSectionComponent>
+		<CommentSectionComponent :canInteract="canInteract" :reviewer="usernameReviewer" :isbn="isbn" @comment_closed="decreaseHeight" @comment_opened="expandHeight"></CommentSectionComponent>
 		<div v-if="confirmation==true">
 			<ConfirmComponent :header_msg="msg" @confirmation_response="getResponse"></ConfirmComponent>
 		</div>
@@ -62,6 +62,9 @@ export default{
 		profilePage() {
 			this.$router.push('/user/' + this.usernameReviewer);
 		},
+		decreaseHeight() {
+			this.$emit("decreaseHeight");
+		},
 		expandHeight(height){
 			this.$emit("expandHeight");
 		},
@@ -80,7 +83,13 @@ export default{
 				axios.delete('http://localhost:8080/api/book/'+this.isbn+"/review?username="+this.usernameReviewer,config)
 				.then(resp=>{
 					console.log(resp)
-					if(resp.status==200) this.$emit('review_deletion');
+					axios.delete('http://localhost:8080/api/book/'+this.isbn+"/rate?username="+this.usernameReviewer,config)
+					.then(resp=>{
+						console.log(resp)
+						if(resp.status==200) this.$emit('review_deletion');
+					}).catch(error=>{
+						console.log(error);
+					})
 				}).catch(error=>{
 					console.log(error);
 				})

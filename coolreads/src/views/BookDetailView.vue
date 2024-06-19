@@ -50,9 +50,9 @@ import Rating from 'primevue/rating';
 	<div v-bind:style="{ 'color': reviewcolor, 'font-weight': reviewfont }" @click="changeTabStyle(`Reviews`)" class="reviews-title">Reviews 
 			<img class="line-icon" alt="" src="/img/line.svg"> 
 			<div v-if="activeTab=='Reviews'">
-				<MyReviewComponent :canInteract="can_interact" @newpost="getReviews(this.isbn,1)" :username="username" :profileImg="profileImg" :isbn="isbn"></MyReviewComponent>
+				<MyReviewComponent :canInteract="can_interact" :ownReview="ownReview" :marginReviewBottom="marginReviewBottom" @review_deletion="getReviews(this.isbn,1)" @decreaseHeight="decreaseHeight" @newpost="getReviews(this.isbn,1)" @expandHeight="increaseHeight" :username="username" :profileImg="profileImg" :isbn="isbn"></MyReviewComponent>
 				<div class="review-div" v-for="review in reviews" v-if="!review">
-					<ReviewComponent @review_deletion="getReviews(this.isbn,1)" :options="review.myown" :canInteract="can_interact" :isbn="isbn" :marginReviewBottom="marginReviewBottom" @expandHeight="increaseHeight" :likesCount="review.likes" :emojiIds="review.emojiIds" :reviewRate="review.rating" :reviewDescription="review.description"
+					<ReviewComponent v-if="username!=review.customerUsername" @review_deletion="getReviews(this.isbn,1)" :options="review.myown" :canInteract="can_interact" :isbn="isbn" :marginReviewBottom="marginReviewBottom" @decreaseHeight="decreaseHeight" @expandHeight="increaseHeight" :likesCount="review.likes" :emojiIds="review.emojiIds" :reviewRate="review.rating" :reviewDescription="review.description"
 					:imageReviewer="review.customerUrl" :usernameReviewer="review.customerUsername"></ReviewComponent>					
 			</div>
 			<div v-show="showLoading==true">
@@ -158,8 +158,6 @@ export default {
 		TimeFrameComponent
     },created(){
 		this.isbn = this.$route.params.bookisbn;
-		this.getBook(this.isbn);
-		this.getReviews(this.isbn,0);
 		const token = localStorage.getItem('user');
 		if (!token || this.$store.state.auth.status.loggedIn===false) {
 			this.can_interact=false;
@@ -176,6 +174,8 @@ export default {
 		} catch (error) {
 			console.error('Error parsing user token:', error);
 		}
+		this.getBook(this.isbn);
+		this.getReviews(this.isbn,0);
 	},
 	methods:{
 		navigateToCategory(category) {
@@ -204,20 +204,43 @@ export default {
 			}
 		},
 		getReviews(isbn,update){
+			let header = authHeader();
+            let config = {headers:header};
 			if(update==1) {
 				this.nrpageReview=0;
-				this.reviews=[]
+				this.reviews=[];
 			}
 			axios.get("http://localhost:8080/api/book/"+isbn+"/review?page="+this.nrpageReview+"&size=1").then(review =>{
+				if (this.username) {
+					axios.get("http://localhost:8080/api/book/"+isbn+"/review/username/"+this.username, config).then(review => {
+						this.ownReview = review.data;
+						console.log(this.ownReview);
+						if ((this.ownReview.bookrate == 0 && this.ownReview.description == '') || 
+						    (this.ownReview.bookrate == null && this.ownReview.description == null)) {
+							this.ownReview = null;
+						}
+					}).catch(err=>{
+						this.ownReview = null;
+						console.error(err);
+					});
+				}
 				if(review.data.length==0){
 					this.showMoretxt=false;
 					return;
 				}
-				if(update==0) this.reviews= this.reviews.concat(review.data);
-				else{
+				if (this.username == review.data[0].customerUsername) {
+					this.nrpageReview = this.nrpageReview + 1;
+					this.getReviews(isbn, 0);
+					console.warn("Found the review from username");
+					return;
+				}
+				review.data[0].customerUrl = review.data[0].customerUrl ? review.data[0].customerUrl : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+				console.log(review.data);
+				if (update==0) {
+					this.reviews= this.reviews.concat(review.data);
+				} else {
 					this.reviews = review.data;
 					console.log("pssst");
-					console.log(review.data);
 				} 
 				console.log("checkar");
 				this.checkMyOwnReview();
@@ -225,9 +248,9 @@ export default {
 				let descreview = this.reviews.filter(b=> b.description!="");
 				this.nrreviews = descreview.length;
 				this.nrratings = this.reviews.length;
-				for (let i = 0; i < this.reviews.length; i++) {
+				for (let i = 1; i <= this.reviews.length; i++) {
 					let ids = ["r"+(5*i+1),"r"+(5*i+2),"r"+(5*i+3),"r"+(5*i+4),"r"+(5*i+5)];
-					this.reviews[i]["emojiIds"]=ids;
+					this.reviews[i-1]["emojiIds"]=ids;
 				}
 				console.log("the reviews");
 				console.log(review.data);
@@ -319,9 +342,14 @@ export default {
 		setUsername(username){
 			this.username=username;
 		},
+		decreaseHeight() {
+			let h = this.marginReviewBottom.replace('px','');
+            h=(parseInt(h)-140)+"px";
+            this.marginReviewBottom=h;
+		},
 		increaseHeight(){
 			let h = this.marginReviewBottom.replace('px','');
-            h=parseInt(h)+140+"px";
+            h=(parseInt(h)+140)+"px";
             this.marginReviewBottom=h;
 		},
 		getAuthorInfo(){
@@ -378,6 +406,7 @@ export default {
 }
 
 .review-div{
+	padding-top: 180px;
 	padding-bottom: 20px;
 }
 

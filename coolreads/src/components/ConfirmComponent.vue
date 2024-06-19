@@ -14,6 +14,9 @@ export default {
 	props:{
 		header_msg:''
 	}, 
+	created() {
+		console.log("Created CC!");
+	},
 	methods:{
 		sendConfirmation(response){
 			this.$emit('confirmation_response', response);
@@ -82,14 +85,14 @@ export default {
 
 .confirm-bookshelfadd {
 	width: 100%;
-	position: absolute;
+	position: relative;
 	height: 539px;
 	text-align: center;
 	font-size: 30px;
 	color: #000;
 	font-family: Michroma;
 	z-index: 22;
-	margin-top: 400px;
-	margin-left: -1800px;
+	left: 400px;
+	bottom: 400px;
 }
 </style>
