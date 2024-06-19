@@ -388,6 +388,7 @@ export default{
 	font-family: Inika;
 	margin-left: -800px;
 	margin-top: 350px;
+	z-index: 40;
 }
 
 </style>
