@@ -209,6 +209,6 @@ public class BookService {
         findBookByIsbn(isbn);
         findCustomerByUsername(username);
 
-        this.bookRatingRepository.deleteById(new RatingId(isbn, username));
+        this.bookRatingRepository.deleteById(new RatingId(username, isbn));
     }
 }
