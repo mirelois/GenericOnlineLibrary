@@ -17,5 +17,3 @@
     state: present
     template: 'psql-service'
     wait: yes
-  
-  

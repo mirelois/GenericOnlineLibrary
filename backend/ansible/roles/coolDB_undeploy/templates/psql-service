@@ -1,10 +1,10 @@
 ---
-# Service for exposing MySQL
+# Service for exposing PSQL
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ db_service_name }} # logical name of the service, which will also become the DNS name of the service when it is created.
-  namespace: {{ ascn_namespace }}
+  namespace: {{ coolreads_namespace }}
   labels:
     app: {{ db_connection_name }}
     tier: database

@@ -1,10 +1,10 @@
 ---
-# Deployment for MySQL
+# Deployment for PSQL
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql-deployment
-  namespace: {{ ascn_namespace }}
+  name: psql-deployment
+  namespace: {{ coolreads_namespace }}
   labels:
     app: {{ db_connection_name }}
     tier: database

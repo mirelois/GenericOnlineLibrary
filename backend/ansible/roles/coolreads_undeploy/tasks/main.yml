@@ -1,10 +1,10 @@
 ---
-- name: Undeploy Laravelio
+- name: Undeploy Coolreads
   kubernetes.core.k8s:
     state: absent
-    template: 'laravelio-deployment'
+    template: 'coolreads-deployment'
 
-- name: Undeploy laravelio Service
+- name: Undeploy Coolreads
   kubernetes.core.k8s:
     state: absent
-    template: 'laravelio-service'
+    template: 'coolreads-service'
