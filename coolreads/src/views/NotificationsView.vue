@@ -5,60 +5,39 @@ import NavComponent from '@/components/NavComponent.vue';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 
 const store = useStore();
-const notifications = computed(() => {
-  const notifs = store.state.notifications.notifications;
-  return notifs;
-});
+const notifications = computed(() => store.state.notifications.notifications);
 const translations = computed(() => store.getters['language/currentTranslations']);
 const username = ref('');
-const page = ref(0);
-const maxPerPage = ref(10);
-const activate = ref([]);
+const maxPerPage = computed(() => store.state.notifications.maxPerPage);
+const currentPage = computed(() => store.state.notifications.currentPage);
 
 const fetchNotifications = () => {
-  console.log('Fetching notifications for', username.value); 
+  console.log('Fetching notifications for', username.value);
   store.dispatch('notifications/fetchNotifications', {
     username: username.value,
-    pageNumber: page.value,
+    pageNumber: currentPage.value,
     pageSize: maxPerPage.value,
-  }).then(() => {
   });
 };
 
 const nextPage = () => {
-  if (page.value + 1 < nrPages.value) {
-    activate.value[page.value] = false;
-    page.value += 1;
-    activate.value[page.value] = true;
-    fetchNotifications();
-  }
-};
-
-const backPage = () => {
-  if (page.value > 0) {
-    activate.value[page.value] = false;
-    page.value -= 1;
-    activate.value[page.value] = true;
-    fetchNotifications();
-  }
-};
-
-const goToPage = (pageIndex) => {
-  activate.value[page.value] = false;
-  page.value = pageIndex;
-  activate.value[page.value] = true;
+  store.commit('notifications/incrementPage');
   fetchNotifications();
 };
 
-const initializeActivate = () => {
-  activate.value = new Array(nrPages.value).fill(false);
-  if (activate.value.length > 0) activate.value[0] = true;
+const backPage = () => {
+  store.commit('notifications/decrementPage');
+  fetchNotifications();
 };
 
+const goToPage = (pageIndex) => {
+  store.commit('notifications/resetPage');
+  store.commit('notifications/incrementPage', pageIndex);
+  fetchNotifications();
+};
 const nrPages = computed(() => Math.ceil(notifications.value.length / maxPerPage.value));
-
 const paginatedNotifications = computed(() => {
-  const start = page.value * maxPerPage.value;
+  const start = currentPage.value * maxPerPage.value;
   const end = start + maxPerPage.value;
   return notifications.value.slice(start, end);
 });
@@ -85,7 +64,6 @@ const formatNotificationType = (type) => {
   }
 };
 
-
 onMounted(() => {
   const token = localStorage.getItem('user');
   if (token) {
@@ -93,7 +71,6 @@ onMounted(() => {
       const decodedToken = JSON.parse(token);
       username.value = decodedToken.info.sub;
       fetchNotifications();
-      initializeActivate();
     } catch (error) {
       console.error('Error parsing user token:', error);
     }
@@ -113,17 +90,13 @@ onMounted(() => {
         <img class="clock-icon" alt="" src="/img/clock.svg">
         <b class="time">{{ timeMachine(notification.createdAt) }}</b>
         <b class="message">{{ formatNotificationType(notification.notificationType) }} from {{ notification.username }}</b>
-        <div v-if="notification.title && notification.author" class="book-details">
-          <b class="title">{{ notification.title }}</b>
-          <b class="author">{{ notification.author }}</b>
-        </div>
       </div>
     </div>
     <div class="pagination">
       <div class="pagination-child">
         <div class="parent">
           <img class="vector-icon" @click="backPage" alt="" src="/img/back.svg">
-          <div v-for="(n, index) in nrPages" :key="index" class="div3" :class="{ 'child': activate[n - 1] }" @click="goToPage(n - 1)">{{ n }}</div>
+          <div v-for="(n, index) in nrPages" :key="index" class="div3" :class="{ 'child': currentPage === index }" @click="goToPage(index)">{{ n }}</div>
           <img class="vector-icon1" @click="nextPage" alt="" src="/img/front.svg">
         </div>
       </div>
@@ -181,7 +154,7 @@ onMounted(() => {
 }
 .clock-icon {
   position: absolute;
-  left: -50px;
+  left: -65px;
   margin-left: 40px;
   width: 40px;
   height: 40px;
@@ -191,7 +164,7 @@ onMounted(() => {
 .time {
   position: absolute;
   margin-left: 40px;
-  left: 0px;
+  left: -15px;
   font-size: 20px;
   color: #fff;
 }
