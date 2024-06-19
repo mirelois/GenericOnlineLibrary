@@ -90,6 +90,10 @@ export default {
                 this.mycomment,
                 config
                 ).then(resp=>{
+                    if(resp.status==200){
+                        this.increaseArea();
+                        this.comentarios.push({"customerUserName":this.reviewer,"comment":this.mycomment});
+                      }
                     console.log(resp);
                 }).catch(error=>{
                     console.log(error);

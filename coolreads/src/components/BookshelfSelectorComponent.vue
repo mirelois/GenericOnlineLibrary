@@ -57,15 +57,9 @@ export default {
             let header = authHeader();
             let config = {headers:header}
             header['Content-Type']='application/json';
-            const date = new Date();
-			      const isoDateString = date.toISOString();
             this.checkedOptions.forEach(bookshelf => {
-                axios.post("http://localhost:8080/api/customer/"+this.username+"/bookshelf/"+bookshelf,
-				            {
-                      pagesRead:0,
-                      insertDate:isoDateString,
-                      bookISBN: this.bookISBN
-				            },
+                axios.post("http://localhost:8080/api/customer/"+this.username+"/bookshelf/"+bookshelf+"?isbn="+this.bookISBN,
+				            {},
                     config 
             				).then(resp =>{
                       if(resp.status==200){

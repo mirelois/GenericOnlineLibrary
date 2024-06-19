@@ -47,8 +47,7 @@ export default{
 
 			const date = new Date();
 			const isoDateString = date.toISOString();
-			if(this.textreview!=""){
-				axios.post("http://localhost:8080/api/book/"+this.isbn+"/review?username="+this.username,
+			axios.post("http://localhost:8080/api/book/"+this.isbn+"/review?username="+this.username,
 				{
 					description:this.textreview,
 					postDate: isoDateString
@@ -61,7 +60,6 @@ export default{
 				}).catch(err=>{
 					console.log(err)
 				})
-			}
 			this.textreview='';
 			this.bookrate=0;
 		},
