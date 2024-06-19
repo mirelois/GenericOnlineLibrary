@@ -79,7 +79,7 @@ public class BookReviewService {
         this.customerRepository.findById(username).orElseThrow(() -> new CustomerNotFoundException(username));
 
         Optional<Review> optionalReview = this.bookReviewRepository.findById(new ReviewId(username, isbn));
-        if(optionalReview.isEmpty()) return null;
+        if(optionalReview.isEmpty()) return new BookReviewDTO();
 
         Review review = optionalReview.get();
 
