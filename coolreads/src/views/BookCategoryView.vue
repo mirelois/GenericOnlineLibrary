@@ -1,5 +1,5 @@
 <template>
-    <div class="books-page">
+    <div class="my-books-page">
       <NavComponent :username="username"></NavComponent>
       <b class="category-fantasy">Genre - {{ category }}</b>
       <input v-model="searchInput" type="text" class="my-search-box" placeholder="Search for books..." />
@@ -30,24 +30,24 @@
         </div>
       </div>
       <div class="separator"></div>
-          <div class="div">
+          <div class="catdiv">
                 <div class="overlap">
                     <div class="my-book-row">
-                        <div class="book">
-                            <div class="overlap-group">
-                            <div class="mywrapper" v-for="(row, index) in paginatedBooks" :key="index"> 
-                            <BookComponent :categories_page="true" v-for="book in row" :bookISBN="book.isbn" :cover="book.imageUrl" />
+                        <div class="mybook">
+                            <div class="my-overlap-group">
+                            <div class="mywrapper" v-for="(value, index) in displayBooksPerPage" :key="index" > 
+                            <BookComponent :title="value.title" :categories_page="true" :bookISBN="value.isbn" :cover="value.imageUrl" />
                           </div>
                         </div>
                       </div>
                   </div>
               </div>
           </div>
-      <div class="pagination">
-        <div class="pagination-child">
+      <div class="my-pagination">
+        <div class="my-pagination-child">
           <div class="parent">
             <img class="my-vector-icon" @click="backPage" alt="" src="/img/back.svg">
-            <div v-for="(n, index) in nrPages" :key="index" class="mydiv3" :class="{ 'mychild': activate[n - 1] }" @click="goToPage(n - 1)">{{ n }}</div>
+            <div class="mydiv3" :class="{ 'mychild': true }">{{ page }}</div>
             <img class="my-vector-icon1" @click="nextPage" alt="" src="/img/front.svg">
           </div>
         </div>
@@ -69,124 +69,82 @@
       NavComponent,
       BookComponent,
     },
-    setup() {
+    data(){
+        return {
+            activate : [],
+            showDropdownMenu:false,
+            page: 1,
+            maxPerPage : 18,
+            nrpages : 0,
+            searchInput: '',
+            filtered: [],
+            newfiltered:[],
+            username:'',
+            category:'',
+            selectedOption: 'Select Sorting Operation'
+        }
+    },
+    created(){
       const route = useRoute();
       const store = useStore();
-      const username = computed(() => {if (store.state.auth.status.loggedIn) return store.state.auth.user.info.sub; else return '';});
-      const category = computed(() => route.params.category);
-  
-      const showDropdownMenu = ref(false);
-      const selectedOption = ref('Select an option');
-      const searchInput = ref('');
-      const page = ref(0);
-      const maxPerPage = 10;
-      const activate = ref([]);
-      const books = ref([]);
-      const filtered = ref([]);
-  
-      const showMenu = () => {
-        showDropdownMenu.value = !showDropdownMenu.value;
-      };
-  
-      const sortBooks = (param) => {
-        if (param === 'Date') {
-          filtered.value.sort((a, b) => new Date(a.insertDate) - new Date(b.insertDate));
-        } else if (param === 'Rate') {
-          filtered.value.sort((a, b) => a.rate - b.rate);
-        } else {
-          filtered.value.sort((a, b) => a.title.localeCompare(b.title));
+      this.username = computed(() => {if (store.state.auth.status.loggedIn) return store.state.auth.user.info.sub; else return '';});
+      this.category = computed(() => route.params.category);
+      this.fetchBooks();
+    
+    },methods:{
+      showMenu(){
+        this.showDropdownMenu = !this.showDropdownMenu
+      },
+      sortBooks(param){
+            if(param=="Date"){
+                this.filtered.sort((a,b)=> new Date(a.insertDate) - new Date(b.insertDate))
+                console.log(this.filtered)
+            }
+            if(param=="Rate"){
+                this.filtered.sort((a,b)=> a.rate-b.rate)
+                console.log(this.filtered)
+            }
+            else{
+                this.filtered.sort((a,b)=>a.title.localeCompare(b.title))
+            }
         }
-        selectedOption.value = param;
-        page.value = 0;
-        initializeActivate();
-      };
-  
-      const nextPage = () => {
-        if (page.value + 1 < nrPages.value) {
-          activate.value[page.value] = false;
-          page.value += 1;
-          activate.value[page.value] = true;
-        }
-      };
-  
-      const backPage = () => {
-        if (page.value > 0) {
-          activate.value[page.value] = false;
-          page.value -= 1;
-          activate.value[page.value] = true;
-        }
-      };
-  
-      const goToPage = (pageIndex) => {
-        activate.value[page.value] = false;
-        page.value = pageIndex;
-        activate.value[page.value] = true;
-      };
-  
-      const initializeActivate = () => {
-        activate.value = new Array(nrPages.value).fill(false);
-        if (activate.value.length > 0) activate.value[0] = true;
-      };
-  
-      const nrPages = computed(() => Math.ceil(filtered.value.length / maxPerPage));
-  
-      const paginatedBooks = computed(() => {
-        const start = page.value * maxPerPage;
-        const end = start + maxPerPage;
-        const booksForPage = filtered.value.slice(start, end);
-        const rows = [];
-        for (let i = 0; i < booksForPage.length; i += 5) {
-          rows.push(booksForPage.slice(i, i + 5));
-        }
-        return rows;
-      });
-  
-      const fetchBooksByCategory = async () => {
+      ,
+      async fetchBooks(){
         try {
-          const response = await axios.get(`http://localhost:8080/api/book/genre?genre=${encodeURIComponent(category.value.toLowerCase())}`);
-          books.value = response.data;
-          filtered.value = books.value;
-          console.log('Books fetched successfully!', books.value);
-          initializeActivate();
+          let mypage = 0;
+          if(this.page>0) mypage = this.page - 1;
+          const response = await axios.get("http://localhost:8080/api/book/genre?genre="+this.category.toLowerCase()+"&page="+mypage+"&size="+this.maxPerPage);
+          if(response.data.length>0) this.filtered = response.data;
+          else this.backPage();
+          console.log('Books fetched successfully!', this.filtered);
         } catch (error) {
           console.error('Error fetching books by category:', error);
         }
-      };
-  
-      watch(searchInput, (newSearch) => {
-        if (newSearch) {
-          filtered.value = books.value.filter((book) =>
-            book.title.toLowerCase().includes(newSearch.toLowerCase())
-          );
-        } else {
-          filtered.value = books.value;
+      },
+      nextPage(){
+        console.log("next")
+        this.page = this.page + 1;
+        this.fetchBooks();
+      },
+      backPage(){
+        if(this.page>1){
+          this.page = this.page - 1;
+          this.fetchBooks();
         }
-        initializeActivate();
-      });
-  
-      onMounted(() => {
-        fetchBooksByCategory();
-      });
-  
-      return {
-        category,
-        username,
-        showDropdownMenu,
-        selectedOption,
-        showMenu,
-        searchInput,
-        page,
-        nrPages,
-        activate,
-        nextPage,
-        backPage,
-        goToPage,
-        paginatedBooks,
-        sortBooks,
-      };
+      }
     },
-  };
-  </script>
+    computed: {
+        displayBooksPerPage(){
+            if (this.searchInput !== '') {
+                this.newfiltered = this.filtered.filter(b => b.title.toLowerCase().includes(this.searchInput.toLowerCase()))
+            }else{
+                this.newfiltered = this.filtered 
+            }
+            return this.newfiltered;
+          }
+    }
+}
+</script>
 
 
 <style>
@@ -194,46 +152,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap');
-.bodyCategory {
-margin: 0; line-height: normal;
-}
-.bodyCategory .overlap {
-  position: relative;
-  flex-direction: row;
-  width: 1179px;
-  height: 1163px;
-  top: 190px;
-  left: -1050px;
-}
-.mywrapper{
-  display:flex;
-}
-.bodyCategory .divm:not(#searchbox) {
-    width: 600px;
-    height: 700px;
-    position: absolute;
-    flex-direction: row;
-} 
-.bodyCategory .book {
-    position: relative;
-    width: 40px;
-    height: 100px;
-    flex-direction: row;
-} 
-.bodyCategory .my-book-row {
-    display: flex;
-    width: 1060px;
-    align-items: flex-end;
-    flex-direction: row;
-    gap: 45px;
-    position: absolute;
-    top: 29px;
-    left: 80px;
-}
-.bodyCategory ~ .remove {
-  display: none
-}
-.books-page .my-book-row {
+
+.my-books-page .my-book-row {
   display: flex;
   width: 1060px;
   align-items: flex-end;
@@ -243,25 +163,25 @@ margin: 0; line-height: normal;
   left: -180px;
 }
 
-.books-page .book {
+.my-books-page .mybook {
     position: relative;
     width: 180px;
     height: 280px;
 } 
 
-.books-page {
+.my-books-page {
 	width: 2000px;
 	display: flex;
 	flex-direction: row;
 }
-.books-page .div:not(#searchbox) {
+.my-books-page .div:not(#searchbox) {
   width: 1300px;
   height: 800px;
   position: absolute;
   left: 500px;
 }
 
-.books-page .text-wrapper-4 {
+.my-books-page .text-wrapper-4 {
   position: absolute;
   top: 300px;
   left: 600px;
@@ -273,14 +193,21 @@ margin: 0; line-height: normal;
   line-height: normal;
 }
 
-.books-page .remove {
+.my-books-page .remove {
     position: absolute;
     width: 30px;
     height: 30px;
     top: 0;
     left: 165px;
 }
-.books-page .book-add {
+
+.my-books-page .book {
+    position: relative;
+    width: 180px;
+    height: 280px;
+    margin-bottom:40px;
+} 
+.my-books-page .book-add {
     position: absolute;
     width: 179px;
     height: 280px;
@@ -288,14 +215,14 @@ margin: 0; line-height: normal;
     left: 68px;
     cursor: pointer;
 }
-.books-page .div-wrapper {
+.my-books-page .div-wrapper {
     position: relative;
     width: 180px;
     height: 280px;
     box-shadow: var(--book-shadow);
     background: linear-gradient(180deg, rgba(221, 221, 221, 0) 0%, rgb(221, 221, 221) 100%);
 }
-.books-page .text-wrapper-3 {
+.my-books-page .text-wrapper-3 {
     position: absolute;
     top: 87px;
     left: 68px;
@@ -320,7 +247,7 @@ margin: 0; line-height: normal;
     cursor:pointer;
 } 
 
-.books-page .pagination {
+.my-books-page .mypagination {
     position: absolute;
     width: 542px;
     height: 68px;
@@ -331,7 +258,7 @@ margin: 0; line-height: normal;
     box-shadow: 0px 4.97px 4.97px #00000033;
 }
 
-.books-page .overlap-2 {
+.my-books-page .overlap-2 {
     position: absolute;
     width: 445px;
     height: 42px;
@@ -339,7 +266,7 @@ margin: 0; line-height: normal;
     left: 80px;
 }
 
-.books-page .vector {
+.my-books-page .vector {
     top: 12px;
     left: 433px;
     position: absolute;
@@ -347,7 +274,7 @@ margin: 0; line-height: normal;
     height: 16px;
 }
 
-.books-page .element {
+.my-books-page .element {
     position: absolute;
     width: 445px;
     height: 42px;
@@ -388,7 +315,7 @@ margin: 0; line-height: normal;
     line-height: normal;
 } 
 
-.books-page .overlap-group-2 {
+.my-books-page .overlap-group-2 {
     position: absolute;
     width: 42px;
     height: 42px;
@@ -397,7 +324,7 @@ margin: 0; line-height: normal;
     background-color: #8698d4;
     border-radius: 21px;
 }
-.books-page .text-wrapper-5 {
+.my-books-page .text-wrapper-5 {
     position: absolute;
     height: 20px;
     top: 10px;
@@ -412,7 +339,7 @@ margin: 0; line-height: normal;
     line-height: normal;
     white-space: nowrap;
 }
-.books-page .frame {
+.my-books-page .frame {
     display: flex;
     width: 363px;
     height: 20px;
@@ -422,7 +349,7 @@ margin: 0; line-height: normal;
     top: 10px;
     left: 78px;
 }
-.books-page .text-wrapper-6 {
+.my-books-page .text-wrapper-6 {
     position: relative;
     height: 19.5px;
     margin-top: -1.5px;
@@ -436,14 +363,14 @@ margin: 0; line-height: normal;
     line-height: normal;
     white-space: nowrap;
 }
-.books-page .vector-2 {
+.my-books-page .vector-2 {
     top: 26px;
     left: 14px;
     position: absolute;
     width: 8px;
     height: 16px;
 }
-.books-page .search-bookshelf {
+.my-books-page .search-bookshelf {
     position: absolute;
     width: 739px;
     height: 57px;
@@ -453,14 +380,14 @@ margin: 0; line-height: normal;
     border-radius: 25px;
 }
 
-.books-page .search-2 {
+.my-books-page .search-2 {
     position: absolute;
     width: 33px;
     height: 34px;
     top: 11px;
     left: 16px;
 }
-.books-page .text-wrapper-7 {
+.my-books-page .text-wrapper-7 {
     position: absolute;
     height: 26px;
     top: 14px;
@@ -599,16 +526,26 @@ margin: 0; line-height: normal;
   	width: 856px;
   	height: 92px;
 }
-
-.vector-icon {
-	width: 9px;
-  	position: absolute;
-  	height: 16px;
+.my-vector-icon {
+    width: 26px;
+    position: absolute;
+    height: 26px;
+    left: -60px;
+    top: -5px;
 }
-.vector-icon1 {
-  	width: 9px;
-  	position: absolute;
-  	height: 16px;
+
+.my-vector-icon1 {
+    width: 26px;
+    position: absolute;
+    height: 26px;
+    left: 630px;
+    top: -5px;
+}
+.my-vector-icon:hover {
+	cursor:pointer;
+}
+.my-vector-icon1:hover {
+    cursor:pointer;
 }
 .child {
   	position: absolute;
@@ -619,7 +556,7 @@ margin: 0; line-height: normal;
   	width: 42px;
   	height: 42px;
 }
-.overlap-group {
+.my-overlap-group {
     display: grid;
     grid-template-columns: auto auto auto auto auto auto;
     grid-template-rows : auto auto auto auto auto auto;
@@ -665,16 +602,15 @@ margin: 0; line-height: normal;
   	gap: 36px;
   	color: #656565;
 }
-.div {
-  	position: absolute;
-  	top: 13px;
-  	left: 80px;
-  	width: 441px;
-  	height: 42px;
+.catdiv {
+    position: absolute;
+    top: 555px;
+    left: 580px;
+    width: 641px;
+    height: 42px;
 }
-.pagination {
+.mypagination {
   	position: absolute;
-  	top: 1467px;
   	left: 464px;
   	width: 642px;
   	height: 68.4px;
@@ -682,10 +618,10 @@ margin: 0; line-height: normal;
   	font-size: 18px;
   	font-family: Lato;
 }
-.pagination-child {
+.my-pagination-child {
   	position: absolute;
-  	top: 0px;
-  	left: 0px;
+    top: 1900px;
+    left: 600px;
   	box-shadow: 0px 4.972476959228516px 4.97px rgba(0, 0, 0, 0.2);
   	border-radius: 32.32px;
   	background-color: #f7f9ff;

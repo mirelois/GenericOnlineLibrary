@@ -61,7 +61,7 @@ if (localStorage.getItem('selectedLanguage')) {
                         <div class="book">
                             <div class="overlap-group">
                                 <div v-for="book in displayBooksPerPage" v-if="!book">
-                                    <BookComponent :categories_page="false" @removeBook="showConfirmDeletion" :cover="book.coverImage" :bookISBN="book.bookISBN" ></BookComponent>
+                                    <BookComponent :categories_page="false" @removeBook="showConfirmDeletion" :title="book.title" :cover="book.coverImage" :bookISBN="book.bookISBN" ></BookComponent>
                                 </div>
                             </div>
                         </div>
@@ -600,7 +600,7 @@ export default {
     width: 26px;
     position: absolute;
     height: 26px;
-    left: 630px;
+    left: 430px;
     top: -5px;
 }
 .myvector-icon1:hover {
