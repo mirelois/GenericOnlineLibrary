@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-responsive.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+  <script src="assets/js/jquery-1.8.3.min.js" type="text/javascript"></script>
+  <script src="assets/js/main.js" type="text/javascript"></script>
+
+  <title>REST API Resources</title>
+</head>
+<body>
+  <div class="header">
+    <div class="top-bar">
+      <h1 id="logo"><a class="logo" href="/"><span>Swagger</span><span class="light">API Docs</span></a></h1>
+    </div>
+  </div>
+  <div class="model-container"></div>
+  <div class="content">
+    <div class="box clearfix">
+      <div class="sidebar">
+        <div class="section-box">
+          <div class="section-header">
+            Overview
+          </div>
+          <ul>
+            <li>Getting Started</li>
+          </ul>
+        </div>
+        <div class="section-box">
+          <div class="section-header">
+            <a href="#!/BookControllerApi">BookControllerApi</a>
+          </div>
+          <ul>
+            <li><a href="#!/BookControllerApi#deleteBookRating">deleteBookRating</a></li>
+            <li><a href="#!/BookControllerApi#getBook">getBook</a></li>
+            <li><a href="#!/BookControllerApi#getBookRating">getBookRating</a></li>
+            <li><a href="#!/BookControllerApi#getBooksByGenre">getBooksByGenre</a></li>
+            <li><a href="#!/BookControllerApi#getBooksByName">getBooksByName</a></li>
+            <li><a href="#!/BookControllerApi#insertBook1">insertBook1</a></li>
+            <li><a href="#!/BookControllerApi#insertBookRating">insertBookRating</a></li>
+            <li><a href="#!/BookControllerApi#updateBookRating">updateBookRating</a></li>
+          </ul>
+        </div>
+        <div class="section-box">
+          <div class="section-header">
+            <a href="#!/BookReviewControllerApi">BookReviewControllerApi</a>
+          </div>
+          <ul>
+            <li><a href="#!/BookReviewControllerApi#deleteLike">deleteLike</a></li>
+            <li><a href="#!/BookReviewControllerApi#deleteReview">deleteReview</a></li>
+            <li><a href="#!/BookReviewControllerApi#deleteReviewComment">deleteReviewComment</a></li>
+            <li><a href="#!/BookReviewControllerApi#getCustomerReview">getCustomerReview</a></li>
+            <li><a href="#!/BookReviewControllerApi#getReview">getReview</a></li>
+            <li><a href="#!/BookReviewControllerApi#getReviewComments">getReviewComments</a></li>
+            <li><a href="#!/BookReviewControllerApi#insertLike">insertLike</a></li>
+            <li><a href="#!/BookReviewControllerApi#insertReview">insertReview</a></li>
+            <li><a href="#!/BookReviewControllerApi#insertReviewComment">insertReviewComment</a></li>
+            <li><a href="#!/BookReviewControllerApi#updateReview">updateReview</a></li>
+          </ul>
+        </div>
+        <div class="section-box">
+          <div class="section-header">
+            <a href="#!/BookshelfControllerApi">BookshelfControllerApi</a>
+          </div>
+          <ul>
+            <li><a href="#!/BookshelfControllerApi#addExclusivityClassToBookshelf">addExclusivityClassToBookshelf</a></li>
+            <li><a href="#!/BookshelfControllerApi#changeExclusivityClassName">changeExclusivityClassName</a></li>
+            <li><a href="#!/BookshelfControllerApi#checkIfExclusivityClassAreConflictFree">checkIfExclusivityClassAreConflictFree</a></li>
+            <li><a href="#!/BookshelfControllerApi#createExclusivityClass">createExclusivityClass</a></li>
+            <li><a href="#!/BookshelfControllerApi#deleteBook">deleteBook</a></li>
+            <li><a href="#!/BookshelfControllerApi#deleteBookshelf">deleteBookshelf</a></li>
+            <li><a href="#!/BookshelfControllerApi#deleteExclusivityClass">deleteExclusivityClass</a></li>
+            <li><a href="#!/BookshelfControllerApi#getBooks">getBooks</a></li>
+            <li><a href="#!/BookshelfControllerApi#getBookshelves">getBookshelves</a></li>
+            <li><a href="#!/BookshelfControllerApi#getExclusivityClasses">getExclusivityClasses</a></li>
+            <li><a href="#!/BookshelfControllerApi#insertBook">insertBook</a></li>
+            <li><a href="#!/BookshelfControllerApi#insertBookshelf">insertBookshelf</a></li>
+            <li><a href="#!/BookshelfControllerApi#removeExclusivityClassFromBookshelf">removeExclusivityClassFromBookshelf</a></li>
+            <li><a href="#!/BookshelfControllerApi#updateBook">updateBook</a></li>
+            <li><a href="#!/BookshelfControllerApi#updateBookshelf">updateBookshelf</a></li>
+          </ul>
+        </div>
+        <div class="section-box">
+          <div class="section-header">
+            <a href="#!/CustomerControllerApi">CustomerControllerApi</a>
+          </div>
+          <ul>
+            <li><a href="#!/CustomerControllerApi#acceptFriendRequest">acceptFriendRequest</a></li>
+            <li><a href="#!/CustomerControllerApi#changePassword">changePassword</a></li>
+            <li><a href="#!/CustomerControllerApi#deleteCurrentCustomerProfileDetails">deleteCurrentCustomerProfileDetails</a></li>
+            <li><a href="#!/CustomerControllerApi#getCurrentCustomerProfile">getCurrentCustomerProfile</a></li>
+            <li><a href="#!/CustomerControllerApi#getCustomer">getCustomer</a></li>
+            <li><a href="#!/CustomerControllerApi#getFriendsList">getFriendsList</a></li>
+            <li><a href="#!/CustomerControllerApi#getNotifications">getNotifications</a></li>
+            <li><a href="#!/CustomerControllerApi#login">login</a></li>
+            <li><a href="#!/CustomerControllerApi#register">register</a></li>
+            <li><a href="#!/CustomerControllerApi#removeFriend">removeFriend</a></li>
+            <li><a href="#!/CustomerControllerApi#removeNotification">removeNotification</a></li>
+            <li><a href="#!/CustomerControllerApi#sendFriendRequest">sendFriendRequest</a></li>
+            <li><a href="#!/CustomerControllerApi#updateCurrentCustomerProfile">updateCurrentCustomerProfile</a></li>
+          </ul>
+        </div>
+        <div class="section-box">
+          <div class="section-header">
+            <a href="#!/PublisherControllerApi">PublisherControllerApi</a>
+          </div>
+          <ul>
+            <li><a href="#!/PublisherControllerApi#insertPublisher">insertPublisher</a></li>
+          </ul>
+        </div>
+        <div class="section-box">
+          <div class="section-header">
+            <a href="#!/StatisticsControllerApi">StatisticsControllerApi</a>
+          </div>
+          <ul>
+            <li><a href="#!/StatisticsControllerApi#getStatisticsAgePie">getStatisticsAgePie</a></li>
+            <li><a href="#!/StatisticsControllerApi#getStatisticsCountryPie">getStatisticsCountryPie</a></li>
+            <li><a href="#!/StatisticsControllerApi#getStatisticsGenderPie">getStatisticsGenderPie</a></li>
+            <li><a href="#!/StatisticsControllerApi#getStatisticsLine">getStatisticsLine</a></li>
+            <li><a href="#!/StatisticsControllerApi#getStatisticsNumber">getStatisticsNumber</a></li>
+          </ul>
+        </div>
+      </div>
+    <div class="non-sidebar">
+      <div class="main-content">
+        <h2>Getting Started</h2>
+        <p>To begin using your fancy HTTP API, follow the steps below.</p>
+        <p>You can add some helpful tips, here</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
