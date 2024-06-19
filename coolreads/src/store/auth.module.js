@@ -44,15 +44,13 @@ const auth = {
     changePassword({ commit }, { oldPassword, newPassword }) {
       return AuthService.changePassword(oldPassword, newPassword).then(
         response => {
-          commit('changePasswordSuccess');
           return Promise.resolve(response.data);
         },
         error => {
-          commit('changePasswordFailure');
           return Promise.reject(error);
         }
       );
-    }
+    },
   },
   mutations: {
     loginSuccess(state, user) {
@@ -71,7 +69,7 @@ const auth = {
       if (lastRoute) {
         state.lastRoute = lastRoute;
       } else {
-        state.lastRoute = '/'
+        state.lastRoute = '/';
       }
     },
     registerSuccess(state) {
@@ -79,14 +77,6 @@ const auth = {
     },
     registerFailure(state) {
       state.status.loggedIn = false;
-    },
-    changePasswordSuccess(state) {
-      state.passwordChangeMessage = "Success";
-      console.log("Success: Password changed");
-    },
-    changePasswordFailure(state, error) {
-      state.passwordChangeMessage = "Pass not correct";
-      console.error("Error: Password change failed", error);
     },
     storeReview(state, textReview) {
       state.storedReview = textReview;

@@ -33,25 +33,13 @@ class AuthService {
       email: user.email
     });
   }
-
   changePassword(oldPassword, newPassword) {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return axios
-        .put(API_URL + 'me/password', {
-          oldPassword: oldPassword,
-          newPassword: newPassword
-    }, {
-      headers: {
-        Authorization: 'Bearer ' + user.accessToken
-      }
-    }).then(response => {
-      if (response.data.success) {
-        return Promise.resolve(response.data);
-      } else {
-        return Promise.reject(new Error('Password change failed'));
-      }
-    }).catch(error => {
-      return Promise.reject(error);
+    return axios.put(API_URL + 'me/password', null, {
+      params: {
+        oldPassword: oldPassword,
+        newPassword: newPassword
+      },
+      headers: authHeader()
     });
   }
 }

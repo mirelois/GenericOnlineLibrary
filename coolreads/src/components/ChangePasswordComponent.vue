@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 import { computed } from 'vue';
+
 const store = useStore();
 
 const translations = computed(() => store.getters['language/currentTranslations']);
@@ -11,18 +12,28 @@ const selectedLanguage = computed(() => store.state.language.selectedLanguage);
 if (localStorage.getItem('selectedLanguage')) {
     setLanguage(localStorage.getItem('selectedLanguage'));
 }
+
 const currentPassword = ref('');
 const newPassword = ref('');
-const errorMessage = ref('');
+const toastMessage = ref('');
+const showToast = ref(false);
 
+const changePassword = async () => {
+  try {
+    await store.dispatch('auth/changePassword', { oldPassword: currentPassword.value, newPassword: newPassword.value });
+    toastMessage.value = 'Successfuly changed password';
+  } catch (error) {
+    toastMessage.value = error.response ? error.response.data : 'Fail';
+  } finally {
+    showToast.value = true;
+  }
+};
 
-const confirmChange = async () => {
-    try {
-        await store.dispatch('auth/changePassword', { oldPassword: currentPassword.value, newPassword: newPassword.value });
-        errorMessage.value = translations.value.passwordChangeSuccess;
-    } catch (error) {
-        errorMessage.value = translations.value.passwordChangeError;
-    }
+const handleToastClose = () => {
+  showToast.value = false;
+  if (toastMessage.value === 'Successfuly changed password') {
+    closePopup();
+  }
 };
 </script>
 
@@ -41,14 +52,14 @@ const confirmChange = async () => {
           <label for="new-password">{{ translations.newPassword }}</label>
           <input v-model="newPassword" type="password" id="new-password" />
         </div>
-        <button class="confirm-button" @click="confirmChange">{{ translations.confirm }}</button>
+        <button class="confirm-button" @click="changePassword">{{ translations.confirm }}</button>
       </div>
     </div>
-    <ToastComponent v-if="errorMessage" :msg="errorMessage" @close_toast="errorMessage = ''" />
+    <ToastComponent v-if="showToast" :msg="toastMessage" @close_toast="handleToastClose" />
   </div>
 </template>
+
 <script>
-import { mapActions } from 'vuex';
 import ToastComponent from './ToastComponent.vue';
 
 export default {
@@ -56,36 +67,14 @@ export default {
   components: {
     ToastComponent
   },
-  data() {
-    return {
-      oldPassword: '',
-      newPassword: '',
-      showToast: false,
-      toastMessage: ''
-    };
-  },
   methods: {
-    ...mapActions('auth', ['changePassword']),
-    confirmChange() {
-      this.changePassword({ oldPassword: this.oldPassword, newPassword: this.newPassword })
-        .then(() => {
-          this.toastMessage = 'Password changed successfully';
-          this.showToast = true;
-        })
-        .catch(() => {
-          this.toastMessage = 'Error changing password';
-          this.showToast = true;
-        });
-    },
-    closeToast() {
-      this.showToast = false;
-    },
     closePopup() {
-        this.$emit('close');
-      },
+      this.$emit('close');
+    },
   }
 };
 </script>
+
   
   <style scoped>
   .popup-overlay {
