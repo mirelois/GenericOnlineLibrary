@@ -17,3 +17,47 @@
     state: present
     template: 'psql-service'
     wait: yes
+
+- name: Wait for PostgreSQL to be ready
+  wait_for:
+    host: localhost  
+    port: 5432       
+    timeout: 300      
+    delay: 10         
+    state: started
+
+- name: Execute SQL scripts
+  shell: |
+    docker exec -i postgres psql -U postgres -d cool -c "CREATE DATABASE cool"
+    docker exec -i postgres psql -U postgres -d cool -c "CREATE TABLE IF NOT EXISTS Genre (
+      genre_type VARCHAR(255) UNIQUE NOT NULL PRIMARY KEY
+    );"
+    docker exec -i postgres psql -U postgres -d cool -c "CREATE TABLE IF NOT EXISTS AgeRange (
+      id SERIAL PRIMARY KEY,
+      ageClass VARCHAR(255) UNIQUE NOT NULL
+    );"
+    docker exec -i postgres psql -U postgres -d cool -c "INSERT INTO Genre (genre_type) VALUES
+      ('scifi'),
+      ('fantasy'),
+      ('adventure'),
+      ('mystery'),
+      ('biography'),
+      ('manga'),
+      ('music'),
+      ('sports'),
+      ('romance')
+    ON CONFLICT (genre_type) DO NOTHING;"
+    docker exec -i postgres psql -U postgres -d cool -c "INSERT INTO AgeRange (ageClass) VALUES
+      ('child'),
+      ('teen'),
+      ('young_adult'),
+      ('adult'),
+      ('elder')
+    ON CONFLICT (ageClass) DO NOTHING;"
+  args:
+    executable: /bin/bash
+  register: sql_execution
+  until: sql_execution.rc == 0
+  retries: 5
+  delay: 10
+

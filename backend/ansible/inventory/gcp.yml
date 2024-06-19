@@ -23,8 +23,9 @@ all:
   app_name: coolreads
   app_service_name: coolreads-service
   db_database_name: cool
-  db_connection_name: psql
+  db_connection_name: postgresql
   db_service_name: psql-service
+  db_container_port: 5432
 
 
   # Database variables

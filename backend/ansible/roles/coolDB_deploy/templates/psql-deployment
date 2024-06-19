@@ -23,6 +23,8 @@ spec:
       containers:
       - name: {{ db_connection_name }}
         image: postgres:16
+        ports:
+          - containerPort: {{ db_container_port }}
         env: # The variables below could be set on a ConfigMap object
         - name: POSTGRES_DB
           value: {{ db_database_name }}
