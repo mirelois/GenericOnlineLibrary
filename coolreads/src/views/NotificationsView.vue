@@ -5,7 +5,11 @@ import NavComponent from '@/components/NavComponent.vue';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 
 const store = useStore();
-const notifications = computed(() => store.state.notifications.notifications);
+const notifications = computed(() => {
+  const notifs = store.state.notifications.notifications;
+  console.log('Computed notifications:', notifs);
+  return notifs;
+});
 const translations = computed(() => store.getters['language/currentTranslations']);
 const username = ref('');
 const page = ref(0);
@@ -13,12 +17,14 @@ const maxPerPage = ref(10);
 const activate = ref([]);
 
 const fetchNotifications = () => {
+  console.log('Fetching notifications for', username.value); 
   store.dispatch('notifications/fetchNotifications', {
     username: username.value,
     pageNumber: page.value,
     pageSize: maxPerPage.value,
+  }).then(() => {
+    console.log('Notifications fetched');
   });
-  console.log('Fetched');
 };
 
 const handleDelete = (notificationId) => {
@@ -102,14 +108,18 @@ onMounted(() => {
         <img class="clock-icon" alt="" src="/img/clock.svg">
         <b class="time">{{ timeMachine(notification.createdAt) }}</b>
         <b class="message">{{ notification.notificationType }} from {{ notification.username }}</b>
-        <div class="deletebutton"><button @click="handleDelete(notification.id)">{{ translations.value.delete }}</button></div>
+        <div v-if="notification.title && notification.author" class="book-details">
+          <b class="title">{{ notification.title }}</b>
+          <b class="author">{{ notification.author }}</b>
+        </div>
+        <div class="deletebutton"><button @click="handleDelete(notification.id)">{{ translations.delete }}</button></div>
       </div>
     </div>
     <div class="pagination">
       <div class="pagination-child">
         <div class="parent">
           <img class="vector-icon" @click="backPage" alt="" src="/img/back.svg">
-          <div v-for="(n, index) in nrPages" :key="index" class="div3" :class="{ 'child': activate.value[index] }" @click="goToPage(index)">{{ n + 1 }}</div>
+          <div v-for="(n, index) in nrPages" :key="index" class="div3" :class="{ 'child': activate[n - 1] }" @click="goToPage(n - 1)">{{ n }}</div>
           <img class="vector-icon1" @click="nextPage" alt="" src="/img/front.svg">
         </div>
       </div>
@@ -117,7 +127,6 @@ onMounted(() => {
     <NavComponent></NavComponent>
   </div>
 </template>
-
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,700&display=swap');
@@ -160,7 +169,7 @@ onMounted(() => {
 }
 .deletebutton {
   position: absolute;
-  left: -100px;
+  left: -150px;
   margin-left: 40px;
   width: 70px;
   height: 40px;
@@ -168,7 +177,7 @@ onMounted(() => {
 }
 .clock-icon {
   position: absolute;
-  left: 0;
+  left: -50px;
   margin-left: 40px;
   width: 40px;
   height: 40px;
@@ -178,7 +187,7 @@ onMounted(() => {
 .time {
   position: absolute;
   margin-left: 40px;
-  left: 50px;
+  left: 0px;
   font-size: 20px;
   color: #fff;
 }

@@ -4,12 +4,15 @@ import authHeader from './auth.header';
 const API_URL = 'http://localhost:8080/api/customer/me/notifications';
 
 class NotificationService {
-  getNotifications(username, page, size) {
-    return axios.get(`${API_URL}`, {
+  getNotifications(username, pageNumber, pageSize) {
+    return axios.get(`${API_URL}?username=${username}&page=${pageNumber}&size=${pageSize}`, {
       headers: authHeader(),
-      params: { page, size }
     })
-    .then(response => response.data)
+    .then(response => {
+      console.log('Response data:', response.data);
+      return response.data;
+       
+    })
     .catch(error => {
       console.error('Error fetching notifications:', error);
       throw error;
