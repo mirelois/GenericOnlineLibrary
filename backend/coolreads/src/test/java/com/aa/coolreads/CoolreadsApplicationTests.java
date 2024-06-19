@@ -245,12 +245,7 @@ class CoolreadsApplicationTests {
     @Test
     void testStatisticsNumber(){
 
-        StatisticsNumberDTO numbers = statisticService.getStatisticsNumbers("9781673363609");
-
-        System.out.println(numbers.getAlreadyRead());
-        System.out.println(numbers.getCurrentlyReading());
-        System.out.println(numbers.getDidNotFinish());
-        System.out.println(numbers.getWantToRead());
+        StatisticsNumberDTO numbers = statisticService.getStatisticsNumbers("9784783251309");
 
     }
 

@@ -256,11 +256,7 @@ public class Seeder implements CommandLineRunner {
                 authenticationService.signup(registerDTO, false);
             } catch (CustomerAlreadyExistsException e) {
             }
-
-
         }
-
-
     }
 
     private void addFriends() {
