@@ -50,7 +50,8 @@ import Rating from 'primevue/rating';
 	<div v-bind:style="{ 'color': reviewcolor, 'font-weight': reviewfont }" @click="changeTabStyle(`Reviews`)" class="reviews-title">Reviews 
 			<img class="line-icon" alt="" src="/img/line.svg"> 
 			<div v-if="activeTab=='Reviews'">
-				<MyReviewComponent :canInteract="can_interact" @newpost="getReviews(this.isbn,1)" :username="username" :profileImg="profileImg" :isbn="isbn"></MyReviewComponent>			<div class="review-div" v-for="review in reviews" v-if="!review">
+				<MyReviewComponent :canInteract="can_interact" @newpost="getReviews(this.isbn,1)" :username="username" :profileImg="profileImg" :isbn="isbn"></MyReviewComponent>
+				<div class="review-div" v-for="review in reviews" v-if="!review">
 					<ReviewComponent @review_deletion="getReviews(this.isbn,1)" :options="review.myown" :canInteract="can_interact" :isbn="isbn" :marginReviewBottom="marginReviewBottom" @expandHeight="increaseHeight" :likesCount="review.likes" :emojiIds="review.emojiIds" :reviewRate="review.rating" :reviewDescription="review.description"
 					:imageReviewer="review.customerUrl" :usernameReviewer="review.customerUsername"></ReviewComponent>					
 			</div>
@@ -120,7 +121,7 @@ export default {
 			nrreviews:0,
 			nrratings:0,
 			username:'',
-			profileImg: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+			profileImg: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
 			isbn:'',
 			nrpageReview:0,
 			msg:'',
@@ -325,8 +326,10 @@ export default {
 		},
 		getAuthorInfo(){
 			axios.get("http://localhost:8080/api/customer/username/"+this.author).then(resp=>{
-				this.authorName = resp.data.name;
-				this.authorImage = resp.data.profileImageUrl;
+				console.log("prov?")
+				console.log(resp)
+				this.authorName = resp.data.name ? resp.data.name : "unknown";
+				this.authorImage = resp.data.profileImageUrl ? resp.data.profileImageUrl : this.profileImg;
 			}).catch(error=>{
 				console.log(error)
 			})
@@ -362,6 +365,7 @@ export default {
 
 .authorImage{
 	border-radius: 50%;
+	width:80px;
 }
 
 .canva-brown-rusty-mystery-nove-icon {
