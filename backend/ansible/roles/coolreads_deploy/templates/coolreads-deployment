@@ -33,7 +33,5 @@ spec:
           value: "{{ db_password }}" # Use secret object in real usage
         - name: PROFILE
           value: {{ profile }}
-        - name: CACHE_HOST
-          values: {{ cache_connection_name }}
         ports:
         - containerPort: {{ coolreads_container_port }}
