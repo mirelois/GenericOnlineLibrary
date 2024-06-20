@@ -69,7 +69,7 @@ if (localStorage.getItem('selectedLanguage')) {
                 </div>
             </div>
         </div>
-        <div v-if="showConfirmDel==true">
+        <div v-if="showConfirmDel==true" class="confirm">
            <ConfirmComponent @confirmation_response="confirmdeleteBook" :header_msg="confirm_msg"></ConfirmComponent>
         </div>
         <div class="pagination">
@@ -841,6 +841,12 @@ export default {
   font-family: Montserrat;
   position: absolute;
   height: 450px;
+}
+
+.confirm {
+    position: relative;
+    left: -2100px;
+    top: 600px;
 }
 
 .my-sort-component {
