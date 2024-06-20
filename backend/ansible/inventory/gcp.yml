@@ -40,7 +40,7 @@ all:
 
   # Laravel Deploy variables
   coolreads_container_port: 8080
-  coolreads_deploy_n_replicas: 1
+  coolreads_deploy_n_replicas: 3
 
 
   # DB Deploy variables
