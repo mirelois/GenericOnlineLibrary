@@ -162,17 +162,17 @@ export default {
 		if (!token || this.$store.state.auth.status.loggedIn===false) {
 			this.can_interact=false;
 			console.warn('User token not found in localStorage');
-			return;
-		}
-		try {
-			const decodedToken = JSON.parse(token);
-			if(decodedToken.info.exp<Date.now()/1000) {
-				this.can_interact=false;
-				this.handle_logout();
+		} else {
+			try {
+				const decodedToken = JSON.parse(token);
+				if(decodedToken.info.exp<Date.now()/1000) {
+					this.can_interact=false;
+					this.handle_logout();
+				}
+				this.setUsername(decodedToken.info.sub);
+			} catch (error) {
+				console.error('Error parsing user token:', error);
 			}
-			this.setUsername(decodedToken.info.sub);
-		} catch (error) {
-			console.error('Error parsing user token:', error);
 		}
 		this.getBook(this.isbn);
 		this.getReviews(this.isbn,0);
