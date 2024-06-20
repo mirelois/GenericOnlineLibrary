@@ -662,6 +662,12 @@ export default {
 	cursor:pointer;
 }
 
+.confirm-position {
+	position: relative;
+	left:-500px;
+	top:250px;
+}
+
 .author-content {
 	margin-top: 140px;
 	margin-left: -200px;

@@ -179,11 +179,13 @@ export default {
     getMyInfo(){
       let header = authHeader();
       let config = {headers:header};
-      let route = "http://localhost:8080/api/customer/me";
       console.log(this.$route.params.username);
       console.log(this.username);
+      let route = "http://localhost:8080/api/customer/me";
+      this.name = this.username;
       if (this.$route.params.username) {
         route = "http://localhost:8080/api/customer/username/" + this.$route.params.username;
+        this.name = this.$route.params.username;
       }
       console.log(route);
       axios.get(route, config).then(me=>{
@@ -191,7 +193,6 @@ export default {
         this.birthDate = me.data.birthDate ? (new Date().getYear()-new Date(me.data.birthDate).getYear()) : '-';
         this.date = new Date(me.data.birthDate);
         this.country = me.data.country ? me.data.country : '-';
-        this.name = me.data.name ? me.data.name : this.username;
         this.description = me.data.description ? me.data.description : '';
         this.gender = me.data.gender ? me.data.gender : '-';
         console.log("qhats happening");
@@ -226,7 +227,7 @@ export default {
       let header = authHeader();
       let config = {headers:header};
       let genre = null;
-      console.log(this.name);
+      console.log(config);
       if (this.selected_gender) {
         genre = this.selected_gender.replaceAll('-','_').toLowerCase();
       }
